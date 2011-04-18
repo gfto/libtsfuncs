@@ -497,9 +497,17 @@ void ts_pes_dump(struct ts_pes *pes) {
 		pes->pes_extension_flag	? "PES_Ext "	: ""
 	);
 	if (pes->PTS_flag && pes->have_pts)
-		ts_LOGf("  * PTS        : %llu\n", pes->PTS);
+		ts_LOGf("  * PTS        : %llu (%llu ms) (%llu.%04llu sec)\n",
+			pes->PTS,
+			pes->PTS / 90,
+			pes->PTS / 90000, (pes->PTS % 90000) / 9
+		);
 	if (pes->DTS_flag && pes->have_dts)
-		ts_LOGf("  * DTS        : %llu\n", pes->DTS);
+		ts_LOGf("  * DTS        : %llu (%llu ms) (%llu.%04llu sec)\n",
+			pes->DTS,
+			pes->DTS / 90,
+			pes->DTS / 90000, (pes->DTS % 90000) / 9
+		);
 	if (pes->ESCR_flag)
 		ts_LOGf("  * ESCR       : %llu\n", pes->ESCR);
 	if (pes->ES_rate_flag)

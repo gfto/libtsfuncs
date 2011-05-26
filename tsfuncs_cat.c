@@ -73,15 +73,14 @@ ERROR:
 }
 
 int ts_cat_parse(struct ts_cat *cat) {
-	uint8_t *section_data = cat->section_header->section_data + 8; // + 8 to compensate for section table header
-	int section_len = cat->section_header->packet_section_len;
+	uint8_t *section_data = cat->section_header->data;
+	int section_len = cat->section_header->data_len;
 
 	/* Handle streams */
 	uint8_t *stream_data = section_data;
 	cat->program_info_size = section_len;
 	cat->program_info = malloc(cat->program_info_size);
 	memcpy(cat->program_info, stream_data, cat->program_info_size);
-//	ts_print_bytes("DEBUG", cat->program_info, cat->program_info_size);
 	stream_data += cat->program_info_size;
 
 	cat->CRC = (cat->CRC << 8) | stream_data[3];
@@ -89,7 +88,7 @@ int ts_cat_parse(struct ts_cat *cat) {
 	cat->CRC = (cat->CRC << 8) | stream_data[1];
 	cat->CRC = (cat->CRC << 8) | stream_data[0];
 
-	u_int32_t check_crc = ts_crc32(cat->section_header->section_data, cat->section_header->data_size);
+	u_int32_t check_crc = ts_crc32_section(cat->section_header);
 	if (check_crc != 0) {
 		ts_LOGf("!!! Wrong cat CRC! It should be 0 but it is %08x (CRC in data is 0x%08x)\n", check_crc, cat->CRC);
 		return 0;

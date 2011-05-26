@@ -15,12 +15,6 @@ static void ts_pat_regenerate_packet_data(struct ts_pat *pat) {
 	free(ts_packets);
 }
 
-static void ts_pat_init_private_variables(struct ts_pat *pat) {
-	pat->section_header->data_size          = pat->section_header->section_length + 3;
-	pat->section_header->packet_section_len = pat->section_header->data_size - 8 - 4;	// -8 for the section header, -4 for the CRC at the end
-	ts_pat_regenerate_packet_data(pat);
-}
-
 struct ts_pat *ts_pat_alloc_init(uint16_t transport_stream_id) {
 	struct ts_pat *pat = ts_pat_alloc();
 
@@ -42,7 +36,7 @@ struct ts_pat *ts_pat_alloc_init(uint16_t transport_stream_id) {
 
 	pat->initialized = 1;
 
-	ts_pat_init_private_variables(pat);
+	ts_pat_regenerate_packet_data(pat);
 
 	return pat;
 }
@@ -71,7 +65,8 @@ int ts_pat_add_program(struct ts_pat *pat, uint16_t program, uint16_t pat_pid) {
 	pat->programs[pat->programs_num] = pinfo;
 	pat->programs_num++;
 
-	ts_pat_init_private_variables(pat);
+	ts_pat_regenerate_packet_data(pat);
+
 	return 1;
 }
 
@@ -110,7 +105,7 @@ int ts_pat_del_program(struct ts_pat *pat, uint16_t program) {
 	pat->section_header->section_length -= 4;
 	pat->programs_num--;
 
-	ts_pat_init_private_variables(pat);
+	ts_pat_regenerate_packet_data(pat);
 
 	return 1;
 }

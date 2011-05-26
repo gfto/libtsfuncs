@@ -83,8 +83,8 @@ ERROR:
 }
 
 int ts_sdt_parse(struct ts_sdt *sdt) {
-	uint8_t *section_data = sdt->section_header->section_data + 8; // + 8 to compensate for section table header
-	int section_len = sdt->section_header->packet_section_len;
+	uint8_t *section_data = sdt->section_header->data;
+	int section_len = sdt->section_header->data_len;
 
 	// 3 bytes
 	sdt->original_network_id = (section_data[0] << 8) | section_data[1];
@@ -127,7 +127,7 @@ int ts_sdt_parse(struct ts_sdt *sdt) {
 	sdt->CRC = (sdt->CRC << 8) | section_data[1];
 	sdt->CRC = (sdt->CRC << 8) | section_data[0];
 
-	u_int32_t check_crc = ts_crc32(sdt->section_header->section_data, sdt->section_header->data_size);
+	u_int32_t check_crc = ts_crc32_section(sdt->section_header);
 	if (check_crc != 0) {
 		ts_LOGf("!!! Wrong SDT CRC! It should be 0 but it is %08x (CRC in data is 0x%08x)\n", check_crc, sdt->CRC);
 		return 0;

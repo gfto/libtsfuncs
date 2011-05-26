@@ -15,12 +15,6 @@ static void ts_sdt_regenerate_packet_data(struct ts_sdt *sdt) {
 	free(ts_packets);
 }
 
-static void ts_sdt_init_private_variables(struct ts_sdt *sdt) {
-	sdt->section_header->data_size          = sdt->section_header->section_length + 3;
-	sdt->section_header->packet_section_len = sdt->section_header->data_size - 8 - 4;	// -8 for the section header, -4 for the CRC at the end
-	ts_sdt_regenerate_packet_data(sdt);
-}
-
 struct ts_sdt *ts_sdt_alloc_init(uint16_t org_network_id, uint16_t transport_stream_id) {
 	struct ts_sdt *sdt = ts_sdt_alloc();
 
@@ -44,7 +38,7 @@ struct ts_sdt *ts_sdt_alloc_init(uint16_t org_network_id, uint16_t transport_str
 
 	sdt->initialized = 1;
 
-	ts_sdt_init_private_variables(sdt);
+	ts_sdt_regenerate_packet_data(sdt);
 
 	return sdt;
 }
@@ -80,7 +74,7 @@ static int ts_sdt_add_stream(struct ts_sdt *sdt, uint16_t service_id, uint8_t *d
 	sdt->streams[sdt->streams_num] = sinfo;
 	sdt->streams_num++;
 
-	ts_sdt_init_private_variables(sdt);
+	ts_sdt_regenerate_packet_data(sdt);
 
 	return 1;
 }

@@ -192,9 +192,6 @@ struct ts_section_header {
 	uint8_t		last_section_number;
 
 	// The variables bellow this line are not in the physical packet
-	uint16_t	data_size;						// Section length scaled within one packet
-	uint16_t	packet_section_len;				// Section length in the current packet minus - 4 (the CRC)
-
 	int			section_pos;					// Up to this pos the section data has come
 	int			initialized;					// Set to 1 when whole sectino is initialized
 
@@ -202,6 +199,9 @@ struct ts_section_header {
 	uint8_t		*packet_data;					// TS packet(s) that were used to transfer the table.
 
 	int			num_packets;					// From how much packets this section is build
+
+	int			data_len;						// Data size without the CRC32 (4 bytes)
+	uint8_t		*data;							// Offset into section_data (where the section data start without the section header)
 };
 
 struct ts_pat_program {

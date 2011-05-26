@@ -15,12 +15,6 @@ static void ts_eit_regenerate_packet_data(struct ts_eit *eit) {
 	free(ts_packets);
 }
 
-static void ts_eit_init_private_variables(struct ts_eit *eit) {
-	eit->section_header->data_size          = eit->section_header->section_length + 3;
-	eit->section_header->packet_section_len = eit->section_header->data_size - 8 - 4;	// -8 for the section header, -4 for the CRC at the end
-	ts_eit_regenerate_packet_data(eit);
-}
-
 struct ts_eit *ts_eit_alloc_init(uint16_t service_id, uint16_t transport_stream_id, uint16_t org_network_id, uint8_t table_id, uint8_t sec_number, uint8_t last_sec_number) {
 	struct ts_eit *eit = ts_eit_alloc();
 
@@ -49,7 +43,8 @@ struct ts_eit *ts_eit_alloc_init(uint16_t service_id, uint16_t transport_stream_
 
 	eit->initialized = 1;
 
-	ts_eit_init_private_variables(eit);
+	ts_eit_regenerate_packet_data(eit);
+
 	return eit;
 }
 
@@ -99,7 +94,7 @@ static int ts_eit_add_stream(struct ts_eit *eit, uint16_t event_id, uint8_t runn
 	eit->streams[eit->streams_num] = sinfo;
 	eit->streams_num++;
 
-	ts_eit_init_private_variables(eit);
+	ts_eit_regenerate_packet_data(eit);
 
 	return 1;
 }

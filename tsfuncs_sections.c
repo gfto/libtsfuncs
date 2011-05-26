@@ -33,27 +33,24 @@ uint8_t *ts_section_header_parse(uint8_t *ts_packet, struct ts_header *ts_header
 	if (ts_section_header->table_id == 0x72)
 		return NULL;
 
-	ts_section_header->ts_id_number             = (data[3] << 8) | data[4]; // xxxxxxx xxxxxxx
+	if (ts_section_header->section_syntax_indicator) {
+		ts_section_header->ts_id_number             = (data[3] << 8) | data[4]; // xxxxxxx xxxxxxx
 
-	ts_section_header->reserved2                = data[5] >> 6;				// xx111111
-	ts_section_header->version_number           = (data[5] &~ 0xC1) >> 1;	// 11xxxxx1
-	ts_section_header->current_next_indicator   = data[5] &~ 0xFE;			// 1111111x
+		ts_section_header->reserved2                = data[5] >> 6;				// xx111111
+		ts_section_header->version_number           = (data[5] &~ 0xC1) >> 1;	// 11xxxxx1
+		ts_section_header->current_next_indicator   = data[5] &~ 0xFE;			// 1111111x
 
-	ts_section_header->section_number           = data[6];
-	ts_section_header->last_section_number      = data[7];
+		ts_section_header->section_number           = data[6];
+		ts_section_header->last_section_number      = data[7];
 
-	if (!ts_section_header->section_syntax_indicator) {
-		ts_LOGf("!!! Table 0x%02x have no section_syntax_indicator set!\n",
-			ts_section_header->table_id);
-		ts_packet_header_dump(ts_header);
-		ts_section_header_dump(ts_section_header);
-		return NULL;
+		ts_section_header->data = ts_section_header->section_data + 8; // Skip header
+		ts_section_header->data_len = ts_section_header->section_length - (5 + 4);	// 5 for extended syntax, 4 for crc at the end
+		return data + 8;
+	} else {
+		ts_section_header->data = ts_section_header->section_data + 3; // Skip header
+		ts_section_header->data_len = ts_section_header->section_length;
+		return data + 3;
 	}
-
-	ts_section_header->data_size = ts_section_header->section_length + 3;
-	ts_section_header->packet_section_len = ts_section_header->data_size - 8 - 4;	// -8 for the section header, -4 for the CRC at the end
-
-	return data + 8;
 }
 
 void ts_section_header_generate(uint8_t *ts_packet, struct ts_section_header *ts_section_header, uint8_t start) {
@@ -118,15 +115,17 @@ void ts_section_header_dump(struct ts_section_header *t) {
 		t->table_id == 0xff         ? "reserved" : "Impossible!"
 	);
 	ts_LOGf("    - Section length     : %03x (%d)\n", t->section_length, t->section_length);
-	ts_LOGf("    - TS ID / Program No : %04x (%d)\n", t->ts_id_number, t->ts_id_number);
-	ts_LOGf("    - Version number %d, current next %d, section number %d, last section number %d\n",
-			t->version_number,
-			t->current_next_indicator,
-			t->section_number,
-			t->last_section_number);
-	ts_LOGf("    - Private vars       : data_size:%d packet_section_len:%d num_packets:%d section_pos:%d\n",
-			t->data_size,
-			t->packet_section_len,
+	if (!t->section_syntax_indicator) {
+		ts_LOGf("    - Private section syntax\n");
+	} else {
+		ts_LOGf("    - TS ID / Program No : %04x (%d)\n", t->ts_id_number, t->ts_id_number);
+		ts_LOGf("    - Version number %d, current next %d, section number %d, last section number %d\n",
+				t->version_number,
+				t->current_next_indicator,
+				t->section_number,
+				t->last_section_number);
+	}
+	ts_LOGf("    - Private vars       : num_packets:%d section_pos:%d\n",
 			t->num_packets,
 			t->section_pos);
 }

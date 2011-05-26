@@ -82,8 +82,8 @@ ERROR:
 }
 
 int ts_pat_parse(struct ts_pat *pat) {
-	uint8_t *section_data = pat->section_header->section_data + 8; // + 8 to compensate for section table header
-	int section_len = pat->section_header->packet_section_len;
+	uint8_t *section_data = pat->section_header->data;
+	int section_len = pat->section_header->data_len;
 
 	while (section_len > 0) {
 		if (pat->programs_num == pat->programs_max) {
@@ -107,7 +107,7 @@ int ts_pat_parse(struct ts_pat *pat) {
 	pat->CRC = (pat->CRC << 8) | section_data[1];
 	pat->CRC = (pat->CRC << 8) | section_data[0];
 
-	u_int32_t check_crc = ts_crc32(pat->section_header->section_data, pat->section_header->data_size);
+	u_int32_t check_crc = ts_crc32_section(pat->section_header);
 	if (check_crc != 0) {
 		ts_LOGf("!!! Wrong PAT CRC! It should be 0 but it is %08x (CRC in data is 0x%08x)\n", check_crc, pat->CRC);
 		return 0;

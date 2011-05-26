@@ -85,8 +85,8 @@ ERROR:
 
 
 int ts_nit_parse(struct ts_nit *nit) {
-	uint8_t *section_data = nit->section_header->section_data + 8; // + 8 to compensate for section table header
-	int section_len = nit->section_header->packet_section_len;
+	uint8_t *section_data = nit->section_header->data;
+	int section_len = nit->section_header->data_len;
 
 	/* Table data (2 bytes) */
 	nit->reserved1         =  (section_data[0] &~ 0x0F) >> 4;						// xxxx1111
@@ -142,7 +142,7 @@ int ts_nit_parse(struct ts_nit *nit) {
 	nit->CRC = (nit->CRC << 8) | stream_data[1];
 	nit->CRC = (nit->CRC << 8) | stream_data[0];
 
-	u_int32_t check_crc = ts_crc32(nit->section_header->section_data, nit->section_header->data_size);
+	u_int32_t check_crc = ts_crc32_section(nit->section_header);
 	if (check_crc != 0) {
 		ts_LOGf("!!! Wrong NIT CRC! It should be 0 but it is %08x (CRC in data is 0x%08x)\n", check_crc, nit->CRC);
 		return 0;

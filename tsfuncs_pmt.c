@@ -83,8 +83,8 @@ ERROR:
 }
 
 int ts_pmt_parse(struct ts_pmt *pmt) {
-	uint8_t *section_data = pmt->section_header->section_data + 8; // + 8 to compensate for section table header
-	int section_len = pmt->section_header->packet_section_len;
+	uint8_t *section_data = pmt->section_header->data;
+	int section_len = pmt->section_header->data_len;
 
 	pmt->reserved1         =  (section_data[0] &~ 0x1F) >> 5;						// xxx11111
 	pmt->PCR_pid           = ((section_data[0] &~ 0xE0) << 8) | section_data[1];	// 111xxxxx xxxxxxxx
@@ -136,7 +136,7 @@ int ts_pmt_parse(struct ts_pmt *pmt) {
 	pmt->CRC = (pmt->CRC << 8) | stream_data[1];
 	pmt->CRC = (pmt->CRC << 8) | stream_data[0];
 
-	u_int32_t check_crc = ts_crc32(pmt->section_header->section_data, pmt->section_header->data_size);
+	u_int32_t check_crc = ts_crc32_section(pmt->section_header);
 	if (check_crc != 0) {
 		ts_LOGf("!!! Wrong PMT CRC! It should be 0 but it is %08x (CRC in data is 0x%08x)\n", check_crc, pmt->CRC);
 		return 0;

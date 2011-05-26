@@ -15,12 +15,6 @@ static void ts_nit_regenerate_packet_data(struct ts_nit *nit) {
 	free(ts_packets);
 }
 
-static void ts_nit_init_private_variables(struct ts_nit *nit) {
-	nit->section_header->data_size          = nit->section_header->section_length + 3;
-	nit->section_header->packet_section_len = nit->section_header->data_size - 8 - 4;	// -8 for the section header, -4 for the CRC at the end
-	ts_nit_regenerate_packet_data(nit);
-}
-
 struct ts_nit *ts_nit_alloc_init(uint16_t network_id) {
 	struct ts_nit *nit = ts_nit_alloc();
 
@@ -46,7 +40,7 @@ struct ts_nit *ts_nit_alloc_init(uint16_t network_id) {
 
 	nit->initialized = 1;
 
-	ts_nit_init_private_variables(nit);
+	ts_nit_regenerate_packet_data(nit);
 
 	return nit;
 }
@@ -70,7 +64,8 @@ int ts_nit_add_network_name_descriptor(struct ts_nit *nit, char *network_name) {
 	nit->network_info = descriptor;
 	nit->section_header->section_length += nit->network_info_size;
 
-	ts_nit_init_private_variables(nit);
+	ts_nit_regenerate_packet_data(nit);
+
 	return 1;
 }
 
@@ -102,7 +97,7 @@ static int ts_nit_add_stream(struct ts_nit *nit, uint16_t ts_id, uint16_t org_ne
 	nit->streams[nit->streams_num] = sinfo;
 	nit->streams_num++;
 
-	ts_nit_init_private_variables(nit);
+	ts_nit_regenerate_packet_data(nit);
 
 	return 1;
 }

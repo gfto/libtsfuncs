@@ -87,8 +87,8 @@ ERROR:
 
 
 int ts_eit_parse(struct ts_eit *eit) {
-	uint8_t *section_data = eit->section_header->section_data + 8; // + 8 to compensate for section table header
-	int section_len = eit->section_header->packet_section_len;
+	uint8_t *section_data = eit->section_header->data;
+	int section_len = eit->section_header->data_len;
 
 	/* Table data (6 bytes) */
 	eit->transport_stream_id			= (section_data[0] << 8) | section_data[1];	// 11111111 11111111
@@ -141,7 +141,7 @@ int ts_eit_parse(struct ts_eit *eit) {
 	eit->CRC = (eit->CRC << 8) | stream_data[1];
 	eit->CRC = (eit->CRC << 8) | stream_data[0];
 
-	u_int32_t check_crc = ts_crc32(eit->section_header->section_data, eit->section_header->data_size);
+	u_int32_t check_crc = ts_crc32_section(eit->section_header);
 	if (check_crc != 0) {
 		ts_LOGf("!!! Wrong EIT CRC! It should be 0 but it is %08x (CRC in data is 0x%08x)\n", check_crc, eit->CRC);
 		return 0;

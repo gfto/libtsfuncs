@@ -73,6 +73,19 @@ void ts_section_header_generate(uint8_t *ts_packet, struct ts_section_header *ts
 	ts_packet[start + 7] = ts_section_header->last_section_number;
 }
 
+int ts_section_is_same(struct ts_section_header *s1, struct ts_section_header *s2) {
+	if (s1->CRC != s2->CRC)
+		return 0;
+
+	if (s1->version_number != s2->version_number)
+		return 0;
+
+	if (s1->section_number != s2->section_number)
+		return 0;
+
+	return 1; // Should be the same
+}
+
 #define IN(x, a, b) \
 	(x >= a && x <= b)
 

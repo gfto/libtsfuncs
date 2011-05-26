@@ -77,6 +77,8 @@ uint8_t *					ts_section_header_parse		(uint8_t *ts_packet, struct ts_header *ts
 void						ts_section_header_generate	(uint8_t *ts_packet, struct ts_section_header *ts_section_header, uint8_t start);
 void						ts_section_header_dump		(struct ts_section_header *t);
 
+int ts_section_is_same(struct ts_section_header *s1, struct ts_section_header *s2);
+
 uint8_t *					ts_section_data_alloc_section	();
 uint8_t *					ts_section_data_alloc_packet	();
 

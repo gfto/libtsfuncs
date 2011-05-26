@@ -266,29 +266,6 @@ void ts_pmt_dump(struct ts_pmt *pmt) {
 	ts_pmt_check_generator(pmt);
 }
 
-/*
-int parse_pmt(uint8_t *ts_packet, uint16_t pmt_pid, uint16_t *pcr_pid, uint16_t *video_pid, uint16_t *audio_pid, int dump) {
-	struct ts_pmt *pmt = calloc(1, sizeof(struct ts_pmt));
-	int ret = ts_pmt_init(pmt, pmt_pid, ts_packet);
-	if (ret) {
-		int i;
-		*pcr_pid = pmt->PCR_pid;
-		for (i=0;i<pmt->streams_num;i++) {
-			struct ts_pmt_stream *stream = pmt->streams[i];
-			if (ts_is_stream_type_video(stream->stream_type))
-				*video_pid = stream->pid;
-			if (ts_is_stream_type_audio(stream->stream_type))
-				*audio_pid = stream->pid;
-		}
-	}
-	if (dump)
-		ts_pmt_dump(pmt);
-	ts_pmt_free(&pmt);
-	return ret;
-}
-
-*/
-
 int ts_pmt_is_same(struct ts_pmt *pmt1, struct ts_pmt *pmt2) {
 	return ts_section_is_same(pmt1->section_header, pmt2->section_header);
 }

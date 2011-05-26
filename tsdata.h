@@ -32,146 +32,6 @@ struct ts_header {
 	uint8_t		payload_offset;		// Payload offset inside the packet
 };
 
-struct mpeg_audio_header {
-	uint32_t	syncword		: 12,
-				ID				: 1,
-				layer			: 2,
-				protection_bit	: 1,
-				bitrate_index	: 4,
-				sampl_freq		: 2,
-				padding_bit		: 1,
-				private_bit		: 1,
-				mode			: 2,
-				mode_extension	: 2,
-				copyright		: 1,
-				org_home		: 1,
-				emphasis		: 2;
-
-	uint8_t		initialized;
-};
-
-struct ts_pes {
-	struct ts_header ts_header;
-
-	uint32_t	have_pts		: 1,		// Have PTS in the PES (init from PES header)
-				have_dts		: 1,		// Have DTS in the PES (init from PES header)
-				is_audio		: 1,		// PES carries audio (mpeg2 or AC3) (init from PES stream_id and PMT stream_type and descriptors)
-				is_audio_mpeg1	: 1,		// PES carries MP1 audio (init from PMT stream_id)
-				is_audio_mpeg1l1: 1,		// PES carries MP1 audio Layer I (init from PMT audio descriptor)
-				is_audio_mpeg1l2: 1,		// PES carries MP1 audio Layer II (init from PMT audio descriptor)
-				is_audio_mpeg1l3: 1,		// PES carries MP1 audio Layer III (init from PMT audio descriptor)
-				is_audio_mpeg2	: 1,		// PES carries MP2 audio (init from PMT stream_id)
-				is_audio_aac	: 1,		// PES carries AAC audio (init from PMT stream_id)
-				is_audio_ac3	: 1,		// PES carries AC3 audio (init from stream_id and PMT descriptors and elmentary stream)
-				is_audio_dts	: 1,		// PES carries DTS audio (init from stream_id and elementary stream)
-				is_video		: 1,		// PES carries video (mpeg2 or H.264) (init from PES stream_id)
-				is_video_mpeg1	: 1,		// PES carries mpeg1 video (init from PES stream_id)
-				is_video_mpeg2	: 1,		// PES carries mpeg2 video (init from PES stream_id)
-				is_video_mpeg4	: 1,		// PES carries mpeg4 part 2 video (init from PES stream_id)
-				is_video_h264	: 1,		// PES carries H.264 video (init from PES stream_id)
-				is_video_avs	: 1,		// PES carries AVS video (init from PES stream_id)
-				is_teletext		: 1,		// PES carries teletext (init from PMT descriptors)
-				is_subtitle		: 1;		// PES carries subtitles (init from PMT descriptors)
-
-	uint8_t		stream_id;					// If !0 then the PES has started initializing
-	uint16_t	pes_packet_len;				// Allowed to be 0 for video streams
-	int			real_pes_packet_len;		// if pes_packet_len is > 0 the this is eq to pes_packet_len
-											// if pes_packet_len is = 0 this is set to -1 until very last packet
-
-	uint8_t		flags_1;					// Bellow flags
-	uint8_t		reserved1			: 2,	// Always eq 2 (10 binary)
-				scrambling			: 2,
-				priority			: 1,
-				data_alignment		: 1,
-				copyright			: 1,
-				original_or_copy	: 1;
-
-	uint8_t		flags_2;					// Bellow flags
-	uint8_t		PTS_flag			: 1,
-				DTS_flag			: 1,
-				ESCR_flag			: 1,
-				ES_rate_flag		: 1,
-				trick_mode_flag		: 1,
-				add_copy_info_flag	: 1,
-				pes_crc_flag		: 1,
-				pes_extension_flag	: 1;
-
-	uint8_t		pes_header_len;
-
-	uint64_t	PTS;						// if (PTS_flag)
-	uint64_t	DTS;						// if (DTS_flag)
-	uint64_t	ESCR;						// if (ESCR_flag)
-	uint32_t	ES_rate;					// if (ES_rate_flag)
-
-	uint16_t	trick_mode_control	: 2,	// if (trick_mode_flag)
-				field_id			: 2,
-				intra_slice_refresh	: 1,
-				freq_truncation		: 2,
-				rep_ctrl			: 5,
-				tm_reserved			: 4;
-
-	uint8_t		reserved_add		: 1,	// if (add_copy_info_flag)
-				add_copy_info		: 7;
-
-	uint16_t	prev_pes_crc;				// if (pes_crc_flag)
-
-	// PES extension
-	uint8_t		flags_3;					// Bellow flags
-	uint8_t		pes_private_data_flag			: 1,
-				pack_header_field_flag			: 1,
-				program_packet_seq_counter_flag	: 1,
-				p_std_buffer_flag				: 1,
-				reserved2						: 3,
-				pes_extension2_flag				: 1;
-
-	uint64_t	pes_private_data_1;					// if (pes_private_data_flag)
-	uint64_t	pes_private_data_2;					// The whole field is 128 bits
-
-	uint8_t		pack_header_len;					// if (pack_header_field_flag)
-	uint8_t		*pack_header;						// Pointer into *pes_data
-
-	uint8_t		reserved3					: 1,	// if (program_packet_seq_counter_flag)
-				program_packet_seq_counter	: 7;
-
-	uint8_t		mpeg1_mpeg2_identifier		: 1,
-				original_stuff_length		: 6;
-
-	uint16_t	p_std_reserved				: 2,	// Always 1, if (p_std_buffer_flag)
-				p_std_buffer_scale			: 1,
-				p_std_buffer_size			: 13;
-
-	uint16_t	reserved4					: 1,	// if (pes_extension2_flag)
-				pes_extension_field_len		: 7;
-	uint8_t		*pes_extension2;					// Pointer into *pes_data
-
-	// Private data
-	uint8_t		*pes_data;				// Whole packet is stored here
-	uint32_t	pes_data_pos;			// How much data is filled in pes_data
-	uint32_t	pes_data_size;			// Total allocated for pes_data
-	uint8_t		pes_data_initialized;	// Set to 1 when all of the pes_data is in *pes_data and the parsing can start
-
-	// More private data
-	uint8_t		*es_data;				// Pointer to start of data after PES header, initialized when the packet is fully assembled
-	uint32_t	es_data_size;			// Full pes packet length (used for video streams, otherwise equal to pes_packet_len)
-	uint8_t		initialized;			// Set to 1 when the packet is fully assembled
-
-	// Extra data
-	struct mpeg_audio_header mpeg_audio_header;
-};
-
-struct pes_entry {
-	uint16_t		pid;
-	struct ts_pes	*pes;
-	struct ts_pes	*pes_next;
-};
-
-struct pes_array {
-	int max;
-	int cur;
-	struct pes_entry **entries;
-};
-
-
 struct ts_section_header {
 	uint8_t		pointer_field;
 
@@ -451,5 +311,145 @@ enum ts_stream_type {
 										       id == STREAM_ID_PROGRAM_STREAM_DIRECTORY || \
 										       id == STREAM_ID_DSMCC_STREAM             || \
 										       id == STREAM_ID_H222_E_STREAM))
+
+
+struct mpeg_audio_header {
+	uint32_t	syncword		: 12,
+				ID				: 1,
+				layer			: 2,
+				protection_bit	: 1,
+				bitrate_index	: 4,
+				sampl_freq		: 2,
+				padding_bit		: 1,
+				private_bit		: 1,
+				mode			: 2,
+				mode_extension	: 2,
+				copyright		: 1,
+				org_home		: 1,
+				emphasis		: 2;
+
+	uint8_t		initialized;
+};
+
+struct ts_pes {
+	struct ts_header ts_header;
+
+	uint32_t	have_pts		: 1,		// Have PTS in the PES (init from PES header)
+				have_dts		: 1,		// Have DTS in the PES (init from PES header)
+				is_audio		: 1,		// PES carries audio (mpeg2 or AC3) (init from PES stream_id and PMT stream_type and descriptors)
+				is_audio_mpeg1	: 1,		// PES carries MP1 audio (init from PMT stream_id)
+				is_audio_mpeg1l1: 1,		// PES carries MP1 audio Layer I (init from PMT audio descriptor)
+				is_audio_mpeg1l2: 1,		// PES carries MP1 audio Layer II (init from PMT audio descriptor)
+				is_audio_mpeg1l3: 1,		// PES carries MP1 audio Layer III (init from PMT audio descriptor)
+				is_audio_mpeg2	: 1,		// PES carries MP2 audio (init from PMT stream_id)
+				is_audio_aac	: 1,		// PES carries AAC audio (init from PMT stream_id)
+				is_audio_ac3	: 1,		// PES carries AC3 audio (init from stream_id and PMT descriptors and elmentary stream)
+				is_audio_dts	: 1,		// PES carries DTS audio (init from stream_id and elementary stream)
+				is_video		: 1,		// PES carries video (mpeg2 or H.264) (init from PES stream_id)
+				is_video_mpeg1	: 1,		// PES carries mpeg1 video (init from PES stream_id)
+				is_video_mpeg2	: 1,		// PES carries mpeg2 video (init from PES stream_id)
+				is_video_mpeg4	: 1,		// PES carries mpeg4 part 2 video (init from PES stream_id)
+				is_video_h264	: 1,		// PES carries H.264 video (init from PES stream_id)
+				is_video_avs	: 1,		// PES carries AVS video (init from PES stream_id)
+				is_teletext		: 1,		// PES carries teletext (init from PMT descriptors)
+				is_subtitle		: 1;		// PES carries subtitles (init from PMT descriptors)
+
+	uint8_t		stream_id;					// If !0 then the PES has started initializing
+	uint16_t	pes_packet_len;				// Allowed to be 0 for video streams
+	int			real_pes_packet_len;		// if pes_packet_len is > 0 the this is eq to pes_packet_len
+											// if pes_packet_len is = 0 this is set to -1 until very last packet
+
+	uint8_t		flags_1;					// Bellow flags
+	uint8_t		reserved1			: 2,	// Always eq 2 (10 binary)
+				scrambling			: 2,
+				priority			: 1,
+				data_alignment		: 1,
+				copyright			: 1,
+				original_or_copy	: 1;
+
+	uint8_t		flags_2;					// Bellow flags
+	uint8_t		PTS_flag			: 1,
+				DTS_flag			: 1,
+				ESCR_flag			: 1,
+				ES_rate_flag		: 1,
+				trick_mode_flag		: 1,
+				add_copy_info_flag	: 1,
+				pes_crc_flag		: 1,
+				pes_extension_flag	: 1;
+
+	uint8_t		pes_header_len;
+
+	uint64_t	PTS;						// if (PTS_flag)
+	uint64_t	DTS;						// if (DTS_flag)
+	uint64_t	ESCR;						// if (ESCR_flag)
+	uint32_t	ES_rate;					// if (ES_rate_flag)
+
+	uint16_t	trick_mode_control	: 2,	// if (trick_mode_flag)
+				field_id			: 2,
+				intra_slice_refresh	: 1,
+				freq_truncation		: 2,
+				rep_ctrl			: 5,
+				tm_reserved			: 4;
+
+	uint8_t		reserved_add		: 1,	// if (add_copy_info_flag)
+				add_copy_info		: 7;
+
+	uint16_t	prev_pes_crc;				// if (pes_crc_flag)
+
+	// PES extension
+	uint8_t		flags_3;					// Bellow flags
+	uint8_t		pes_private_data_flag			: 1,
+				pack_header_field_flag			: 1,
+				program_packet_seq_counter_flag	: 1,
+				p_std_buffer_flag				: 1,
+				reserved2						: 3,
+				pes_extension2_flag				: 1;
+
+	uint64_t	pes_private_data_1;					// if (pes_private_data_flag)
+	uint64_t	pes_private_data_2;					// The whole field is 128 bits
+
+	uint8_t		pack_header_len;					// if (pack_header_field_flag)
+	uint8_t		*pack_header;						// Pointer into *pes_data
+
+	uint8_t		reserved3					: 1,	// if (program_packet_seq_counter_flag)
+				program_packet_seq_counter	: 7;
+
+	uint8_t		mpeg1_mpeg2_identifier		: 1,
+				original_stuff_length		: 6;
+
+	uint16_t	p_std_reserved				: 2,	// Always 1, if (p_std_buffer_flag)
+				p_std_buffer_scale			: 1,
+				p_std_buffer_size			: 13;
+
+	uint16_t	reserved4					: 1,	// if (pes_extension2_flag)
+				pes_extension_field_len		: 7;
+	uint8_t		*pes_extension2;					// Pointer into *pes_data
+
+	// Private data
+	uint8_t		*pes_data;				// Whole packet is stored here
+	uint32_t	pes_data_pos;			// How much data is filled in pes_data
+	uint32_t	pes_data_size;			// Total allocated for pes_data
+	uint8_t		pes_data_initialized;	// Set to 1 when all of the pes_data is in *pes_data and the parsing can start
+
+	// More private data
+	uint8_t		*es_data;				// Pointer to start of data after PES header, initialized when the packet is fully assembled
+	uint32_t	es_data_size;			// Full pes packet length (used for video streams, otherwise equal to pes_packet_len)
+	uint8_t		initialized;			// Set to 1 when the packet is fully assembled
+
+	// Extra data
+	struct mpeg_audio_header mpeg_audio_header;
+};
+
+struct pes_entry {
+	uint16_t		pid;
+	struct ts_pes	*pes;
+	struct ts_pes	*pes_next;
+};
+
+struct pes_array {
+	int max;
+	int cur;
+	struct pes_entry **entries;
+};
 
 #endif

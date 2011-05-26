@@ -21,11 +21,11 @@ PROG = libts.a
 
 all: $(PROG)
 
-$(PROG): $(OBJS) tsdata.h
+$(PROG): $(OBJS) tsdata.h tsfuncs.h
 	$(Q)echo "  LINK	$(PROG)"
 	$(Q)$(LINK) $@ $(LIBRARY_LINK_OPTS) $(OBJS) 
 
-%.o: %.c
+%.o: %.c tsdata.h tsfuncs.h
 	$(Q)echo "  CC	libts	$<"
 	$(Q)$(CC) $(CFLAGS) -c $<
 

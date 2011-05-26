@@ -169,7 +169,7 @@ void ts_cat_dump(struct ts_cat *cat) {
     ts_section_header_dump(cat->section_header);
 
 	if (cat->program_info_size > 0) {
-		ts_LOGf(" * Descriptor dump:\n");
+		ts_LOGf("  * Descriptor dump:\n");
 		ts_descriptor_dump(cat->program_info, cat->program_info_size);
 	}
 	ts_LOGf("  * CRC 0x%04x\n", cat->CRC);

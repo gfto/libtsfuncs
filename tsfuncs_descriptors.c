@@ -176,7 +176,8 @@ void ts_descriptor_dump(uint8_t *desc_data, int desc_data_len) {
 			case  9: { // CA descriptor
 				uint16_t CA_ID = (data[0] << 8) | data[1];
 				uint16_t CA_PID = ((data[2] & 0x1F) << 8) | data[3];
-				ts_LOGf("Tag 0x%02x (%02d), sz: %d, CA descriptor: CAID 0x%04x (%02d) | CA PID 0x%04x (%d) | %s\n",
+				ts_LOGf("%sTag 0x%02x (%02d), sz: %d, CA descriptor: CAID 0x%04x (%02d) | CA PID 0x%04x (%d) | %s\n",
+					pad,
 					tag, tag,
 					this_length,
 					CA_ID, CA_ID,

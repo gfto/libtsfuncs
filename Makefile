@@ -19,11 +19,16 @@ OBJS = log.o tsfuncs.o tsfuncs_crc.o tsfuncs_misc.o tsfuncs_time.o \
 	tsfuncs_pes_es.o
 PROG = libts.a
 
-all: $(PROG)
+tstest_OBJS = tstest.o libts.a
+all: $(PROG) tstest
 
 $(PROG): $(OBJS) tsdata.h tsfuncs.h
 	$(Q)echo "  LINK	$(PROG)"
-	$(Q)$(LINK) $@ $(LIBRARY_LINK_OPTS) $(OBJS) 
+	$(Q)$(LINK) $@ $(LIBRARY_LINK_OPTS) $(OBJS)
+
+tstest: $(tstest_OBJS)
+	$(Q)echo "  LINK	$(PROG)"
+	$(Q)$(CC) $(CFLAGS) $(tstest_OBJS) -o tstest
 
 %.o: %.c tsdata.h tsfuncs.h
 	$(Q)echo "  CC	libts	$<"

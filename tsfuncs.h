@@ -235,6 +235,7 @@ void	ts_pes_es_dump							(struct ts_pes *pes);
 // CRC
 uint32_t        ts_crc32      (uint8_t *data, int data_size);
 uint32_t		ts_crc32_section			(struct ts_section_header *section_header);
+int				ts_crc32_section_check		(struct ts_section_header *section_header, char *table);
 
 // Misc
 int				dec2bcd						(int dec);

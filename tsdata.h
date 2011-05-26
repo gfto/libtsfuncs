@@ -223,6 +223,13 @@ struct ts_pat {
 	uint8_t						initialized;	// Set to 1 when full table is initialized
 };
 
+enum CA_system {
+	CA_IRDETO,		// 0x0600 - 0x06FF Irdeto
+	CA_CONNAX,		// 0x0B00 - 0x0BFF Norwegian Telekom
+	CA_CRYPTOWORKS,	// 0x0D00 - 0x0DFF CrytoWorks
+	CA_UNKNOWN,
+};
+
 struct ts_cat {
 	struct ts_header			ts_header;
 	struct ts_section_header	*section_header;

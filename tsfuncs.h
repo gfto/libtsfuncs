@@ -114,6 +114,9 @@ int				ts_cat_parse		(struct ts_cat *cat);
 void            ts_cat_dump			(struct ts_cat *cat);
 int				ts_cat_is_same		(struct ts_cat *cat1, struct ts_cat *cat2);
 
+enum CA_system	ts_get_CA_sys		(uint16_t CA_id);
+char *			ts_get_CA_sys_txt	(enum CA_system CA_sys);
+
 // PMT
 struct ts_pmt *	ts_pmt_alloc		();
 struct ts_pmt * ts_pmt_alloc_init	(uint16_t org_network_id, uint16_t transport_stream_id);

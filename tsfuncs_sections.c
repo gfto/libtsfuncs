@@ -146,6 +146,27 @@ void ts_section_header_dump(struct ts_section_header *t) {
 
 void ts_section_dump(struct ts_section_header *sec) {
 	int i;
+
+	ts_LOGf("%s table\n",
+		sec->table_id == 0x00         ? "PAT" :
+		sec->table_id == 0x01         ? "CAT" :
+		sec->table_id == 0x02         ? "PMT" :
+		sec->table_id == 0x03         ? "TSDT" :
+		IN(sec->table_id, 0x40, 0x41) ? "NIT" :
+		sec->table_id == 0x42         ? "SDT" :
+		sec->table_id == 0x46         ? "SDT" :
+		sec->table_id == 0x4a         ? "BAT" :
+		IN(sec->table_id, 0x4e, 0x6f) ? "EIT" :
+		sec->table_id == 0x70         ? "TDT" :
+		sec->table_id == 0x71         ? "RST" :
+		sec->table_id == 0x72         ? "STUFFING" :
+		sec->table_id == 0x73         ? "TOT" :
+		sec->table_id == 0x7e         ? "DIS" :
+		sec->table_id == 0x7f         ? "SIS" :
+		IN(sec->table_id, 0x80, 0xfe) ? "USER_DEFINED" :
+		sec->table_id == 0xff         ? "RESERVED" : "UNKNOWN"
+	);
+
 	for (i=0;i<sec->num_packets;i++) {
 		struct ts_header tshdr;
 		ts_packet_header_parse(sec->packet_data + (i * TS_PACKET_SIZE), &tshdr);

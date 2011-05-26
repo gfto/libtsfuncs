@@ -144,4 +144,14 @@ void ts_section_header_dump(struct ts_section_header *t) {
 			t->section_pos);
 }
 
+void ts_section_dump(struct ts_section_header *sec) {
+	int i;
+	for (i=0;i<sec->num_packets;i++) {
+		struct ts_header tshdr;
+		ts_packet_header_parse(sec->packet_data + (i * TS_PACKET_SIZE), &tshdr);
+		ts_packet_header_dump(&tshdr);
+	}
+	ts_section_header_dump(sec);
+}
+
 #undef IN

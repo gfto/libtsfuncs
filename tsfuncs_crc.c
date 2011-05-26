@@ -38,3 +38,8 @@ uint32_t ts_crc32(uint8_t *data, int data_size) {
 	}
 	return crc;
 }
+
+u_int32_t ts_crc32_section(struct ts_section_header *section_header) {
+	// +3 to include the first 3 bytes before section_length field
+	return ts_crc32(section_header->section_data, section_header->section_length + 3);
+}

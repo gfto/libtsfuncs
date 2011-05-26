@@ -106,6 +106,13 @@ int             ts_pat_del_program	(struct ts_pat *pat, uint16_t program);
 
 int				ts_pat_is_same		(struct ts_pat *pat1, struct ts_pat *pat2);
 
+// CAT
+struct ts_cat *	ts_cat_alloc		();
+struct ts_cat *	ts_cat_push_packet	(struct ts_cat *cat, uint8_t *ts_packet);
+void            ts_cat_free			(struct ts_cat **cat);
+int				ts_cat_parse		(struct ts_cat *cat);
+void            ts_cat_dump			(struct ts_cat *cat);
+int				ts_cat_is_same		(struct ts_cat *cat1, struct ts_cat *cat2);
 
 // PMT
 struct ts_pmt *	ts_pmt_alloc		();

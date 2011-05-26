@@ -9,6 +9,7 @@ OBJS = log.o tsfuncs.o tsfuncs_crc.o tsfuncs_misc.o tsfuncs_time.o \
 	tsfuncs_sections.o tsfuncs_section_data.o \
 	tsfuncs_descriptors.o \
 	tsfuncs_pat.o tsfuncs_pat_desc.o \
+	tsfuncs_cat.o \
 	tsfuncs_pmt.o \
 	tsfuncs_nit.o tsfuncs_nit_desc.o \
 	tsfuncs_sdt.o tsfuncs_sdt_desc.o \

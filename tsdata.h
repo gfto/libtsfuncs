@@ -223,6 +223,19 @@ struct ts_pat {
 	uint8_t						initialized;	// Set to 1 when full table is initialized
 };
 
+struct ts_cat {
+	struct ts_header			ts_header;
+	struct ts_section_header	*section_header;
+
+	int							program_info_size;
+	uint8_t						*program_info;
+
+	uint32_t					CRC;
+
+	// The variables bellow are nor part of the physical packet
+	uint8_t						initialized;	// Set to 1 when full table is initialized
+};
+
 struct ts_pmt_stream {
 	uint8_t		stream_type;
 

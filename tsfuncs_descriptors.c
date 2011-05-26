@@ -32,8 +32,6 @@ void ts_descriptor_dump(uint8_t *desc_data, int desc_data_len) {
 	int data_len = desc_data_len;
 	while (data_len >= 2) {
 		int i;
-		uint32_t temp_u;
-
 		uint8_t tag         = data[0];
 		uint8_t this_length = data[1];
 
@@ -175,12 +173,15 @@ void ts_descriptor_dump(uint8_t *desc_data, int desc_data_len) {
 				);
 				break;
 			}
-			case  9: { // I see this in data, so might as well "explain" it
-				ts_LOGf("%sTag 0x%02x (%02d), sz: %d, CA descriptor:\n", pad, tag, tag, this_length);
-				temp_u = (data[0] << 8) | data[1];
-				ts_LOGf("%sCA  id %04x (%02d)\n",pad,temp_u,temp_u);
-				temp_u = ((data[2] & 0x1F) << 8) | data[3];
-				ts_LOGf("%sCA PID %04x (%d)\n",pad,temp_u,temp_u);
+			case  9: { // CA descriptor
+				uint16_t CA_ID = (data[0] << 8) | data[1];
+				uint16_t CA_PID = ((data[2] & 0x1F) << 8) | data[3];
+				ts_LOGf("%sTag 0x%02x (%02d), sz: %d, CA descriptor: CAID 0x%04x (%02d) | CA PID 0x%04x (%d)\n",
+					pad,
+					tag, tag,
+					this_length,
+					CA_ID, CA_ID,
+					CA_PID, CA_PID);
 				break;
 			}
 			case 10: { // We'll assume the length is a multiple of 4

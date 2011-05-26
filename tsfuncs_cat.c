@@ -209,3 +209,31 @@ char * ts_get_CA_sys_txt(enum CA_system CA_sys) {
 	}
 }
 
+static int find_CA_descriptor(uint8_t *data, int data_len, enum CA_system req_CA_type, uint16_t *CA_id, uint16_t *CA_pid) {
+	while (data_len >= 2) {
+		uint8_t tag         = data[0];
+		uint8_t this_length = data[1];
+		data     += 2;
+		data_len -= 2;
+		if (tag == 9 && this_length == 4) {
+			uint16_t CA_ID = (data[0] << 8) | data[1];
+			uint16_t CA_PID = ((data[2] & 0x1F) << 8) | data[3];
+			if (ts_get_CA_sys(CA_ID) == req_CA_type) {
+				*CA_id = CA_ID;
+				*CA_pid = CA_PID;
+				return 1;
+			}
+		}
+		data_len -= this_length;
+		data += this_length;
+	}
+	return 0;
+}
+
+int ts_get_emm_info(struct ts_cat *cat, enum CA_system req_CA_type, uint16_t *CA_id, uint16_t *CA_pid) {
+	return find_CA_descriptor(cat->program_info, cat->program_info_size, req_CA_type, CA_id, CA_pid);
+}
+
+int ts_get_ecm_info(struct ts_pmt *pmt, enum CA_system req_CA_type, uint16_t *CA_id, uint16_t *CA_pid) {
+	return find_CA_descriptor(pmt->program_info, pmt->program_info_size, req_CA_type, CA_id, CA_pid);
+}

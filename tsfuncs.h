@@ -117,6 +117,9 @@ int				ts_cat_is_same		(struct ts_cat *cat1, struct ts_cat *cat2);
 enum CA_system	ts_get_CA_sys		(uint16_t CA_id);
 char *			ts_get_CA_sys_txt	(enum CA_system CA_sys);
 
+int				ts_get_emm_info		(struct ts_cat *cat, enum CA_system CA_sys, uint16_t *CA_id, uint16_t *CA_pid);
+int				ts_get_ecm_info		(struct ts_pmt *pmt, enum CA_system CA_sys, uint16_t *CA_id, uint16_t *CA_pid);
+
 // PMT
 struct ts_pmt *	ts_pmt_alloc		();
 struct ts_pmt * ts_pmt_alloc_init	(uint16_t org_network_id, uint16_t transport_stream_id);

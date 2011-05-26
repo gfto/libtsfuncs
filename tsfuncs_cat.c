@@ -83,16 +83,8 @@ int ts_cat_parse(struct ts_cat *cat) {
 	memcpy(cat->program_info, stream_data, cat->program_info_size);
 	stream_data += cat->program_info_size;
 
-	cat->CRC = (cat->CRC << 8) | stream_data[3];
-	cat->CRC = (cat->CRC << 8) | stream_data[2];
-	cat->CRC = (cat->CRC << 8) | stream_data[1];
-	cat->CRC = (cat->CRC << 8) | stream_data[0];
-
-	u_int32_t check_crc = ts_crc32_section(cat->section_header);
-	if (check_crc != 0) {
-		ts_LOGf("!!! Wrong cat CRC! It should be 0 but it is %08x (CRC in data is 0x%08x)\n", check_crc, cat->CRC);
+	if (!ts_crc32_section_check(cat->section_header, "CAT"))
 		return 0;
-	}
 
 	cat->initialized = 1;
 	return 1;
@@ -106,7 +98,7 @@ void ts_cat_generate(struct ts_cat *cat, uint8_t **ts_packets, int *num_packets)
 	memcpy(secdata + curpos, cat->program_info, cat->program_info_size);
 	curpos += cat->program_info_size;
 
-    cat->CRC = ts_section_data_calculate_crc(secdata, curpos);
+	cat->section_header->CRC = ts_section_data_calculate_crc(secdata, curpos);
     curpos += 4; // CRC
 
     ts_section_data_gen_ts_packets(&cat->ts_header, secdata, curpos, cat->section_header->pointer_field, ts_packets, num_packets);
@@ -172,13 +164,12 @@ void ts_cat_dump(struct ts_cat *cat) {
 		ts_LOGf("  * Descriptor dump:\n");
 		ts_descriptor_dump(cat->program_info, cat->program_info_size);
 	}
-	ts_LOGf("  * CRC 0x%04x\n", cat->CRC);
 
 	ts_cat_check_generator(cat);
 }
 
 int ts_cat_is_same(struct ts_cat *cat1, struct ts_cat *cat2) {
-	if (cat1->CRC == cat2->CRC) // Same
+	if (cat1->section_header->CRC == cat2->section_header->CRC) // Same
 		return 1;
 
 	// If some version is not current, just claim the structures are the same

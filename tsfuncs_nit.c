@@ -137,16 +137,8 @@ int ts_nit_parse(struct ts_nit *nit) {
 		stream_len  -= 6 + sinfo->descriptor_size;
 	}
 
-	nit->CRC = (nit->CRC << 8) | stream_data[3];
-	nit->CRC = (nit->CRC << 8) | stream_data[2];
-	nit->CRC = (nit->CRC << 8) | stream_data[1];
-	nit->CRC = (nit->CRC << 8) | stream_data[0];
-
-	u_int32_t check_crc = ts_crc32_section(nit->section_header);
-	if (check_crc != 0) {
-		ts_LOGf("!!! Wrong NIT CRC! It should be 0 but it is %08x (CRC in data is 0x%08x)\n", check_crc, nit->CRC);
+	if (!ts_crc32_section_check(nit->section_header, "NIT"))
 		return 0;
-	}
 
 	nit->initialized = 1;
 	return 1;
@@ -195,7 +187,7 @@ void ts_nit_generate(struct ts_nit *nit, uint8_t **ts_packets, int *num_packets)
 			curpos += stream->descriptor_size;
 		}
 	}
-	nit->CRC = ts_section_data_calculate_crc(secdata, curpos);
+	nit->section_header->CRC = ts_section_data_calculate_crc(secdata, curpos);
 	curpos += 4; // CRC
 
 	ts_section_data_gen_ts_packets(&nit->ts_header, secdata, curpos, nit->section_header->pointer_field, ts_packets, num_packets);
@@ -261,7 +253,6 @@ void ts_nit_dump(struct ts_nit *nit) {
 			ts_descriptor_dump(stream->descriptor_data, stream->descriptor_size);
 		}
 	}
-	ts_LOGf("  * CRC 0x%04x\n", nit->CRC);
 
 	ts_nit_check_generator(nit);
 }

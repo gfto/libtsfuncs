@@ -102,16 +102,9 @@ int ts_pat_parse(struct ts_pat *pat) {
 		section_data += 4;
 		section_len  -= 4;
 	}
-	pat->CRC = (pat->CRC << 8) | section_data[3];
-	pat->CRC = (pat->CRC << 8) | section_data[2];
-	pat->CRC = (pat->CRC << 8) | section_data[1];
-	pat->CRC = (pat->CRC << 8) | section_data[0];
 
-	u_int32_t check_crc = ts_crc32_section(pat->section_header);
-	if (check_crc != 0) {
-		ts_LOGf("!!! Wrong PAT CRC! It should be 0 but it is %08x (CRC in data is 0x%08x)\n", check_crc, pat->CRC);
+	if (!ts_crc32_section_check(pat->section_header, "PAT"))
 		return 0;
-	}
 
 	pat->initialized = 1;
 	return 1;
@@ -133,7 +126,7 @@ void ts_pat_generate(struct ts_pat *pat, uint8_t **ts_packets, int *num_packets)
 		secdata[curpos + 3]  = prg->pid &~ 0xff00;
 		curpos += 4; // Compensate for the above
 	}
-	pat->CRC = ts_section_data_calculate_crc(secdata, curpos);
+	pat->section_header->CRC = ts_section_data_calculate_crc(secdata, curpos);
 	curpos += 4; // CRC
 
 	ts_section_data_gen_ts_packets(&pat->ts_header, secdata, curpos, pat->section_header->pointer_field, ts_packets, num_packets);
@@ -208,7 +201,6 @@ void ts_pat_dump(struct ts_pat *pat) {
 			ts_LOGf("      - NIT PID %04x (%d)\n", prg->pid, prg->pid);
 		}
 	}
-	ts_LOGf("  * CRC 0x%08x\n", pat->CRC);
 
 	ts_pat_check_generator(pat);
 }
@@ -216,7 +208,7 @@ void ts_pat_dump(struct ts_pat *pat) {
 int ts_pat_is_same(struct ts_pat *pat1, struct ts_pat *pat2) {
 	int i;
 
-	if (pat1->CRC == pat2->CRC) // Same
+	if (pat1->section_header->CRC == pat2->section_header->CRC) // Same
 		return 1;
 
 	// If some version is not current, just claim the structures are the same

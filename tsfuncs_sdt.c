@@ -122,16 +122,9 @@ int ts_sdt_parse(struct ts_sdt *sdt) {
 		section_data += 5 + sinfo->descriptor_size;
 		section_len  -= 5 + sinfo->descriptor_size;
 	}
-	sdt->CRC = (sdt->CRC << 8) | section_data[3];
-	sdt->CRC = (sdt->CRC << 8) | section_data[2];
-	sdt->CRC = (sdt->CRC << 8) | section_data[1];
-	sdt->CRC = (sdt->CRC << 8) | section_data[0];
 
-	u_int32_t check_crc = ts_crc32_section(sdt->section_header);
-	if (check_crc != 0) {
-		ts_LOGf("!!! Wrong SDT CRC! It should be 0 but it is %08x (CRC in data is 0x%08x)\n", check_crc, sdt->CRC);
+	if (!ts_crc32_section_check(sdt->section_header, "SDT"))
 		return 0;
-	}
 
 	sdt->initialized = 1;
 	return 1;
@@ -169,7 +162,7 @@ void ts_sdt_generate(struct ts_sdt *sdt, uint8_t **ts_packets, int *num_packets)
 			curpos += stream->descriptor_size;
 		}
 	}
-    sdt->CRC = ts_section_data_calculate_crc(secdata, curpos);
+    sdt->section_header->CRC = ts_section_data_calculate_crc(secdata, curpos);
     curpos += 4; // CRC
 
     ts_section_data_gen_ts_packets(&sdt->ts_header, secdata, curpos, sdt->section_header->pointer_field, ts_packets, num_packets);
@@ -229,7 +222,6 @@ void ts_sdt_dump(struct ts_sdt *sdt) {
 			ts_descriptor_dump(stream->descriptor_data, stream->descriptor_size);
 		}
 	}
-	ts_LOGf("  * CRC 0x%04x\n", sdt->CRC);
 
 	ts_sdt_check_generator(sdt);
 }

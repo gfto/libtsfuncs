@@ -131,16 +131,9 @@ int ts_pmt_parse(struct ts_pmt *pmt) {
 		stream_data += 5 + sinfo->ES_info_size;
 		stream_len  -= 5 + sinfo->ES_info_size;
 	}
-	pmt->CRC = (pmt->CRC << 8) | stream_data[3];
-	pmt->CRC = (pmt->CRC << 8) | stream_data[2];
-	pmt->CRC = (pmt->CRC << 8) | stream_data[1];
-	pmt->CRC = (pmt->CRC << 8) | stream_data[0];
 
-	u_int32_t check_crc = ts_crc32_section(pmt->section_header);
-	if (check_crc != 0) {
-		ts_LOGf("!!! Wrong PMT CRC! It should be 0 but it is %08x (CRC in data is 0x%08x)\n", check_crc, pmt->CRC);
+	if (!ts_crc32_section_check(pmt->section_header, "PMT"))
 		return 0;
-	}
 
 	pmt->initialized = 1;
 	return 1;
@@ -184,7 +177,7 @@ void ts_pmt_generate(struct ts_pmt *pmt, uint8_t **ts_packets, int *num_packets)
 			curpos += stream->ES_info_size;
 		}
 	}
-    pmt->CRC = ts_section_data_calculate_crc(secdata, curpos);
+    pmt->section_header->CRC = ts_section_data_calculate_crc(secdata, curpos);
     curpos += 4; // CRC
 
     ts_section_data_gen_ts_packets(&pmt->ts_header, secdata, curpos, pmt->section_header->pointer_field, ts_packets, num_packets);
@@ -272,7 +265,6 @@ void ts_pmt_dump(struct ts_pmt *pmt) {
 			ts_descriptor_dump(stream->ES_info, stream->ES_info_size);
 		}
 	}
-	ts_LOGf("  * CRC 0x%04x\n", pmt->CRC);
 
 	ts_pmt_check_generator(pmt);
 }
@@ -303,7 +295,7 @@ int parse_pmt(uint8_t *ts_packet, uint16_t pmt_pid, uint16_t *pcr_pid, uint16_t 
 int ts_pmt_is_same(struct ts_pmt *pmt1, struct ts_pmt *pmt2) {
 	int i;
 
-	if (pmt1->CRC == pmt2->CRC) // Same
+	if (pmt1->section_header->CRC == pmt2->section_header->CRC) // Same
 		return 1;
 
 	// If some version is not current, just claim the structures are the same

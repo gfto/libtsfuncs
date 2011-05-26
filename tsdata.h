@@ -77,7 +77,6 @@ struct ts_pat {
 	struct ts_section_header	*section_header;
 
 	struct ts_pat_program		**programs;
-	uint32_t					CRC;
 
 	// The variables bellow are nor part of the physical packet
 	int							programs_max;	// How much programs are allocated
@@ -98,8 +97,6 @@ struct ts_cat {
 
 	int							program_info_size;
 	uint8_t						*program_info;
-
-	uint32_t					CRC;
 
 	// The variables bellow are nor part of the physical packet
 	uint8_t						initialized;	// Set to 1 when full table is initialized
@@ -130,8 +127,6 @@ struct ts_pmt {
 
 	struct ts_pmt_stream		**streams;
 
-	uint32_t					CRC;
-
 	// The variables bellow are nor part of the physical packet
 	int							streams_max;	// How much streams are allocated
 	int							streams_num;	// How much streams are initialized
@@ -161,8 +156,6 @@ struct ts_sdt {
 	uint8_t						reserved;
 
 	struct ts_sdt_stream		**streams;
-
-	uint32_t					CRC;
 
 	// The variables bellow are nor part of the physical packet
 	int							streams_max;	// How much streams are allocated
@@ -196,8 +189,6 @@ struct ts_nit {
 
 	struct ts_nit_stream		**streams;
 
-	uint32_t					CRC;
-
 	// The variables bellow are nor part of the physical packet
 	int							streams_max;	// How much streams are allocated
 	int							streams_num;	// How much streams are initialized
@@ -228,8 +219,6 @@ struct ts_eit {
 	uint8_t						last_table_id;
 
 	struct ts_eit_stream		**streams;
-
-	uint32_t					CRC;
 
 	// The variables bellow are nor part of the physical packet
 	int							streams_max;	// How much streams are allocated

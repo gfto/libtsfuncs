@@ -169,17 +169,7 @@ void ts_cat_dump(struct ts_cat *cat) {
 }
 
 int ts_cat_is_same(struct ts_cat *cat1, struct ts_cat *cat2) {
-	if (cat1->section_header->CRC == cat2->section_header->CRC) // Same
-		return 1;
-
-	// If some version is not current, just claim the structures are the same
-	if (!cat1->section_header->current_next_indicator || cat2->section_header->version_number)
-		return 1;
-
-	if (cat1->section_header->version_number != cat2->section_header->version_number) // Different
-		return 0;
-
-	return 1; // Same
+	return ts_section_is_same(cat1->section_header, cat2->section_header);
 }
 
 enum CA_system ts_get_CA_sys(uint16_t CA_id) {

@@ -206,28 +206,5 @@ void ts_pat_dump(struct ts_pat *pat) {
 }
 
 int ts_pat_is_same(struct ts_pat *pat1, struct ts_pat *pat2) {
-	int i;
-
-	if (pat1->section_header->CRC == pat2->section_header->CRC) // Same
-		return 1;
-
-	// If some version is not current, just claim the structures are the same
-	if (!pat1->section_header->current_next_indicator || pat2->section_header->version_number)
-		return 1;
-
-	if (pat1->section_header->version_number != pat2->section_header->version_number) // Different
-		return 0;
-
-	if (pat1->programs_num != pat2->programs_num) // Different
-		return 0;
-
-	// Check each program and PIDs
-	for (i=0;i<pat1->programs_num;i++) {
-		struct ts_pat_program *prg1 = pat1->programs[i];
-		struct ts_pat_program *prg2 = pat2->programs[i];
-		if (prg1->program != prg2->program || prg1->pid != prg2->pid) // Different
-			return 0;
-	}
-
-	return 1; // Same
+	return ts_section_is_same(pat1->section_header, pat2->section_header);
 }

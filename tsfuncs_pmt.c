@@ -293,31 +293,5 @@ int parse_pmt(uint8_t *ts_packet, uint16_t pmt_pid, uint16_t *pcr_pid, uint16_t 
 */
 
 int ts_pmt_is_same(struct ts_pmt *pmt1, struct ts_pmt *pmt2) {
-	int i;
-
-	if (pmt1->section_header->CRC == pmt2->section_header->CRC) // Same
-		return 1;
-
-	// If some version is not current, just claim the structures are the same
-	if (!pmt1->section_header->current_next_indicator || pmt2->section_header->version_number)
-		return 1;
-
-	if (pmt1->section_header->version_number != pmt2->section_header->version_number) // Different
-		return 0;
-
-	if (pmt1->PCR_pid != pmt2->PCR_pid) // Different
-		return 0;
-
-	if (pmt1->streams_num != pmt2->streams_num) // Different
-		return 0;
-
-	// Check each program and PIDs
-	for (i=0;i<pmt1->streams_num;i++) {
-		struct ts_pmt_stream *stream1 = pmt1->streams[i];
-		struct ts_pmt_stream *stream2 = pmt2->streams[i];
-		if (stream1->pid != stream2->pid) // Different
-			return 0;
-	}
-
-	return 1; // Same
+	return ts_section_is_same(pmt1->section_header, pmt2->section_header);
 }

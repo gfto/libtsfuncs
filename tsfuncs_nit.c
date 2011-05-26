@@ -218,15 +218,11 @@ void ts_nit_check_generator(struct ts_nit *nit) {
 }
 
 void ts_nit_dump(struct ts_nit *nit) {
+	struct ts_section_header *sec = nit->section_header;
 	int i;
-	ts_LOGf("NIT table\n");
-	ts_LOGf("  * TS Packets\n");
-	for(i=0;i<nit->section_header->num_packets;i++) {
-		struct ts_header tshdr;
-		ts_packet_header_parse(nit->section_header->packet_data + (i * TS_PACKET_SIZE), &tshdr);
-		ts_packet_header_dump(&tshdr);
-	}
-	ts_section_header_dump(nit->section_header);
+
+	ts_section_dump(sec);
+
 	ts_LOGf("  * NIT data\n");
 	ts_LOGf("    * PID         : 0x%04x (%d)\n", nit->ts_header.pid, nit->ts_header.pid);
 	ts_LOGf("    * reserved1   : 0x%02x\n", nit->reserved1);

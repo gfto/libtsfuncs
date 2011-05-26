@@ -230,14 +230,11 @@ void ts_pmt_check_generator(struct ts_pmt *pmt) {
 }
 
 void ts_pmt_dump(struct ts_pmt *pmt) {
+	struct ts_section_header *sec = pmt->section_header;
 	int i;
-	ts_LOGf("PMT packet\n");
-    for(i=0;i<pmt->section_header->num_packets;i++) {
-        struct ts_header tshdr;
-        ts_packet_header_parse(pmt->section_header->packet_data + (i * TS_PACKET_SIZE), &tshdr);
-        ts_packet_header_dump(&tshdr);
-    }
-    ts_section_header_dump(pmt->section_header);
+
+	ts_section_dump(sec);
+
 	ts_LOGf("  * PMT data\n");
 	ts_LOGf("    * PID         : %04x (%d)\n", pmt->ts_header.pid, pmt->ts_header.pid);
 	ts_LOGf("    * reserved1   : %d\n", pmt->reserved1);

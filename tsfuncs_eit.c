@@ -242,15 +242,11 @@ struct ts_eit *ts_eit_copy(struct ts_eit *eit) {
 }
 
 void ts_eit_dump(struct ts_eit *eit) {
+	struct ts_section_header *sect = eit->section_header;
 	int i;
-	ts_LOGf("EIT table\n");
-	ts_LOGf("  * TS Packets\n");
-	for(i=0;i<eit->section_header->num_packets;i++) {
-		struct ts_header tshdr;
-		ts_packet_header_parse(eit->section_header->packet_data + (i * TS_PACKET_SIZE), &tshdr);
-		ts_packet_header_dump(&tshdr);
-	}
-	ts_section_header_dump(eit->section_header);
+
+	ts_section_dump(sect);
+
 	ts_LOGf("  * EIT data\n");
 	ts_LOGf("    * PID             : 0x%04x (%d)\n", eit->ts_header.pid, eit->ts_header.pid);
 	ts_LOGf("    * ts_stream_id    : 0x%04x (%d)\n", eit->transport_stream_id, eit->transport_stream_id);

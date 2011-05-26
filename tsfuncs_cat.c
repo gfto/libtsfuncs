@@ -151,14 +151,9 @@ void ts_cat_check_generator(struct ts_cat *cat) {
 }
 
 void ts_cat_dump(struct ts_cat *cat) {
-	int i;
-	ts_LOGf("CAT table\n");
-    for(i=0;i<cat->section_header->num_packets;i++) {
-        struct ts_header tshdr;
-        ts_packet_header_parse(cat->section_header->packet_data + (i * TS_PACKET_SIZE), &tshdr);
-        ts_packet_header_dump(&tshdr);
-    }
-    ts_section_header_dump(cat->section_header);
+	struct ts_section_header *sec = cat->section_header;
+
+	ts_section_dump(sec);
 
 	if (cat->program_info_size > 0) {
 		ts_LOGf("  * Descriptor dump:\n");

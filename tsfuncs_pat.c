@@ -179,14 +179,11 @@ void ts_pat_check_generator(struct ts_pat *pat) {
 }
 
 void ts_pat_dump(struct ts_pat *pat) {
+	struct ts_section_header *sec = pat->section_header;
 	int i;
-	ts_LOGf("PAT packet\n");
-    for(i=0;i<pat->section_header->num_packets;i++) {
-        struct ts_header tshdr;
-        ts_packet_header_parse(pat->section_header->packet_data + (i * TS_PACKET_SIZE), &tshdr);
-        ts_packet_header_dump(&tshdr);
-    }
-    ts_section_header_dump(pat->section_header);
+
+	ts_section_dump(sec);
+
 	ts_LOGf("  * PAT data\n");
 	ts_LOGf("    * num_programs: %d\n", pat->programs_num);
 	for (i=0;i<pat->programs_num;i++) {

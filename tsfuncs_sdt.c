@@ -193,14 +193,11 @@ void ts_sdt_check_generator(struct ts_sdt *sdt) {
 }
 
 void ts_sdt_dump(struct ts_sdt *sdt) {
+	struct ts_section_header *sec = sdt->section_header;
 	int i;
-	ts_LOGf("SDT packet\n");
-    for(i=0;i<sdt->section_header->num_packets;i++) {
-        struct ts_header tshdr;
-        ts_packet_header_parse(sdt->section_header->packet_data + (i * TS_PACKET_SIZE), &tshdr);
-        ts_packet_header_dump(&tshdr);
-    }
-    ts_section_header_dump(sdt->section_header);
+
+	ts_section_dump(sec);
+
 	ts_LOGf("  * SDT data\n");
 	ts_LOGf("    * PID         : %04x (%d)\n", sdt->ts_header.pid, sdt->ts_header.pid);
 	ts_LOGf("    * org_net_id  : %04x (%d)\n", sdt->original_network_id, sdt->original_network_id);

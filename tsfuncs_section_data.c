@@ -115,4 +115,11 @@ void ts_section_add_packet(struct ts_section_header *sec, struct ts_header *ts_h
 	sec->section_pos += to_copy;
 	sec->num_packets++;
 	sec->initialized = (sec->section_pos+1) >= (sec->section_length + 4); // +4 to include the CRC
+	if (sec->initialized) {
+		// CRC is after sec->data[sec->data_len]
+		sec->CRC = (sec->CRC << 8) | sec->data[sec->data_len + 3];
+		sec->CRC = (sec->CRC << 8) | sec->data[sec->data_len + 2];
+		sec->CRC = (sec->CRC << 8) | sec->data[sec->data_len + 1];
+		sec->CRC = (sec->CRC << 8) | sec->data[sec->data_len + 0];
+	}
 }

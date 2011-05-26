@@ -62,6 +62,8 @@ struct ts_section_header {
 
 	int			data_len;						// Data size without the CRC32 (4 bytes)
 	uint8_t		*data;							// Offset into section_data (where the section data start without the section header)
+
+	uint32_t	CRC;
 };
 
 struct ts_pat_program {

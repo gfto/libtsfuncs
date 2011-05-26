@@ -124,6 +124,7 @@ void ts_section_header_dump(struct ts_section_header *t) {
 				t->current_next_indicator,
 				t->section_number,
 				t->last_section_number);
+		ts_LOGf("    - CRC 0x%08x\n", t->CRC);
 	}
 	ts_LOGf("    - Private vars       : num_packets:%d section_pos:%d\n",
 			t->num_packets,

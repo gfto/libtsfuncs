@@ -63,15 +63,17 @@ void ts_section_header_generate(uint8_t *ts_packet, struct ts_section_header *ts
 	ts_packet[start + 1] |= ts_section_header->section_length           >> 8;		// 1111xxxx xxxxxxxx
 	ts_packet[start + 2]  = ts_section_header->section_length           &~ 0xff00;	// 1111xxxx xxxxxxxx
 
-	ts_packet[start + 3]  = ts_section_header->ts_id_number             >> 8;		// xxxxxxxx xxxxxxxx
-	ts_packet[start + 4]  = ts_section_header->ts_id_number             &~ 0xff00;
+	if (ts_section_header->section_syntax_indicator) { // Extended table syntax
+		ts_packet[start + 3]  = ts_section_header->ts_id_number             >> 8;		// xxxxxxxx xxxxxxxx
+		ts_packet[start + 4]  = ts_section_header->ts_id_number             &~ 0xff00;
 
-	ts_packet[start + 5]  = ts_section_header->reserved2                 << 6;		// xx111111
-	ts_packet[start + 5] |= ts_section_header->version_number            << 1;		// 11xxxxx1
-	ts_packet[start + 5] |= ts_section_header->current_next_indicator;				// 1111111x
+		ts_packet[start + 5]  = ts_section_header->reserved2                 << 6;		// xx111111
+		ts_packet[start + 5] |= ts_section_header->version_number            << 1;		// 11xxxxx1
+		ts_packet[start + 5] |= ts_section_header->current_next_indicator;				// 1111111x
 
-	ts_packet[start + 6] = ts_section_header->section_number;
-	ts_packet[start + 7] = ts_section_header->last_section_number;
+		ts_packet[start + 6] = ts_section_header->section_number;
+		ts_packet[start + 7] = ts_section_header->last_section_number;
+	}
 }
 
 int ts_section_is_same(struct ts_section_header *s1, struct ts_section_header *s2) {

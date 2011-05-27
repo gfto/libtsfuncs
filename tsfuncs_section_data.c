@@ -98,6 +98,9 @@ void ts_section_data_gen_ts_packets(struct ts_header *ts_header, uint8_t *sectio
 
 void ts_section_add_packet(struct ts_section_header *sec, struct ts_header *ts_header, uint8_t *ts_packet) {
 	uint8_t payload_offset = ts_header->payload_offset;
+	if (!sec->section_length)
+		return;
+
 	if (ts_header->pusi) {
 		payload_offset += sec->pointer_field + 1; // Pointer field
 	}

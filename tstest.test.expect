@@ -2,11 +2,10 @@ PAT table
 *** tei:0 pusi:1 prio:0 pid:0000 (0) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
   * Section header
     - Table id           : 000 (0) program_association_section
-    - Section length     : 009 (9)
+    - Section length     : 009 (9) [num_packets:1]
     - TS ID / Program No : 7878 (30840)
     - Version number 1, current next 1, section number 0, last section number 0
-    - CRC 0xc26ec958
-    - Private vars       : num_packets:1 section_pos:0
+    - CRC                : 0xc26ec958
   * PAT data
     * num_programs: 0
    **** PAT (tspacket->struct) generator is correct ****
@@ -15,11 +14,10 @@ PAT table
 *** tei:0 pusi:1 prio:0 pid:0000 (0) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
   * Section header
     - Table id           : 000 (0) program_association_section
-    - Section length     : 015 (21)
+    - Section length     : 015 (21) [num_packets:1]
     - TS ID / Program No : 7878 (30840)
     - Version number 4, current next 1, section number 0, last section number 0
-    - CRC 0x89627b9e
-    - Private vars       : num_packets:1 section_pos:0
+    - CRC                : 0x89627b9e
   * PAT data
     * num_programs: 3
       * [01/03]: Program No 0x0001 (    1) -> PID 0100 (256) /res: 0x07/
@@ -32,11 +30,10 @@ PAT table
 *** tei:0 pusi:1 prio:0 pid:0000 (0) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
   * Section header
     - Table id           : 000 (0) program_association_section
-    - Section length     : 011 (17)
+    - Section length     : 011 (17) [num_packets:1]
     - TS ID / Program No : 7878 (30840)
     - Version number 5, current next 1, section number 0, last section number 0
-    - CRC 0x78dedb30
-    - Private vars       : num_packets:1 section_pos:0
+    - CRC                : 0x78dedb30
   * PAT data
     * num_programs: 2
       * [01/02]: Program No 0x0001 (    1) -> PID 0100 (256) /res: 0x07/
@@ -48,11 +45,10 @@ PAT table
 *** tei:0 pusi:1 prio:0 pid:0000 (0) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
   * Section header
     - Table id           : 000 (0) program_association_section
-    - Section length     : 00d (13)
+    - Section length     : 00d (13) [num_packets:1]
     - TS ID / Program No : 7878 (30840)
     - Version number 6, current next 1, section number 0, last section number 0
-    - CRC 0xa6a08812
-    - Private vars       : num_packets:1 section_pos:0
+    - CRC                : 0xa6a08812
   * PAT data
     * num_programs: 1
       * [01/01]: Program No 0x0001 (    1) -> PID 0100 (256) /res: 0x07/
@@ -62,11 +58,10 @@ PAT table
 *** tei:0 pusi:1 prio:0 pid:0000 (0) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
   * Section header
     - Table id           : 000 (0) program_association_section
-    - Section length     : 035 (53)
+    - Section length     : 035 (53) [num_packets:1]
     - TS ID / Program No : 7878 (30840)
     - Version number 16, current next 1, section number 0, last section number 0
-    - CRC 0x83076570
-    - Private vars       : num_packets:1 section_pos:0
+    - CRC                : 0x83076570
   * PAT data
     * num_programs: 11
       * [01/11]: Program No 0x0001 (    1) -> PID 0100 (256) /res: 0x07/
@@ -86,9 +81,8 @@ TDT table
 *** tei:0 pusi:1 prio:0 pid:0014 (20) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
   * Section header
     - Table id           : 070 (112) time_date_section
-    - Section length     : 005 (5)
+    - Section length     : 005 (5) [num_packets:1]
     - Private section syntax
-    - Private vars       : num_packets:1 section_pos:0
   * TDT data
     - MJD                : 0xd65b   (2009-02-13) unixts: 1234567890 check:0xd65b
     - BCD                : 0x233130 (23:31:30) check:0x233130
@@ -99,9 +93,8 @@ TDT table
 *** tei:0 pusi:1 prio:0 pid:0014 (20) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
   * Section header
     - Table id           : 070 (112) time_date_section
-    - Section length     : 005 (5)
+    - Section length     : 005 (5) [num_packets:1]
     - Private section syntax
-    - Private vars       : num_packets:1 section_pos:0
   * TDT data
     - MJD                : 0xcbc1   (2001-09-09) unixts: 1000000000 check:0xcbc1
     - BCD                : 0x014640 (01:46:40) check:0x014640
@@ -112,9 +105,9 @@ TOT table
 *** tei:0 pusi:1 prio:0 pid:0014 (20) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
   * Section header
     - Table id           : 073 (115) time_offset_section
-    - Section length     : 00b (11)
+    - Section length     : 00b (11) [num_packets:1]
     - Private section syntax
-    - Private vars       : num_packets:1 section_pos:0
+    - CRC                : 0x0e810add
   * TOT data
     - MJD                : 0xd65b   (2009-02-13) unixts: 1234567890 check:0xd65b
     - BCD                : 0x233130 (23:31:30) check:0x233130
@@ -125,9 +118,9 @@ TOT table
 *** tei:0 pusi:1 prio:0 pid:0014 (20) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
   * Section header
     - Table id           : 073 (115) time_offset_section
-    - Section length     : 01a (26)
+    - Section length     : 01a (26) [num_packets:1]
     - Private section syntax
-    - Private vars       : num_packets:1 section_pos:0
+    - CRC                : 0x0082c463
   * TOT data
     - MJD                : 0xd65b   (2009-02-13) unixts: 1234567890 check:0xd65b
     - BCD                : 0x233130 (23:31:30) check:0x233130
@@ -146,9 +139,9 @@ TOT table
 *** tei:0 pusi:1 prio:0 pid:0014 (20) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
   * Section header
     - Table id           : 073 (115) time_offset_section
-    - Section length     : 01a (26)
+    - Section length     : 01a (26) [num_packets:1]
     - Private section syntax
-    - Private vars       : num_packets:1 section_pos:0
+    - CRC                : 0x9bf3527e
   * TOT data
     - MJD                : 0xcbc1   (2001-09-09) unixts: 1000000000 check:0xcbc1
     - BCD                : 0x014640 (01:46:40) check:0x014640
@@ -167,11 +160,10 @@ SDT table
 *** tei:0 pusi:1 prio:0 pid:0011 (17) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
   * Section header
     - Table id           : 042 (66) service_description_section - actual_transport_stream
-    - Section length     : 022 (34)
+    - Section length     : 022 (34) [num_packets:1]
     - TS ID / Program No : 0002 (2)
     - Version number 1, current next 1, section number 0, last section number 0
-    - CRC 0xb29c01b7
-    - Private vars       : num_packets:1 section_pos:0
+    - CRC                : 0xb29c01b7
   * SDT data
     * PID         : 0011 (17)
     * org_net_id  : 0001 (1)
@@ -228,11 +220,10 @@ SDT table
 *** tei:0 pusi:0 prio:0 pid:0011 (17) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
   * Section header
     - Table id           : 042 (66) service_description_section - actual_transport_stream
-    - Section length     : fed (4077)
+    - Section length     : fed (4077) [num_packets:23]
     - TS ID / Program No : 0002 (2)
     - Version number 1, current next 1, section number 0, last section number 0
-    - CRC 0x6a25fac9
-    - Private vars       : num_packets:23 section_pos:0
+    - CRC                : 0x6a25fac9
   * SDT data
     * PID         : 0011 (17)
     * org_net_id  : 0001 (1)
@@ -535,11 +526,10 @@ CAT table
 *** tei:0 pusi:0 prio:0 pid:0012 (18) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
   * Section header
     - Table id           : 001 (1) conditional_access_section
-    - Section length     : 0b8 (184)
+    - Section length     : 0b8 (184) [num_packets:2]
     - TS ID / Program No : 0001 (1)
     - Version number 1, current next 1, section number 0, last section number 0
-    - CRC 0x0516db3c
-    - Private vars       : num_packets:2 section_pos:0
+    - CRC                : 0x0516db3c
   * EIT data
     * PID             : 0x0012 (18)
     * ts_stream_id    : 0x0002 (2)
@@ -563,11 +553,10 @@ CAT table
 *** tei:0 pusi:0 prio:0 pid:0012 (18) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
   * Section header
     - Table id           : 001 (1) conditional_access_section
-    - Section length     : 0b6 (182)
+    - Section length     : 0b6 (182) [num_packets:2]
     - TS ID / Program No : 0001 (1)
     - Version number 1, current next 1, section number 0, last section number 0
-    - CRC 0xd025e111
-    - Private vars       : num_packets:2 section_pos:0
+    - CRC                : 0xd025e111
   * EIT data
     * PID             : 0x0012 (18)
     * ts_stream_id    : 0x0002 (2)
@@ -612,11 +601,10 @@ CAT table
 *** tei:0 pusi:0 prio:0 pid:0012 (18) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
   * Section header
     - Table id           : 001 (1) conditional_access_section
-    - Section length     : ffd (4093)
+    - Section length     : ffd (4093) [num_packets:23]
     - TS ID / Program No : 0001 (1)
     - Version number 1, current next 1, section number 0, last section number 0
-    - CRC 0x24acd242
-    - Private vars       : num_packets:23 section_pos:0
+    - CRC                : 0x24acd242
   * EIT data
     * PID             : 0x0012 (18)
     * ts_stream_id    : 0x0002 (2)
@@ -796,11 +784,10 @@ CAT table
 *** tei:0 pusi:0 prio:0 pid:0012 (18) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
   * Section header
     - Table id           : 001 (1) conditional_access_section
-    - Section length     : fd3 (4051)
+    - Section length     : fd3 (4051) [num_packets:23]
     - TS ID / Program No : 0001 (1)
     - Version number 1, current next 1, section number 0, last section number 0
-    - CRC 0x50b27439
-    - Private vars       : num_packets:23 section_pos:0
+    - CRC                : 0x50b27439
   * EIT data
     * PID             : 0x0012 (18)
     * ts_stream_id    : 0x0002 (2)

@@ -130,7 +130,8 @@ void ts_section_header_dump(struct ts_section_header *t) {
 		IN(t->table_id, 0x80, 0xfe) ? "user defined" :
 		t->table_id == 0xff         ? "reserved" : "Impossible!"
 	);
-	ts_LOGf("    - Section length     : %03x (%d)\n", t->section_length, t->section_length);
+	ts_LOGf("    - Section length     : %03x (%d) [num_packets:%d]\n",
+		t->section_length, t->section_length, t->num_packets);
 	if (!t->section_syntax_indicator) {
 		ts_LOGf("    - Private section syntax\n");
 	} else {
@@ -140,11 +141,9 @@ void ts_section_header_dump(struct ts_section_header *t) {
 				t->current_next_indicator,
 				t->section_number,
 				t->last_section_number);
-		ts_LOGf("    - CRC 0x%08x\n", t->CRC);
 	}
-	ts_LOGf("    - Private vars       : num_packets:%d section_pos:%d\n",
-			t->num_packets,
-			t->section_pos);
+	if (t->CRC)
+		ts_LOGf("    - CRC                : 0x%08x\n", t->CRC);
 }
 
 void ts_section_dump(struct ts_section_header *sec) {

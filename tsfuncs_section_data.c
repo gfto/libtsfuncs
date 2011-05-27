@@ -107,7 +107,7 @@ void ts_section_add_packet(struct ts_section_header *sec, struct ts_header *ts_h
 		return;
 
 	if (sec->section_pos + to_copy >= 4092) {
-		to_copy = (sec->section_length + 4) - sec->section_pos;
+		to_copy = (sec->section_length + 3) - sec->section_pos;
 	}
 
 	memcpy(sec->section_data + sec->section_pos, ts_packet + payload_offset, to_copy);

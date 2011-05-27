@@ -15,13 +15,13 @@ int bcd2dec(int bcd) {
 	return ((bcd>>4) * 10) + bcd % 16;
 }
 
-char *ts_hex_dump(uint8_t *d, int size) {
+char *ts_hex_dump(uint8_t *d, int size, int col) {
 	int i;
 	char *buf = calloc(1, size * 6);
 	if (!buf)
 		return NULL;
 	for (i=0;i<size;i++) {
-		if (size > 188 && (i % 16 == 15))
+		if (col && (i % col == col - 1))
 			sprintf(buf+(i*3), "%02x\n", d[i]);
 		else
 			sprintf(buf+(i*3), "%02x ", d[i]);
@@ -30,7 +30,7 @@ char *ts_hex_dump(uint8_t *d, int size) {
 }
 
 void ts_print_bytes(char *prefix, uint8_t *d, int size) {
-	char *buf = ts_hex_dump(d, size);
+	char *buf = ts_hex_dump(d, size, 0);
 	ts_LOGf("%s -> %s\n", prefix, buf);
 	free(buf);
 }

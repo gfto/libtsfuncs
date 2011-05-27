@@ -48,7 +48,7 @@ void ts_descriptor_dump(uint8_t *desc_data, int desc_data_len) {
 
 		switch (tag) {
 			case  2: { // Video stream descriptor
-				char *dump = ts_hex_dump(data, this_length);
+				char *dump = ts_hex_dump(data, this_length, 0);
 				ts_LOGf("%sTag 0x%02x (%02d), sz: %d, Video stream descriptor: %s\n", pad, tag, tag, this_length, dump);
 				free(dump);
 				struct {
@@ -120,7 +120,7 @@ void ts_descriptor_dump(uint8_t *desc_data, int desc_data_len) {
 				break;
 			}
 			case  3: { // Audio stream descriptor
-				char *dump = ts_hex_dump(data, this_length);
+				char *dump = ts_hex_dump(data, this_length, 0);
 				ts_LOGf("%sTag 0x%02x (%02d), sz: %d, Audio stream descriptor: %s\n", pad, tag, tag, this_length, dump);
 				free(dump);
 				struct {
@@ -475,7 +475,7 @@ void ts_descriptor_dump(uint8_t *desc_data, int desc_data_len) {
 			}
 */
 			default: {
-				char *dump = ts_hex_dump(data, this_length);
+				char *dump = ts_hex_dump(data, this_length, 0);
 				ts_LOGf("%s*** Unknown Tag 0x%02x (%02d), sz: %d, data: %s\n", pad, tag, tag, this_length, dump);
 				free(dump);
 				break;

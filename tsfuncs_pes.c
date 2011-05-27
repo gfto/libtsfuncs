@@ -540,12 +540,12 @@ void ts_pes_dump(struct ts_pes *pes) {
 		pes->es_data_size
 	);
 
-	char *phex = ts_hex_dump(pes->pes_data, min(32, pes->pes_data_pos));
+	char *phex = ts_hex_dump(pes->pes_data, min(32, pes->pes_data_pos), 0);
 	ts_LOGf("  - PES dump   : %s...\n", phex);
 	free(phex);
 
 	if (pes->es_data) {
-		char *hex = ts_hex_dump(pes->es_data, min(32, pes->es_data_size));
+		char *hex = ts_hex_dump(pes->es_data, min(32, pes->es_data_size), 0);
 		ts_LOGf("  - ES dump    : %s...\n", hex);
 		free(hex);
 	}

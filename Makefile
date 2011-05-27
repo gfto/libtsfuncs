@@ -16,7 +16,8 @@ OBJS = log.o tsfuncs.o tsfuncs_crc.o tsfuncs_misc.o tsfuncs_time.o \
 	tsfuncs_eit.o tsfuncs_eit_desc.o \
 	tsfuncs_tdt.o tsfuncs_tdt_desc.o \
 	tsfuncs_pes.o tsfuncs_pes_data.o \
-	tsfuncs_pes_es.o
+	tsfuncs_pes_es.o \
+	tsfuncs_privsec.o
 PROG = libts.a
 
 tstest_OBJS = tstest.o libts.a

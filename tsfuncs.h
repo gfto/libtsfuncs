@@ -197,6 +197,13 @@ void			ts_tdt_set_time		(struct ts_tdt *tdt, time_t ts);
 void			ts_tot_set_localtime_offset			(struct ts_tdt *tdt, time_t now, time_t change_time, uint8_t polarity, uint16_t ofs, uint16_t ofs_next);
 void			ts_tot_set_localtime_offset_sofia	(struct ts_tdt *tdt, time_t now);
 
+// Private section
+struct ts_privsec *	ts_privsec_alloc();
+void				ts_privsec_free			(struct ts_privsec **pprivsec);
+
+struct ts_privsec *	ts_privsec_push_packet	(struct ts_privsec *privsec, uint8_t *ts_packet);
+void				ts_privsec_dump			(struct ts_privsec *privsec);
+
 // Time
 uint32_t		ts_time_encode_bcd	(int duration_sec);
 void			ts_time_decode_bcd	(int duration_bcd, int *duration_sec, int *hour, int *min, int *sec);

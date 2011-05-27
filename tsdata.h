@@ -245,6 +245,12 @@ struct ts_tdt {
 	uint8_t		initialized;
 };
 
+struct ts_privsec {
+	struct ts_header			ts_header;
+	struct ts_section_header	*section_header;
+	uint8_t						initialized;
+};
+
 // PMT stream types
 enum ts_stream_type {
 	STREAM_TYPE_MPEG1_VIDEO			= 0x01, // MPEG-1 video

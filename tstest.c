@@ -1,5 +1,7 @@
 #include "tsfuncs.h"
 
+#define NOW 1234567890
+
 void ts_pat_test() {
 	struct ts_pat *pat = ts_pat_alloc_init(0x7878);
 
@@ -47,13 +49,13 @@ int ts_sdt_test() {
 void ts_eit_test1(struct ts_eit *eit) { // Exactly one TS packet (188 bytes)
 //int ts_eit_add_short_event_descriptor(struct ts_eit *eit, uint16_t event_id, uint8_t running, time_t start_time, int duration_sec, char *event_name, char *event_short_descr) {
 
-	ts_eit_add_short_event_descriptor(eit, 4, 1, time(NULL), 3600,
+	ts_eit_add_short_event_descriptor(eit, 4, 1, NOW, 3600,
 		"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		"yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy****");
 }
 
 void ts_eit_test2(struct ts_eit *eit) { // One TS packet + 2 bytes (2 bytes of the CRC are in the next packet
-	ts_eit_add_short_event_descriptor(eit, 4, 1, time(NULL), 3600,
+	ts_eit_add_short_event_descriptor(eit, 4, 1, NOW, 3600,
 		"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 		"yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy**");
 }
@@ -62,22 +64,22 @@ void ts_eit_test3(struct ts_eit *eit) { // Test 4096 PSI packet
 	int i;
 	for (i=0;i<15;i++) {
 		// Maximum descriptor size, 255 bytes
-		if (ts_eit_add_short_event_descriptor(eit, 4, 1, time(NULL), 3600, "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx") != 1) {
+		if (ts_eit_add_short_event_descriptor(eit, 4, 1, NOW, 3600, "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx") != 1) {
 			break;
 		}
 	}
-	ts_eit_add_short_event_descriptor(eit, 4, 1, time(NULL), 3600, "00000000000000000000000", "1111111111111111111111111111111");
+	ts_eit_add_short_event_descriptor(eit, 4, 1, NOW, 3600, "00000000000000000000000", "1111111111111111111111111111111");
 }
 
 void ts_eit_test4(struct ts_eit *eit) { // Test almost full PSI packet on the TS packet boundary
 	int i;
 	for (i=0;i<15;i++) {
 		// Maximum descriptor size, 255 bytes
-		if (ts_eit_add_short_event_descriptor(eit, 4, 1, time(NULL), 3600, "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx") != 1) {
+		if (ts_eit_add_short_event_descriptor(eit, 4, 1, NOW, 3600, "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx") != 1) {
 			break;
 		}
 	}
-	ts_eit_add_short_event_descriptor(eit, 4, 1, time(NULL), 3600, "aaaaaaaaBBBB", NULL);
+	ts_eit_add_short_event_descriptor(eit, 4, 1, NOW, 3600, "aaaaaaaaBBBB", NULL);
 }
 
 void ts_eit_test() {

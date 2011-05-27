@@ -82,6 +82,87 @@ PAT table
       * [11/11]: Program No 0x0013 (   19) -> PID 008c (140) /res: 0x07/
    **** PAT (tspacket->struct) generator is correct ****
    **** PAT (struct->tspacket) generator is correct ****
+TDT table
+*** tei:0 pusi:1 prio:0 pid:0014 (20) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
+  * Section header
+    - Table id           : 070 (112) time_date_section
+    - Section length     : 005 (5)
+    - Private section syntax
+    - Private vars       : num_packets:1 section_pos:0
+  * TDT data
+    - MJD                : 0xd65b   (2009-02-13) unixts: 1234567890 check:0xd65b
+    - BCD                : 0x233130 (23:31:30) check:0x233130
+    - UTC Time           : 1234567890 (2009-02-13 23:31:30)
+   **** TDT (tspacket->struct) generator is correct ****
+   **** TDT (struct->tspacket) generator is correct ****
+TDT table
+*** tei:0 pusi:1 prio:0 pid:0014 (20) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
+  * Section header
+    - Table id           : 070 (112) time_date_section
+    - Section length     : 005 (5)
+    - Private section syntax
+    - Private vars       : num_packets:1 section_pos:0
+  * TDT data
+    - MJD                : 0xcbc1   (2001-09-09) unixts: 1000000000 check:0xcbc1
+    - BCD                : 0x014640 (01:46:40) check:0x014640
+    - UTC Time           : 1000000000 (2001-09-09 01:46:40)
+   **** TDT (tspacket->struct) generator is correct ****
+   **** TDT (struct->tspacket) generator is correct ****
+TOT table
+*** tei:0 pusi:1 prio:0 pid:0014 (20) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
+  * Section header
+    - Table id           : 073 (115) time_offset_section
+    - Section length     : 00b (11)
+    - Private section syntax
+    - Private vars       : num_packets:1 section_pos:0
+  * TOT data
+    - MJD                : 0xd65b   (2009-02-13) unixts: 1234567890 check:0xd65b
+    - BCD                : 0x233130 (23:31:30) check:0x233130
+    - UTC Time           : 1234567890 (2009-02-13 23:31:30)
+   **** TDT (tspacket->struct) generator is correct ****
+   **** TDT (struct->tspacket) generator is correct ****
+TOT table
+*** tei:0 pusi:1 prio:0 pid:0014 (20) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
+  * Section header
+    - Table id           : 073 (115) time_offset_section
+    - Section length     : 01a (26)
+    - Private section syntax
+    - Private vars       : num_packets:1 section_pos:0
+  * TOT data
+    - MJD                : 0xd65b   (2009-02-13) unixts: 1234567890 check:0xd65b
+    - BCD                : 0x233130 (23:31:30) check:0x233130
+    - UTC Time           : 1234567890 (2009-02-13 23:31:30)
+        * Tag 0x58 (88), sz: 13, Local timeoffset descriptor
+        *   Country code: BUL
+        *   Region_id   : 0
+        *   Reserved    : 1
+        *   LTO polarity: 0
+        *   LTO         : +0200
+        *   Change time : (2009-03-29 01:00:00) /0xd687010000, 1238288400/
+        *   LTO next    : +0300
+   **** TDT (tspacket->struct) generator is correct ****
+   **** TDT (struct->tspacket) generator is correct ****
+TOT table
+*** tei:0 pusi:1 prio:0 pid:0014 (20) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
+  * Section header
+    - Table id           : 073 (115) time_offset_section
+    - Section length     : 01a (26)
+    - Private section syntax
+    - Private vars       : num_packets:1 section_pos:0
+  * TOT data
+    - MJD                : 0xcbc1   (2001-09-09) unixts: 1000000000 check:0xcbc1
+    - BCD                : 0x014640 (01:46:40) check:0x014640
+    - UTC Time           : 1000000000 (2001-09-09 01:46:40)
+        * Tag 0x58 (88), sz: 13, Local timeoffset descriptor
+        *   Country code: BUL
+        *   Region_id   : 0
+        *   Reserved    : 1
+        *   LTO polarity: 0
+        *   LTO         : +0300
+        *   Change time : (2001-10-28 01:00:00) /0xcbf2010000, 1004230800/
+        *   LTO next    : +0200
+   **** TDT (tspacket->struct) generator is correct ****
+   **** TDT (struct->tspacket) generator is correct ****
 SDT table
 *** tei:0 pusi:1 prio:0 pid:0011 (17) scramble:0 adapt:0 payload:1 adapt_len:0 adapt_flags:0 | pofs:4 plen:184
   * Section header

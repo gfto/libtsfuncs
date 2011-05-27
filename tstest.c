@@ -28,23 +28,30 @@ void ts_pat_test() {
 	ts_pat_free(&pat);
 }
 
-int ts_tdt_tot_test() {
+void ts_tdt_test() {
 	struct ts_tdt *tdt = ts_tdt_alloc_init(NOW);
-	struct ts_tdt *tot = ts_tot_alloc_init(time(NULL));
-
 	ts_tdt_dump(tdt);
-	ts_tdt_dump(tot);
-
 	ts_tdt_set_time(tdt, NOW2);
 	ts_tdt_dump(tdt);
-
-	ts_tot_set_localtime_offset_sofia(tot);
-	ts_tdt_dump(tot);
-
 	ts_tdt_free(&tdt);
+}
+
+void ts_tot_test() {
+	struct ts_tdt *tot;
+
+	tot = ts_tot_alloc_init(NOW);
+	ts_tdt_dump(tot);
 	ts_tdt_free(&tot);
 
-	return 0;
+	tot = ts_tot_alloc_init(NOW);
+	ts_tot_set_localtime_offset_sofia(tot, NOW);
+	ts_tdt_dump(tot);
+	ts_tdt_free(&tot);
+
+	tot = ts_tot_alloc_init(NOW2);
+	ts_tot_set_localtime_offset_sofia(tot, NOW2);
+	ts_tdt_dump(tot);
+	ts_tdt_free(&tot);
 }
 
 int ts_sdt_test() {
@@ -129,7 +136,8 @@ void ts_eit_test() {
 
 int main() {
 	ts_pat_test();
-	ts_tdt_tot_test();
+	ts_tdt_test();
+	ts_tot_test();
 	ts_sdt_test();
 	ts_eit_test();
 	return 0;

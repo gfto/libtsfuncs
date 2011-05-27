@@ -1,0 +1,21 @@
+#!/bin/sh
+
+ulimit -c unlimited
+
+valgrind \
+	--log-file=tstest-$(date +%F-%H:%M:%S)-valgrind.log \
+	--leak-check=full \
+	--show-reachable=yes \
+	--undef-value-errors=no \
+	--trace-children=yes \
+	--run-libc-freeres=yes \
+	--time-stamp=yes \
+		-- \
+	./tstest > tstest.test.now
+diff -u tstest.test.expect tstest.test.now
+if [ $? != 0 ]
+then
+	echo "DIFFERENCE!"
+else
+	echo "OK"
+fi

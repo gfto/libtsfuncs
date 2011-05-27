@@ -41,7 +41,7 @@ struct ts_cat *ts_cat_push_packet(struct ts_cat *cat, uint8_t *ts_packet) {
 		memset(&section_header, 0, sizeof(struct ts_section_header));
 
 		uint8_t *section_data = ts_section_header_parse(ts_packet, &cat->ts_header, &section_header);
-		if (!section_data || !section_header.section_syntax_indicator) {
+		if (!section_data) {
 			memset(&cat->ts_header, 0, sizeof(struct ts_header));
 			goto OUT;
 		}
@@ -56,12 +56,10 @@ struct ts_cat *ts_cat_push_packet(struct ts_cat *cat, uint8_t *ts_packet) {
 	}
 
 	if (!cat->initialized) {
-		if (cat->section_header->section_syntax_indicator) {
-			ts_section_add_packet(cat->section_header, &ts_header, ts_packet);
-			if (cat->section_header->initialized) {
-				if (!ts_cat_parse(cat))
-					goto ERROR;
-			}
+		ts_section_add_packet(cat->section_header, &ts_header, ts_packet);
+		if (cat->section_header->initialized) {
+			if (!ts_cat_parse(cat))
+				goto ERROR;
 		}
 	}
 

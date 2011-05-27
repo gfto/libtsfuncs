@@ -50,7 +50,7 @@ struct ts_pat *ts_pat_push_packet(struct ts_pat *pat, uint8_t *ts_packet) {
 		memset(&section_header, 0, sizeof(struct ts_section_header));
 
 		uint8_t *section_data = ts_section_header_parse(ts_packet, &pat->ts_header, &section_header);
-		if (!section_data || !section_header.section_syntax_indicator) {
+		if (!section_data) {
 			memset(&pat->ts_header, 0, sizeof(struct ts_header));
 			goto OUT;
 		}
@@ -65,12 +65,10 @@ struct ts_pat *ts_pat_push_packet(struct ts_pat *pat, uint8_t *ts_packet) {
 	}
 
 	if (!pat->initialized) {
-		if (pat->section_header->section_syntax_indicator) {
-			ts_section_add_packet(pat->section_header, &ts_header, ts_packet);
-			if (pat->section_header->initialized) {
-				if (!ts_pat_parse(pat))
-					goto ERROR;
-			}
+		ts_section_add_packet(pat->section_header, &ts_header, ts_packet);
+		if (pat->section_header->initialized) {
+			if (!ts_pat_parse(pat))
+				goto ERROR;
 		}
 	}
 

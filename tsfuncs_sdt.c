@@ -51,7 +51,7 @@ struct ts_sdt *ts_sdt_push_packet(struct ts_sdt *sdt, uint8_t *ts_packet) {
 		memset(&section_header, 0, sizeof(struct ts_section_header));
 
 		uint8_t *section_data = ts_section_header_parse(ts_packet, &sdt->ts_header, &section_header);
-		if (!section_data || !section_header.section_syntax_indicator) {
+		if (!section_data) {
 			memset(&sdt->ts_header, 0, sizeof(struct ts_header));
 			goto OUT;
 		}
@@ -66,12 +66,10 @@ struct ts_sdt *ts_sdt_push_packet(struct ts_sdt *sdt, uint8_t *ts_packet) {
 	}
 
 	if (!sdt->initialized) {
-		if (sdt->section_header->section_syntax_indicator) {
-			ts_section_add_packet(sdt->section_header, &ts_header, ts_packet);
-			if (sdt->section_header->initialized) {
-				if (!ts_sdt_parse(sdt))
-					goto ERROR;
-			}
+		ts_section_add_packet(sdt->section_header, &ts_header, ts_packet);
+		if (sdt->section_header->initialized) {
+			if (!ts_sdt_parse(sdt))
+				goto ERROR;
 		}
 	}
 

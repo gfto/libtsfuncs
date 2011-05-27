@@ -54,7 +54,7 @@ struct ts_nit *ts_nit_push_packet(struct ts_nit *nit, uint8_t *ts_packet) {
 		memset(&section_header, 0, sizeof(struct ts_section_header));
 
 		uint8_t *section_data = ts_section_header_parse(ts_packet, &nit->ts_header, &section_header);
-		if (!section_data || !section_header.section_syntax_indicator)
+		if (!section_data)
 			goto OUT;
 		// table_id should be 0x40 (network_information_section - actual_network)
 		if (section_header.table_id != 0x40) {
@@ -67,12 +67,10 @@ struct ts_nit *ts_nit_push_packet(struct ts_nit *nit, uint8_t *ts_packet) {
 	}
 
 	if (!nit->initialized) {
-		if (nit->section_header->section_syntax_indicator) {
-			ts_section_add_packet(nit->section_header, &ts_header, ts_packet);
-			if (nit->section_header->initialized) {
-				if (!ts_nit_parse(nit))
-					goto ERROR;
-			}
+		ts_section_add_packet(nit->section_header, &ts_header, ts_packet);
+		if (nit->section_header->initialized) {
+			if (!ts_nit_parse(nit))
+				goto ERROR;
 		}
 	}
 

@@ -51,7 +51,7 @@ struct ts_pmt *ts_pmt_push_packet(struct ts_pmt *pmt, uint8_t *ts_packet, uint16
 		memset(&section_header, 0, sizeof(struct ts_section_header));
 
 		uint8_t *section_data = ts_section_header_parse(ts_packet, &pmt->ts_header, &section_header);
-		if (!section_data || !section_header.section_syntax_indicator) {
+		if (!section_data) {
 			memset(&pmt->ts_header, 0, sizeof(struct ts_header));
 			goto OUT;
 		}
@@ -66,12 +66,10 @@ struct ts_pmt *ts_pmt_push_packet(struct ts_pmt *pmt, uint8_t *ts_packet, uint16
 	}
 
 	if (!pmt->initialized) {
-		if (pmt->section_header->section_syntax_indicator) {
-			ts_section_add_packet(pmt->section_header, &ts_header, ts_packet);
-			if (pmt->section_header->initialized) {
-				if (!ts_pmt_parse(pmt))
-					goto ERROR;
-			}
+		ts_section_add_packet(pmt->section_header, &ts_header, ts_packet);
+		if (pmt->section_header->initialized) {
+			if (!ts_pmt_parse(pmt))
+				goto ERROR;
 		}
 	}
 

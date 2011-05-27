@@ -7,24 +7,24 @@
 
 #include "tsfuncs.h"
 
+#define have_left(X) \
+	do { if (data + (X) > data_end) return NULL; } while(0)
+
 uint8_t *ts_section_header_parse(uint8_t *ts_packet, struct ts_header *ts_header, struct ts_section_header *ts_section_header) {
-	if (ts_header->payload_offset + 8 > TS_PACKET_SIZE) {
-		ts_packet_header_dump(ts_header);
-		ts_LOGf("!!! Section start outside of TS packet %d!\n", ts_header->payload_offset + 8);
-		return NULL;
-	}
-
 	uint8_t *data = ts_packet + ts_header->payload_offset;
+	uint8_t *data_end = ts_packet + TS_PACKET_SIZE;
 
+	have_left(ts_section_header->pointer_field + 1);
 	ts_section_header->pointer_field = data[0];
 	data += ts_section_header->pointer_field + 1;
 
+	have_left(3);
 	ts_section_header->table_id                 = data[0];
-
 	ts_section_header->section_syntax_indicator = data[1] >> 7;				// x1111111
 	ts_section_header->private_indicator        = (data[1] &~ 0xBF) >> 6;	// 1x111111
 	ts_section_header->reserved1                = (data[1] &~ 0xCF) >> 4;	// 11xx1111
 	ts_section_header->section_length           = ((data[1] &~ 0xF0) << 8) | data[2]; // 1111xxxx xxxxxxxx
+	data += 3;
 
 	if (ts_section_header->section_length == 0)
 		return NULL;
@@ -34,24 +34,25 @@ uint8_t *ts_section_header_parse(uint8_t *ts_packet, struct ts_header *ts_header
 		return NULL;
 
 	if (ts_section_header->section_syntax_indicator) {
-		ts_section_header->ts_id_number             = (data[3] << 8) | data[4]; // xxxxxxx xxxxxxx
+		ts_section_header->data     = ts_section_header->section_data   + 3 + 5;	// Skip header and extended header
+		ts_section_header->data_len = ts_section_header->section_length - 9;		// 5 for extended header, 4 for crc at the end
 
-		ts_section_header->reserved2                = data[5] >> 6;				// xx111111
-		ts_section_header->version_number           = (data[5] &~ 0xC1) >> 1;	// 11xxxxx1
-		ts_section_header->current_next_indicator   = data[5] &~ 0xFE;			// 1111111x
-
-		ts_section_header->section_number           = data[6];
-		ts_section_header->last_section_number      = data[7];
-
-		ts_section_header->data = ts_section_header->section_data + 8; // Skip header
-		ts_section_header->data_len = ts_section_header->section_length - (5 + 4);	// 5 for extended syntax, 4 for crc at the end
-		return data + 8;
+		have_left(5);
+		ts_section_header->ts_id_number             = (data[0] << 8) | data[1]; // xxxxxxx xxxxxxx
+		ts_section_header->reserved2                =  data[2] >> 6;			// xx111111
+		ts_section_header->version_number           = (data[2] &~ 0xC1) >> 1;	// 11xxxxx1
+		ts_section_header->current_next_indicator   = data[2] &~ 0xFE;			// 1111111x
+		ts_section_header->section_number           = data[3];
+		ts_section_header->last_section_number      = data[4];
+		data += 5;
 	} else {
-		ts_section_header->data = ts_section_header->section_data + 3; // Skip header
+		ts_section_header->data     = ts_section_header->section_data + 3; // Skip header
 		ts_section_header->data_len = ts_section_header->section_length;
-		return data + 3;
 	}
+	return data;
 }
+
+#undef have_left
 
 void ts_section_header_generate(uint8_t *ts_packet, struct ts_section_header *ts_section_header, uint8_t start) {
 	ts_packet[start + 0] = ts_section_header->table_id;

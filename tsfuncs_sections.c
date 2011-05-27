@@ -142,7 +142,7 @@ void ts_section_header_dump(struct ts_section_header *t) {
 				t->section_number,
 				t->last_section_number);
 	}
-	if (t->CRC)
+	if (t->CRC && t->CRC != 0xffffffff)
 		ts_LOGf("    - CRC                : 0x%08x\n", t->CRC);
 }
 

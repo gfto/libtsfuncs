@@ -228,15 +228,7 @@ struct ts_eit {
 
 struct ts_tdt {
 	struct ts_header			ts_header;
-
-	uint8_t		pointer_field;
-
-	uint8_t		table_id;
-
-	uint16_t	section_syntax_indicator: 1,	// Section Syntax Indicator
-				reserved_1              : 1,	// 1 reserved bit
-				reserved_2              : 2,	// 2 reserved bits
-				section_length          : 12;	// Section lenth
+	struct ts_section_header	*section_header;
 
 	uint16_t	mjd;							// This both are part of one 40 bit field (UTC_time)
 	uint32_t	bcd;							// Only 24 bits are used
@@ -245,10 +237,8 @@ struct ts_tdt {
 	uint16_t	reserved_3				: 4,
 				descriptors_size        : 12;
 	uint8_t		*descriptors;
-	uint32_t	CRC;
 
 	// The variables bellow are nor part of the physical packet
-	uint8_t		*packet_data;
 	time_t		utc;	// decoded UTC_time
 	struct tm	tm;		// decoded UTC_time
 

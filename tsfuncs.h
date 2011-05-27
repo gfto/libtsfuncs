@@ -182,18 +182,20 @@ int				ts_eit_add_short_event_descriptor	(struct ts_eit *eit, uint16_t event_id,
 int				ts_eit_add_extended_event_descriptor(struct ts_eit *eit, uint16_t event_id, uint8_t running, time_t start_time, int duration_sec, char *text);
 
 // TDT
+struct ts_tdt *	ts_tdt_alloc();
 struct ts_tdt *	ts_tdt_alloc_init	(time_t ts);
 struct ts_tdt *	ts_tot_alloc_init	(time_t ts);
 void			ts_tdt_free			(struct ts_tdt **tdt);
 
-int				ts_tdt_parse		(struct ts_tdt *tdt, uint8_t *ts_packet);
-void			ts_tdt_generate		(struct ts_tdt *tdt, uint8_t *ts_packet);
+int				ts_tdt_parse		(struct ts_tdt *tdt);
+struct ts_tdt *	ts_tdt_push_packet	(struct ts_tdt *tdt, uint8_t *ts_packet);
+void			ts_tdt_generate		(struct ts_tdt *tdt, uint8_t **ts_packets, int *num_packets);
 void			ts_tdt_dump			(struct ts_tdt *tdt);
 
 void			ts_tdt_set_time		(struct ts_tdt *tdt, time_t ts);
 
 void			ts_tot_set_localtime_offset			(struct ts_tdt *tdt, time_t now, time_t change_time, uint8_t polarity, uint16_t ofs, uint16_t ofs_next);
-void			ts_tot_set_localtime_offset_sofia	(struct ts_tdt *tdt);
+void			ts_tot_set_localtime_offset_sofia	(struct ts_tdt *tdt, time_t now);
 
 // Time
 uint32_t		ts_time_encode_bcd	(int duration_sec);

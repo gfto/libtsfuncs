@@ -37,6 +37,6 @@ tstest: $(tstest_OBJS)
 
 clean:
 	$(Q)echo "  RM	$(PROG) $(OBJS)"
-	$(Q)$(RM) $(PROG) *.o *~
+	$(Q)$(RM) $(PROG) tstest *.o *~
 
 distclean: clean

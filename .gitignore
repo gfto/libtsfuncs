@@ -1,5 +1,3 @@
 *.o
 *.a
 tstest
-tstest-*-valgrind.log
-tstest.test.now

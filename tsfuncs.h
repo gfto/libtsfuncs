@@ -203,6 +203,7 @@ struct ts_privsec *	ts_privsec_alloc();
 void				ts_privsec_free			(struct ts_privsec **pprivsec);
 
 struct ts_privsec *	ts_privsec_push_packet	(struct ts_privsec *privsec, uint8_t *ts_packet);
+int					ts_privsec_is_same		(struct ts_privsec *p1, struct ts_privsec *p2);
 void				ts_privsec_dump			(struct ts_privsec *privsec);
 
 // Time

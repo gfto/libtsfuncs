@@ -55,6 +55,13 @@ OUT:
 	return privsec;
 }
 
+int ts_privsec_is_same(struct ts_privsec *p1, struct ts_privsec *p2) {
+	if (p1 == p2) return 1; // Same
+	if ((!p1 && p2) || (p1 && !p2)) return 0; // Not same (one is NULL)
+	if (p1->section_header->section_length != p1->section_header->section_length) return 0; // Not same
+	return memcmp(p1->section_header->section_data, p2->section_header->section_data, p1->section_header->section_length) == 0;
+}
+
 void ts_privsec_dump(struct ts_privsec *privsec) {
 	struct ts_section_header *sec = privsec->section_header;
 	ts_section_dump(sec);

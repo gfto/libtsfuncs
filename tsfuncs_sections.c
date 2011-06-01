@@ -77,16 +77,23 @@ void ts_section_header_generate(uint8_t *ts_packet, struct ts_section_header *ts
 }
 
 int ts_section_is_same(struct ts_section_header *s1, struct ts_section_header *s2) {
-	if (s1->CRC != s2->CRC)
+//	ts_LOGf("s1->table_id=%d s2->table_id=%d\n", s1->table_id, s2->table_id);
+	if (s1->table_id != s2->table_id)
 		return 0;
 
+//	ts_LOGf("s1->version_number=%d s2->version_number=%d\n", s1->version_number, s2->version_number);
 	if (s1->version_number != s2->version_number)
 		return 0;
 
+//	ts_LOGf("s1->section_number=%d s2->section_number=%d\n", s1->section_number, s2->section_number);
 	if (s1->section_number != s2->section_number)
 		return 0;
 
-	return 1; // Should be the same
+//	ts_LOGf("s1->section_length=%d s2->section_length=%d\n", s1->section_number, s2->section_number);
+	if (s1->section_length != s2->section_length)
+		return 0;
+
+	return memcmp(s1->section_data, s2->section_data, s1->section_length) == 0;
 }
 
 #define IN(x, a, b) \

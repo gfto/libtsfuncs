@@ -176,11 +176,11 @@ enum CA_system ts_get_CA_sys(uint16_t CA_id) {
 
 char * ts_get_CA_sys_txt(enum CA_system CA_sys) {
 	switch (CA_sys) {
-		case CA_IRDETO:			return "IRDETO CA";
-		case CA_CONNAX:			return "CONNAX CA";
-		case CA_CRYPTOWORKS:	return "CRYPTOWORKS CA";
+		case CA_IRDETO:			return "IRDETO";
+		case CA_CONNAX:			return "CONNAX";
+		case CA_CRYPTOWORKS:	return "CRYPTOWORKS";
 		case CA_UNKNOWN:
-		default:				return "UNKNOWN CA";
+		default:				return "UNKNOWN";
 	}
 }
 

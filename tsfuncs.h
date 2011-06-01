@@ -115,6 +115,7 @@ struct ts_cat *	ts_cat_push_packet	(struct ts_cat *cat, uint8_t *ts_packet);
 void            ts_cat_free			(struct ts_cat **cat);
 int				ts_cat_parse		(struct ts_cat *cat);
 void            ts_cat_dump			(struct ts_cat *cat);
+struct ts_cat *	ts_cat_copy			(struct ts_cat *cat);
 int				ts_cat_is_same		(struct ts_cat *cat1, struct ts_cat *cat2);
 
 enum CA_system	ts_get_CA_sys		(uint16_t CA_id);

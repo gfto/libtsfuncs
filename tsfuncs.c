@@ -42,8 +42,12 @@ inline void ts_packet_inc_cont(uint8_t *ts_packet, uint8_t increment) {
 	ts_packet_set_cont(ts_packet, ts_packet_get_cont(ts_packet) + increment);
 }
 
+inline int ts_packet_get_scrambled(uint8_t *ts_packet) {
+	return ts_packet[3] >> 6; // 0 is not scamlbed, 1 is reserved, 2 or 3 mean scrambled
+}
+
 inline int ts_packet_is_scrambled(uint8_t *ts_packet) {
-	return (ts_packet[3] >> 6) > 1; // 0 is not scamlbed, 1 is reserved, 2 or 3 mean scrambled
+	return ts_packet_get_scrambled(ts_packet) > 1;
 }
 
 void ts_packet_set_scrambled(uint8_t *ts_packet, enum ts_scrambled_type stype) {

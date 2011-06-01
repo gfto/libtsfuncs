@@ -265,5 +265,7 @@ void ts_pmt_dump(struct ts_pmt *pmt) {
 }
 
 int ts_pmt_is_same(struct ts_pmt *pmt1, struct ts_pmt *pmt2) {
+	if (pmt1 == pmt2) return 1; // Same
+	if ((!pmt1 && pmt2) || (pmt1 && !pmt2)) return 0; // Not same (one is NULL)
 	return ts_section_is_same(pmt1->section_header, pmt2->section_header);
 }

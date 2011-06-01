@@ -127,7 +127,7 @@ int				ts_get_ecm_info		(struct ts_pmt *pmt, enum CA_system CA_sys, uint16_t *CA
 // PMT
 struct ts_pmt *	ts_pmt_alloc		();
 struct ts_pmt * ts_pmt_alloc_init	(uint16_t org_network_id, uint16_t transport_stream_id);
-struct ts_pmt *	ts_pmt_push_packet	(struct ts_pmt *pmt, uint8_t *ts_packet, uint16_t pmt_pid);
+struct ts_pmt *	ts_pmt_push_packet	(struct ts_pmt *pmt, uint8_t *ts_packet);
 void            ts_pmt_free			(struct ts_pmt **pmt);
 int				ts_pmt_parse		(struct ts_pmt *pmt);
 void            ts_pmt_dump			(struct ts_pmt *pmt);

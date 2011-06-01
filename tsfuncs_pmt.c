@@ -35,13 +35,11 @@ static struct ts_pmt *ts_pmt_reset(struct ts_pmt *pmt) {
 	return newpmt;
 }
 
-struct ts_pmt *ts_pmt_push_packet(struct ts_pmt *pmt, uint8_t *ts_packet, uint16_t pmt_pid) {
+struct ts_pmt *ts_pmt_push_packet(struct ts_pmt *pmt, uint8_t *ts_packet) {
 	struct ts_header ts_header;
 	memset(&ts_header, 0, sizeof(struct ts_header));
 
 	if (ts_packet_header_parse(ts_packet, &ts_header)) {
-		if (ts_header.pid != pmt_pid)
-			goto OUT;
 		if (!pmt->ts_header.pusi)
 			pmt->ts_header = ts_header;
 	}
@@ -196,7 +194,7 @@ struct ts_pmt *ts_pmt_copy(struct ts_pmt *pmt) {
 	struct ts_pmt *newpmt = ts_pmt_alloc();
 	int i;
 	for (i=0;i<pmt->section_header->num_packets; i++) {
-		newpmt = ts_pmt_push_packet(newpmt, pmt->section_header->packet_data + (i * TS_PACKET_SIZE), pmt->ts_header.pid);
+		newpmt = ts_pmt_push_packet(newpmt, pmt->section_header->packet_data + (i * TS_PACKET_SIZE));
 	}
 	if (newpmt->initialized) {
 		return newpmt;

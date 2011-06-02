@@ -15,17 +15,24 @@ int bcd2dec(int bcd) {
 	return ((bcd>>4) * 10) + bcd % 16;
 }
 
-char *ts_hex_dump(uint8_t *d, int size, int col) {
+void ts_hex_dump_buf(char *buf, int bufsz, uint8_t *d, int size, int col) {
 	int i;
-	char *buf = calloc(1, size * 6);
-	if (!buf)
-		return NULL;
+	if (bufsz < size * 6)
+		return;
+	memset(buf, 0, bufsz);
 	for (i=0;i<size;i++) {
 		if (col && (i % col == col - 1))
 			sprintf(buf+(i*3), "%02x\n", d[i]);
 		else
 			sprintf(buf+(i*3), "%02x ", d[i]);
 	}
+}
+
+char *ts_hex_dump(uint8_t *d, int size, int col) {
+	char *buf = malloc(size * 6);
+	if (!buf)
+		return NULL;
+	ts_hex_dump_buf(buf, size * 6, d, size, col);
 	return buf;
 }
 

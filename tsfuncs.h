@@ -256,6 +256,7 @@ int				ts_crc32_section_check		(struct ts_section_header *section_header, char *
 int				dec2bcd						(int dec);
 int				bcd2dec						(int bcd);
 void			ts_compare_data   			(char *prefix, uint8_t *a, uint8_t *b, int size);
+void			ts_hex_dump_buf    			(char *buf, int bufsz, uint8_t *d, int size, int col);
 char *			ts_hex_dump      			(uint8_t *d, int size, int col);
 void			ts_print_bytes				(char *prefix, uint8_t *d, int size);
 char *			init_dvb_string_utf8		(char *text);

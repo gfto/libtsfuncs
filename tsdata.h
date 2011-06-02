@@ -55,6 +55,7 @@ struct ts_section_header {
 	int			section_pos;					// Up to this pos the section data has come
 	int			initialized;					// Set to 1 when whole sectino is initialized
 
+	int			section_data_len;				// Full section length (3 + section_length)
 	uint8_t		*section_data;					// The whole section data
 	uint8_t		*packet_data;					// TS packet(s) that were used to transfer the table.
 

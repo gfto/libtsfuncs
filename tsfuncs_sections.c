@@ -49,6 +49,9 @@ uint8_t *ts_section_header_parse(uint8_t *ts_packet, struct ts_header *ts_header
 		ts_section_header->data     = ts_section_header->section_data + 3; // Skip header
 		ts_section_header->data_len = ts_section_header->section_length;
 	}
+
+	ts_section_header->section_data_len = ts_section_header->section_length + 3;	// 3 for section header
+
 	return data;
 }
 

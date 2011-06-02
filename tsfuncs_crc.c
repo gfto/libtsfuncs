@@ -40,13 +40,11 @@ uint32_t ts_crc32(uint8_t *data, int data_size) {
 }
 
 u_int32_t ts_crc32_section(struct ts_section_header *section_header) {
-	// +3 to include the first 3 bytes before section_length field
-	return ts_crc32(section_header->section_data, section_header->section_length + 3);
+	return ts_crc32(section_header->section_data, section_header->section_data_len);
 }
 
 int ts_crc32_section_check(struct ts_section_header *section_header, char *table) {
-	// +3 to include the first 3 bytes before section_length field
-	uint32_t check_crc = ts_crc32(section_header->section_data, section_header->section_length + 3);
+	uint32_t check_crc = ts_crc32(section_header->section_data, section_header->section_data_len);
 
 	if (check_crc != 0) {
 		ts_LOGf("!!! Wrong %s table CRC! It should be 0 but it is 0x%08x (CRC in data is 0x%08x)\n",

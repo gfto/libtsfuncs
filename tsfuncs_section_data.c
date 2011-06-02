@@ -110,14 +110,14 @@ void ts_section_add_packet(struct ts_section_header *sec, struct ts_header *ts_h
 		return;
 
 	if (sec->section_pos + to_copy >= 4092) {
-		to_copy = (sec->section_length + 3) - sec->section_pos;
+		to_copy = sec->section_data_len - sec->section_pos;
 	}
 
 	memcpy(sec->section_data + sec->section_pos, ts_packet + payload_offset, to_copy);
 	memcpy(sec->packet_data + (sec->num_packets * TS_PACKET_SIZE), ts_packet, TS_PACKET_SIZE);
 	sec->section_pos += to_copy;
 	sec->num_packets++;
-	sec->initialized = (sec->section_pos+1) >= sec->section_length + 3;
+	sec->initialized = (sec->section_pos+1) >= sec->section_data_len;
 	if (sec->initialized) {
 		// CRC is after sec->data[sec->data_len]
 		sec->CRC = (sec->CRC << 8) | sec->data[sec->data_len + 3];

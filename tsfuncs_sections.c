@@ -10,6 +10,17 @@
 #define have_left(X) \
 	do { if (data + (X) > data_end) return NULL; } while(0)
 
+void ts_section_header_set_private_vars(struct ts_section_header *ts_section_header) {
+	if (ts_section_header->section_syntax_indicator) {
+		ts_section_header->data     = ts_section_header->section_data   + 3 + 5;	// Skip header and extended header
+		ts_section_header->data_len = ts_section_header->section_length - 9;		// 5 for extended header, 4 for crc at the end
+	} else {
+		ts_section_header->data     = ts_section_header->section_data + 3; // Skip header
+		ts_section_header->data_len = ts_section_header->section_length;
+	}
+	ts_section_header->section_data_len = ts_section_header->section_length + 3;	// 3 for section header
+}
+
 uint8_t *ts_section_header_parse(uint8_t *ts_packet, struct ts_header *ts_header, struct ts_section_header *ts_section_header) {
 	uint8_t *data = ts_packet + ts_header->payload_offset;
 	uint8_t *data_end = ts_packet + TS_PACKET_SIZE;
@@ -34,9 +45,6 @@ uint8_t *ts_section_header_parse(uint8_t *ts_packet, struct ts_header *ts_header
 		return NULL;
 
 	if (ts_section_header->section_syntax_indicator) {
-		ts_section_header->data     = ts_section_header->section_data   + 3 + 5;	// Skip header and extended header
-		ts_section_header->data_len = ts_section_header->section_length - 9;		// 5 for extended header, 4 for crc at the end
-
 		have_left(5);
 		ts_section_header->ts_id_number             = (data[0] << 8) | data[1]; // xxxxxxx xxxxxxx
 		ts_section_header->reserved2                =  data[2] >> 6;			// xx111111
@@ -45,12 +53,9 @@ uint8_t *ts_section_header_parse(uint8_t *ts_packet, struct ts_header *ts_header
 		ts_section_header->section_number           = data[3];
 		ts_section_header->last_section_number      = data[4];
 		data += 5;
-	} else {
-		ts_section_header->data     = ts_section_header->section_data + 3; // Skip header
-		ts_section_header->data_len = ts_section_header->section_length;
 	}
 
-	ts_section_header->section_data_len = ts_section_header->section_length + 3;	// 3 for section header
+	ts_section_header_set_private_vars(ts_section_header);
 
 	return data;
 }

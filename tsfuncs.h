@@ -88,6 +88,8 @@ uint8_t *					ts_section_data_alloc_packet	();
 struct ts_section_header *	ts_section_data_alloc			();
 void						ts_section_data_free			(struct ts_section_header **ts_section_header);
 
+void						ts_section_data_copy			(struct ts_section_header *src, struct ts_section_header *dst);
+
 void						ts_section_add_packet		(struct ts_section_header *sec, struct ts_header *ts_header, uint8_t *ts_packet);
 
 uint32_t					ts_section_data_calculate_crc	(uint8_t *section_data, int section_data_size);

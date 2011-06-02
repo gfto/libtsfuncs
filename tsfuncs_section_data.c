@@ -36,6 +36,22 @@ void ts_section_data_free(struct ts_section_header **psection_data) {
 	}
 }
 
+void ts_section_data_copy(struct ts_section_header *src, struct ts_section_header *dst) {
+	if (!src || !dst)
+		return;
+	uint8_t *section_data = dst->section_data;
+	uint8_t *packet_data = dst->packet_data;
+
+	memcpy(section_data, src->section_data, 4096);
+	memcpy(packet_data , src->packet_data, 5120);
+	*dst = *src;
+
+	dst->section_data = section_data;
+	dst->packet_data  = packet_data;
+
+	ts_section_header_set_private_vars(dst);
+}
+
 // Fill CRC of the section data after secdata_size bytes
 uint32_t ts_section_data_calculate_crc(uint8_t *section_data, int secdata_size) {
 	uint32_t check_crc = ts_crc32(section_data, secdata_size);

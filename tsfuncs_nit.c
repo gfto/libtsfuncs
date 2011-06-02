@@ -32,6 +32,7 @@ void ts_nit_clear(struct ts_nit *nit) {
 	struct ts_nit_stream **streams = nit->streams;
 	int streams_max = nit->streams_max;
 	// free
+	FREE(nit->network_info);
 	ts_nit_streams_data_free(nit);
 	// clear
 	ts_section_data_clear(section_header);

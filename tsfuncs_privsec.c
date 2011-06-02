@@ -21,6 +21,14 @@ void ts_privsec_free(struct ts_privsec **pprivsec) {
 	}
 }
 
+void ts_privsec_copy(struct ts_privsec *src, struct ts_privsec *dst) {
+	if (!src || !dst)
+		return;
+	dst->ts_header = src->ts_header;
+	dst->initialized = src->initialized;
+	ts_section_data_copy(src->section_header, dst->section_header);
+}
+
 struct ts_privsec *ts_privsec_push_packet(struct ts_privsec *privsec, uint8_t *ts_packet) {
 	struct ts_header ts_header;
 	memset(&ts_header, 0, sizeof(struct ts_header));

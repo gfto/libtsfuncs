@@ -210,6 +210,8 @@ struct ts_privsec *	ts_privsec_push_packet	(struct ts_privsec *privsec, uint8_t 
 int					ts_privsec_is_same		(struct ts_privsec *p1, struct ts_privsec *p2);
 void				ts_privsec_dump			(struct ts_privsec *privsec);
 
+void				ts_privsec_copy			(struct ts_privsec *src, struct ts_privsec *dst);
+
 // Time
 uint32_t		ts_time_encode_bcd	(int duration_sec);
 void			ts_time_decode_bcd	(int duration_bcd, int *duration_sec, int *hour, int *min, int *sec);

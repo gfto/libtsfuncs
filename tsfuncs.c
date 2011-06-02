@@ -50,8 +50,12 @@ inline int ts_packet_is_scrambled(uint8_t *ts_packet) {
 	return ts_packet_get_scrambled(ts_packet) > 1;
 }
 
-void ts_packet_set_scrambled(uint8_t *ts_packet, enum ts_scrambled_type stype) {
+inline void ts_packet_set_not_scrambled(uint8_t *ts_packet) {
 	ts_packet[3] = ts_packet[3] &~ 0xc0; // Mask top two bits (11xxxxxx)
+}
+
+void ts_packet_set_scrambled(uint8_t *ts_packet, enum ts_scrambled_type stype) {
+	ts_packet_set_not_scrambled(ts_packet);
 	if (stype == scrambled_with_even_key)
 		ts_packet[3] |= 2 << 6;
 	if (stype == scrambled_with_odd_key)

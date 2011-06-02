@@ -51,6 +51,7 @@ uint8_t         ts_packet_get_payload_offset(uint8_t *ts_packet);
 
 int             ts_packet_is_scrambled(uint8_t *ts_packet);
 int             ts_packet_get_scrambled(uint8_t *ts_packet);
+void            ts_packet_set_not_scrambled(uint8_t *ts_packet);
 void            ts_packet_set_scrambled(uint8_t *ts_packet, enum ts_scrambled_type stype);
 
 int				ts_packet_has_pcr		(uint8_t *ts_packet);

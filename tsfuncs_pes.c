@@ -25,13 +25,18 @@ void ts_pes_free(struct ts_pes **ppes) {
 	}
 }
 
-struct ts_pes *ts_pes_reset(struct ts_pes *pes) {
+void ts_pes_clear(struct ts_pes *pes) {
+	if (!pes)
+		return;
+	// save
 	uint8_t *pes_data = pes->pes_data;
 	uint32_t pes_data_size = pes->pes_data_size;
+	// clear
+	memset(pes_data, 0x33, pes_data_size);
 	memset(pes, 0, sizeof(struct ts_pes));
+	// restore
 	pes->pes_data = pes_data;
 	pes->pes_data_size = pes_data_size;
-	return pes;
 }
 
 static void ts_pes_add_payload_to_pes_data(struct ts_pes *pes, uint8_t *payload, uint8_t payload_size) {
@@ -67,7 +72,7 @@ int ts_pes_is_finished(struct ts_pes *pes, uint8_t *ts_packet) {
 //		ts_LOGf("packet finished, len:%d\n", pes->real_pes_packet_len);
 		if (!ts_pes_parse(pes)) {
 			ts_LOGf("error parsing!\n");
-			pes = ts_pes_reset(pes);
+			ts_pes_clear(pes);
 			return 0;
 		}
 //		ts_LOGf("parsed OK!\n");
@@ -249,7 +254,8 @@ OUT:
 	return pes;
 
 ERROR:
-	return ts_pes_reset(pes);
+	ts_pes_clear(pes);
+	return pes;
 }
 
 int ts_pes_parse(struct ts_pes *pes) {

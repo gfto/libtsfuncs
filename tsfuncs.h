@@ -229,8 +229,8 @@ char *			h222_stream_id_desc		(uint8_t stream_id);
 
 // PES
 struct ts_pes *		ts_pes_alloc			();
+void				ts_pes_clear			(struct ts_pes *pes);
 void				ts_pes_free				(struct ts_pes **pes);
-struct ts_pes *		ts_pes_reset			(struct ts_pes *pes);
 
 void				ts_pes_fill_type		(struct ts_pes *pes, struct ts_pmt *pmt, uint16_t pid);
 int					ts_pes_is_finished		(struct ts_pes *pes, uint8_t *ts_packet);

@@ -13,6 +13,20 @@ struct ts_tdt *ts_tdt_alloc() {
 	return tdt;
 }
 
+void ts_tdt_clear(struct ts_tdt *tdt) {
+	if (!tdt)
+		return;
+	// save
+	struct ts_section_header *section_header = tdt->section_header;
+	// free
+	FREE(tdt->descriptors);
+	// clear
+	ts_section_data_clear(section_header);
+	memset(tdt, 0, sizeof(struct ts_tdt));
+	// restore
+	tdt->section_header = section_header;
+}
+
 void ts_tdt_free(struct ts_tdt **ptdt) {
 	struct ts_tdt *tdt = *ptdt;
 	if (tdt) {
@@ -20,12 +34,6 @@ void ts_tdt_free(struct ts_tdt **ptdt) {
 		FREE(tdt->descriptors);
 		FREE(*ptdt);
 	}
-}
-
-static struct ts_tdt *ts_tdt_reset(struct ts_tdt *tdt) {
-	struct ts_tdt *newtdt = ts_tdt_alloc();
-	ts_tdt_free(&tdt);
-	return newtdt;
 }
 
 struct ts_tdt *ts_tdt_push_packet(struct ts_tdt *tdt, uint8_t *ts_packet) {
@@ -72,7 +80,8 @@ OUT:
 	return tdt;
 
 ERROR:
-	return ts_tdt_reset(tdt);
+	ts_tdt_clear(tdt);
+	return tdt;
 }
 
 int ts_tdt_parse(struct ts_tdt *tdt) {

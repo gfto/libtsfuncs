@@ -27,6 +27,21 @@ struct ts_section_header *ts_section_data_alloc() {
 	return section_data;
 }
 
+void ts_section_data_clear(struct ts_section_header *sec) {
+	if (!sec)
+		return;
+	// save
+	uint8_t *section_data = sec->section_data;
+	uint8_t *packet_data = sec->packet_data;
+	// clear
+	memset(section_data, 0x30, 4096);
+	memset(packet_data , 0x31, 5120);
+	memset(sec, 0, sizeof(struct ts_section_header));
+	// restore
+	sec->section_data = section_data;
+	sec->packet_data  = packet_data;
+}
+
 void ts_section_data_free(struct ts_section_header **psection_data) {
 	struct ts_section_header *section_data = *psection_data;
 	if (section_data) {

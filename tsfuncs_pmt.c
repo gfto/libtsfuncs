@@ -14,25 +14,45 @@ struct ts_pmt *ts_pmt_alloc() {
 	return pmt;
 }
 
-void ts_pmt_free(struct ts_pmt **ppmt) {
-	struct ts_pmt *pmt = *ppmt;
+static void ts_pmt_streams_data_free(struct ts_pmt *pmt) {
 	int i;
-	if (pmt) {
-		ts_section_data_free(&pmt->section_header);
-		for (i=0;i<pmt->streams_num;i++) {
+	for (i=0;i<pmt->streams_num;i++) {
+		if (pmt->streams[i]) {
 			FREE(pmt->streams[i]->ES_info);
 			FREE(pmt->streams[i]);
 		}
+	}
+}
+
+void ts_pmt_clear(struct ts_pmt *pmt) {
+	if (!pmt)
+		return;
+	// save
+	struct ts_section_header *section_header = pmt->section_header;
+	struct ts_pmt_stream **streams = pmt->streams;
+	int streams_max = pmt->streams_max;
+	// free
+	FREE(pmt->program_info);
+	ts_pmt_streams_data_free(pmt);
+	// clear
+	ts_section_data_clear(section_header);
+	memset(pmt, 0, sizeof(struct ts_pmt));
+	// restore
+	pmt->section_header = section_header;
+	pmt->streams = streams;
+	pmt->streams_max = streams_max;
+}
+
+
+void ts_pmt_free(struct ts_pmt **ppmt) {
+	struct ts_pmt *pmt = *ppmt;
+	if (pmt) {
+		ts_section_data_free(&pmt->section_header);
+		ts_pmt_streams_data_free(pmt);
 		FREE(pmt->program_info);
 		FREE(pmt->streams);
 		FREE(*ppmt);
 	}
-}
-
-static struct ts_pmt *ts_pmt_reset(struct ts_pmt *pmt) {
-	struct ts_pmt *newpmt = ts_pmt_alloc();
-	ts_pmt_free(&pmt);
-	return newpmt;
 }
 
 struct ts_pmt *ts_pmt_push_packet(struct ts_pmt *pmt, uint8_t *ts_packet) {
@@ -75,7 +95,8 @@ OUT:
 	return pmt;
 
 ERROR:
-	return ts_pmt_reset(pmt);
+	ts_pmt_clear(pmt);
+	return pmt;
 }
 
 int ts_pmt_parse(struct ts_pmt *pmt) {

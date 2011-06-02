@@ -14,24 +14,42 @@ struct ts_sdt *ts_sdt_alloc() {
 	return sdt;
 }
 
-void ts_sdt_free(struct ts_sdt **psdt) {
-	struct ts_sdt *sdt = *psdt;
+static void ts_sdt_streams_data_free(struct ts_sdt *sdt) {
 	int i;
-	if (sdt) {
-		ts_section_data_free(&sdt->section_header);
-		for (i=0;i<sdt->streams_num;i++) {
+	for (i=0;i<sdt->streams_num;i++) {
+		if (sdt->streams[i]) {
 			FREE(sdt->streams[i]->descriptor_data);
 			FREE(sdt->streams[i]);
 		}
-		FREE(sdt->streams);
-		FREE(*psdt);
 	}
 }
 
-static struct ts_sdt *ts_sdt_reset(struct ts_sdt *sdt) {
-	struct ts_sdt *newsdt = ts_sdt_alloc();
-	ts_sdt_free(&sdt);
-	return newsdt;
+void ts_sdt_clear(struct ts_sdt *sdt) {
+	if (!sdt)
+		return;
+	// save
+	struct ts_section_header *section_header = sdt->section_header;
+	struct ts_sdt_stream **streams = sdt->streams;
+	int streams_max = sdt->streams_max;
+	// free
+	ts_sdt_streams_data_free(sdt);
+	// clear
+	ts_section_data_clear(section_header);
+	memset(sdt, 0, sizeof(struct ts_sdt));
+	// restore
+	sdt->section_header = section_header;
+	sdt->streams = streams;
+	sdt->streams_max = streams_max;
+}
+
+void ts_sdt_free(struct ts_sdt **psdt) {
+	struct ts_sdt *sdt = *psdt;
+	if (sdt) {
+		ts_section_data_free(&sdt->section_header);
+		ts_sdt_streams_data_free(sdt);
+		FREE(sdt->streams);
+		FREE(*psdt);
+	}
 }
 
 struct ts_sdt *ts_sdt_push_packet(struct ts_sdt *sdt, uint8_t *ts_packet) {
@@ -77,7 +95,8 @@ OUT:
 	return sdt;
 
 ERROR:
-	return ts_sdt_reset(sdt);
+	ts_sdt_clear(sdt);
+	return sdt;
 }
 
 int ts_sdt_parse(struct ts_sdt *sdt) {

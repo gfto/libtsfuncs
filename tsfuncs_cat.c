@@ -12,6 +12,20 @@ struct ts_cat *ts_cat_alloc() {
 	return cat;
 }
 
+void ts_cat_clear(struct ts_cat *cat) {
+	if (!cat)
+		return;
+	// save
+	struct ts_section_header *section_header = cat->section_header;
+	// free
+	FREE(cat->program_info);
+	// clear
+	ts_section_data_clear(section_header);
+	memset(cat, 0, sizeof(struct ts_cat));
+	// restore
+	cat->section_header = section_header;
+}
+
 void ts_cat_free(struct ts_cat **pcat) {
 	struct ts_cat *cat = *pcat;
 	if (cat) {
@@ -19,12 +33,6 @@ void ts_cat_free(struct ts_cat **pcat) {
 		FREE(cat->program_info);
 		FREE(*pcat);
 	}
-}
-
-static struct ts_cat *ts_cat_reset(struct ts_cat *cat) {
-	struct ts_cat *newcat = ts_cat_alloc();
-	ts_cat_free(&cat);
-	return newcat;
 }
 
 struct ts_cat *ts_cat_push_packet(struct ts_cat *cat, uint8_t *ts_packet) {
@@ -67,7 +75,8 @@ OUT:
 	return cat;
 
 ERROR:
-	return ts_cat_reset(cat);
+	ts_cat_clear(cat);
+	return cat;
 }
 
 int ts_cat_parse(struct ts_cat *cat) {

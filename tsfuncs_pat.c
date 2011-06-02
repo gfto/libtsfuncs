@@ -14,23 +14,41 @@ struct ts_pat *ts_pat_alloc() {
 	return pat;
 }
 
-void ts_pat_free(struct ts_pat **ppat) {
-	struct ts_pat *pat = *ppat;
+static void ts_pat_programs_data_free(struct ts_pat *pat) {
 	int i;
-	if (pat) {
-		ts_section_data_free(&pat->section_header);
-		for (i=0;i<pat->programs_num;i++) {
+	for (i=0;i<pat->programs_num;i++) {
+		if (pat->programs[i]) {
 			FREE(pat->programs[i]);
 		}
-		FREE(pat->programs);
-		FREE(*ppat);
 	}
 }
 
-static struct ts_pat *ts_pat_reset(struct ts_pat *pat) {
-	struct ts_pat *newpat = ts_pat_alloc();
-	ts_pat_free(&pat);
-	return newpat;
+void ts_pat_clear(struct ts_pat *pat) {
+	if (!pat)
+		return;
+	// save
+	struct ts_section_header *section_header = pat->section_header;
+	struct ts_pat_program **programs = pat->programs;
+	int programs_max = pat->programs_max;
+	// free
+	ts_pat_programs_data_free(pat);
+	// clear
+	ts_section_data_clear(section_header);
+	memset(pat, 0, sizeof(struct ts_pat));
+	// restore
+	pat->section_header = section_header;
+	pat->programs = programs;
+	pat->programs_max = programs_max;
+}
+
+void ts_pat_free(struct ts_pat **ppat) {
+	struct ts_pat *pat = *ppat;
+	if (pat) {
+		ts_section_data_free(&pat->section_header);
+		ts_pat_programs_data_free(pat);
+		FREE(pat->programs);
+		FREE(*ppat);
+	}
 }
 
 struct ts_pat *ts_pat_push_packet(struct ts_pat *pat, uint8_t *ts_packet) {
@@ -76,7 +94,8 @@ OUT:
 	return pat;
 
 ERROR:
-	return ts_pat_reset(pat);
+	ts_pat_clear(pat);
+	return pat;
 }
 
 int ts_pat_parse(struct ts_pat *pat) {

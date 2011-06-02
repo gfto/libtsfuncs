@@ -86,6 +86,7 @@ uint8_t *					ts_section_data_alloc_section	();
 uint8_t *					ts_section_data_alloc_packet	();
 
 struct ts_section_header *	ts_section_data_alloc			();
+void						ts_section_data_clear			(struct ts_section_header *sec);
 void						ts_section_data_free			(struct ts_section_header **ts_section_header);
 
 void						ts_section_data_copy			(struct ts_section_header *src, struct ts_section_header *dst);
@@ -100,6 +101,7 @@ void						ts_section_data_gen_ts_packets	(struct ts_header *ts_header, uint8_t *
 struct ts_pat *	ts_pat_alloc		();
 struct ts_pat * ts_pat_alloc_init	(uint16_t transport_stream_id);
 struct ts_pat *	ts_pat_push_packet	(struct ts_pat *pat, uint8_t *ts_packet);
+void            ts_pat_clear		(struct ts_pat *pat);
 void            ts_pat_free			(struct ts_pat **pat);
 int				ts_pat_parse		(struct ts_pat *pat);
 void            ts_pat_dump			(struct ts_pat *pat);
@@ -116,6 +118,7 @@ int				ts_pat_is_same		(struct ts_pat *pat1, struct ts_pat *pat2);
 // CAT
 struct ts_cat *	ts_cat_alloc		();
 struct ts_cat *	ts_cat_push_packet	(struct ts_cat *cat, uint8_t *ts_packet);
+void            ts_cat_clear		(struct ts_cat *cat);
 void            ts_cat_free			(struct ts_cat **cat);
 int				ts_cat_parse		(struct ts_cat *cat);
 void            ts_cat_dump			(struct ts_cat *cat);
@@ -132,6 +135,7 @@ int				ts_get_ecm_info		(struct ts_pmt *pmt, enum CA_system CA_sys, uint16_t *CA
 struct ts_pmt *	ts_pmt_alloc		();
 struct ts_pmt * ts_pmt_alloc_init	(uint16_t org_network_id, uint16_t transport_stream_id);
 struct ts_pmt *	ts_pmt_push_packet	(struct ts_pmt *pmt, uint8_t *ts_packet);
+void            ts_pmt_clear		(struct ts_pmt *pmt);
 void            ts_pmt_free			(struct ts_pmt **pmt);
 int				ts_pmt_parse		(struct ts_pmt *pmt);
 void            ts_pmt_dump			(struct ts_pmt *pmt);
@@ -146,6 +150,7 @@ int				ts_pmt_is_same		(struct ts_pmt *pmt1, struct ts_pmt *pmt2);
 struct ts_nit * ts_nit_alloc		();
 struct ts_nit * ts_nit_alloc_init	(uint16_t network_id);
 struct ts_nit *	ts_nit_push_packet	(struct ts_nit *nit, uint8_t *ts_packet);
+void			ts_nit_clear		(struct ts_nit *nit);
 void			ts_nit_free			(struct ts_nit **nit);
 int				ts_nit_parse		(struct ts_nit *nit);
 void			ts_nit_dump			(struct ts_nit *nit);
@@ -160,6 +165,7 @@ int				ts_nit_add_service_list_descriptor			(struct ts_nit *nit, uint16_t ts_id,
 struct ts_sdt *	ts_sdt_alloc		();
 struct ts_sdt * ts_sdt_alloc_init	(uint16_t org_network_id, uint16_t transport_stream_id);
 struct ts_sdt *	ts_sdt_push_packet	(struct ts_sdt *sdt, uint8_t *ts_packet);
+void            ts_sdt_clear		(struct ts_sdt *sdt);
 void            ts_sdt_free			(struct ts_sdt **sdt);
 int				ts_sdt_parse		(struct ts_sdt *sdt);
 void            ts_sdt_dump			(struct ts_sdt *sdt);
@@ -175,6 +181,7 @@ struct ts_eit *	ts_eit_alloc_init_schedule	(uint16_t service_id, uint16_t transp
 
 struct ts_eit *	ts_eit_push_packet	(struct ts_eit *eit, uint8_t *ts_packet);
 
+void			ts_eit_clear		(struct ts_eit *eit);
 void			ts_eit_free			(struct ts_eit **eit);
 int				ts_eit_parse		(struct ts_eit *eit);
 void			ts_eit_dump			(struct ts_eit *eit);
@@ -190,6 +197,7 @@ int				ts_eit_add_extended_event_descriptor(struct ts_eit *eit, uint16_t event_i
 struct ts_tdt *	ts_tdt_alloc();
 struct ts_tdt *	ts_tdt_alloc_init	(time_t ts);
 struct ts_tdt *	ts_tot_alloc_init	(time_t ts);
+void			ts_tdt_clear		(struct ts_tdt *tdt);
 void			ts_tdt_free			(struct ts_tdt **tdt);
 
 int				ts_tdt_parse		(struct ts_tdt *tdt);
@@ -204,6 +212,7 @@ void			ts_tot_set_localtime_offset_sofia	(struct ts_tdt *tdt, time_t now);
 
 // Private section
 struct ts_privsec *	ts_privsec_alloc();
+void				ts_privsec_clear		(struct ts_privsec *pprivsec);
 void				ts_privsec_free			(struct ts_privsec **pprivsec);
 
 struct ts_privsec *	ts_privsec_push_packet	(struct ts_privsec *privsec, uint8_t *ts_packet);

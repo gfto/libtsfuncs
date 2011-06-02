@@ -13,6 +13,18 @@ struct ts_privsec *ts_privsec_alloc() {
 	return privsec;
 }
 
+void ts_privsec_clear(struct ts_privsec *privsec) {
+	if (!privsec)
+		return;
+	// save
+	struct ts_section_header *section_header = privsec->section_header;
+	// clear
+	ts_section_data_clear(section_header);
+	memset(privsec, 0, sizeof(struct ts_privsec));
+	// restore
+	privsec->section_header = section_header;
+}
+
 void ts_privsec_free(struct ts_privsec **pprivsec) {
 	struct ts_privsec *privsec = *pprivsec;
 	if (privsec) {

@@ -14,26 +14,42 @@ struct ts_eit *ts_eit_alloc() {
 	return eit;
 }
 
-void ts_eit_free(struct ts_eit **peit) {
-	struct ts_eit *eit = *peit;
-	if (eit) {
-		int i;
-		ts_section_data_free(&eit->section_header);
-		for (i=0;i<eit->streams_num;i++) {
-			if (eit->streams[i]) {
-				FREE(eit->streams[i]->descriptor_data);
-				FREE(eit->streams[i]);
-			}
+static void ts_eit_streams_data_free(struct ts_eit *eit) {
+	int i;
+	for (i=0;i<eit->streams_num;i++) {
+		if (eit->streams[i]) {
+			FREE(eit->streams[i]->descriptor_data);
+			FREE(eit->streams[i]);
 		}
-		FREE(eit->streams);
-		FREE(*peit);
 	}
 }
 
-static struct ts_eit *ts_eit_reset(struct ts_eit *eit) {
-	struct ts_eit *neweit = ts_eit_alloc();
-	ts_eit_free(&eit);
-	return neweit;
+void ts_eit_clear(struct ts_eit *eit) {
+	if (!eit)
+		return;
+	// save
+	struct ts_section_header *section_header = eit->section_header;
+	struct ts_eit_stream **streams = eit->streams;
+	int streams_max = eit->streams_max;
+	// free
+	ts_eit_streams_data_free(eit);
+	// clear
+	ts_section_data_clear(section_header);
+	memset(eit, 0, sizeof(struct ts_eit));
+	// restore
+	eit->section_header = section_header;
+	eit->streams = streams;
+	eit->streams_max = streams_max;
+}
+
+void ts_eit_free(struct ts_eit **peit) {
+	struct ts_eit *eit = *peit;
+	if (eit) {
+		ts_section_data_free(&eit->section_header);
+		ts_eit_streams_data_free(eit);
+		FREE(eit->streams);
+		FREE(*peit);
+	}
 }
 
 struct ts_eit *ts_eit_push_packet(struct ts_eit *eit, uint8_t *ts_packet) {
@@ -80,7 +96,8 @@ OUT:
 	return eit;
 
 ERROR:
-	return ts_eit_reset(eit);
+	ts_eit_clear(eit);
+	return eit;
 }
 
 

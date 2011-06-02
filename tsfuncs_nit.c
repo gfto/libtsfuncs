@@ -14,27 +14,43 @@ struct ts_nit *ts_nit_alloc() {
 	return nit;
 }
 
-void ts_nit_free(struct ts_nit **pnit) {
-	struct ts_nit *nit = *pnit;
+static void ts_nit_streams_data_free(struct ts_nit *nit) {
 	int i;
-	if (nit) {
-		ts_section_data_free(&nit->section_header);
-		FREE(nit->network_info);
-		for (i=0;i<nit->streams_num;i++) {
-			if (nit->streams[i]) {
-				FREE(nit->streams[i]->descriptor_data);
-				FREE(nit->streams[i]);
-			}
+	for (i=0;i<nit->streams_num;i++) {
+		if (nit->streams[i]) {
+			FREE(nit->streams[i]->descriptor_data);
+			FREE(nit->streams[i]);
 		}
-		FREE(nit->streams);
-		FREE(*pnit);
 	}
 }
 
-static struct ts_nit *ts_nit_reset(struct ts_nit *nit) {
-	struct ts_nit *newnit = ts_nit_alloc();
-	ts_nit_free(&nit);
-	return newnit;
+void ts_nit_clear(struct ts_nit *nit) {
+	if (!nit)
+		return;
+	// save
+	struct ts_section_header *section_header = nit->section_header;
+	struct ts_nit_stream **streams = nit->streams;
+	int streams_max = nit->streams_max;
+	// free
+	ts_nit_streams_data_free(nit);
+	// clear
+	ts_section_data_clear(section_header);
+	memset(nit, 0, sizeof(struct ts_nit));
+	// restore
+	nit->section_header = section_header;
+	nit->streams = streams;
+	nit->streams_max = streams_max;
+}
+
+void ts_nit_free(struct ts_nit **pnit) {
+	struct ts_nit *nit = *pnit;
+	if (nit) {
+		ts_section_data_free(&nit->section_header);
+		FREE(nit->network_info);
+		ts_nit_streams_data_free(nit);
+		FREE(nit->streams);
+		FREE(*pnit);
+	}
 }
 
 struct ts_nit *ts_nit_push_packet(struct ts_nit *nit, uint8_t *ts_packet) {
@@ -78,7 +94,8 @@ OUT:
 	return nit;
 
 ERROR:
-	return ts_nit_reset(nit);
+	ts_nit_clear(nit);
+	return nit;
 }
 
 

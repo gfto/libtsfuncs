@@ -189,3 +189,18 @@ char *h222_stream_id_desc(uint8_t stream_id) {
 	}
 	return text;
 }
+
+void pidmap_clear(pidmap_t *pm) {
+	memset(pm, 0, sizeof(pidmap_t));
+}
+
+void pidmap_set(pidmap_t *pm, uint16_t pid) {
+	if (pid < sizeof(pidmap_t))
+		(*pm)[pid] = 1;
+}
+
+int pidmap_get(pidmap_t *pm, uint16_t pid) {
+	if (pid < sizeof(pidmap_t))
+		return (*pm)[pid];
+	return 0;
+}

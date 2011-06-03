@@ -440,4 +440,6 @@ struct pes_array {
 	struct pes_entry **entries;
 };
 
+typedef uint8_t pidmap_t[0x2000];
+
 #endif

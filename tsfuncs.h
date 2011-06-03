@@ -278,4 +278,8 @@ char *			init_dvb_string_utf8		(char *text);
 char *			init_dvb_string_iso_8859_5	(char *text);
 int				ts_is_psi_pid				(uint16_t pid, struct ts_pat *pat);
 
+void			pidmap_clear				(pidmap_t *pm);
+void			pidmap_set					(pidmap_t *pm, uint16_t pid);
+int				pidmap_get					(pidmap_t *pm, uint16_t pid);
+
 #endif

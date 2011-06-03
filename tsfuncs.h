@@ -278,7 +278,4 @@ char *			init_dvb_string_utf8		(char *text);
 char *			init_dvb_string_iso_8859_5	(char *text);
 int				ts_is_psi_pid				(uint16_t pid, struct ts_pat *pat);
 
-// Shortcuts
-int parse_tdt   (uint8_t *ts_packet, int dump);
-
 #endif

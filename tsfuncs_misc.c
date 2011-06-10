@@ -199,6 +199,11 @@ void pidmap_set(pidmap_t *pm, uint16_t pid) {
 		(*pm)[pid] = 1;
 }
 
+void pidmap_set_val(pidmap_t *pm, uint16_t pid, uint8_t val) {
+	if (pid < sizeof(pidmap_t))
+		(*pm)[pid] = val;
+}
+
 int pidmap_get(pidmap_t *pm, uint16_t pid) {
 	if (pid < sizeof(pidmap_t))
 		return (*pm)[pid];

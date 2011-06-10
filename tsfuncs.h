@@ -280,6 +280,7 @@ int				ts_is_psi_pid				(uint16_t pid, struct ts_pat *pat);
 
 void			pidmap_clear				(pidmap_t *pm);
 void			pidmap_set					(pidmap_t *pm, uint16_t pid);
+void			pidmap_set_val				(pidmap_t *pm, uint16_t pid, uint8_t val);
 int				pidmap_get					(pidmap_t *pm, uint16_t pid);
 
 #endif

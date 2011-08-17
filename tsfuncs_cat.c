@@ -199,7 +199,7 @@ static int find_CA_descriptor(uint8_t *data, int data_len, enum CA_system req_CA
 		uint8_t this_length = data[1];
 		data     += 2;
 		data_len -= 2;
-		if (tag == 9 && this_length == 4) {
+		if (tag == 9 && this_length >= 4) {
 			uint16_t CA_ID = (data[0] << 8) | data[1];
 			uint16_t CA_PID = ((data[2] & 0x1F) << 8) | data[3];
 			if (ts_get_CA_sys(CA_ID) == req_CA_type) {

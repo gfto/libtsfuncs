@@ -219,5 +219,17 @@ int ts_get_emm_info(struct ts_cat *cat, enum CA_system req_CA_type, uint16_t *CA
 }
 
 int ts_get_ecm_info(struct ts_pmt *pmt, enum CA_system req_CA_type, uint16_t *CA_id, uint16_t *CA_pid) {
-	return find_CA_descriptor(pmt->program_info, pmt->program_info_size, req_CA_type, CA_id, CA_pid);
+	int i, result = find_CA_descriptor(pmt->program_info, pmt->program_info_size, req_CA_type, CA_id, CA_pid);
+	if (!result) {
+		for(i=0;i<pmt->streams_num;i++) {
+			struct ts_pmt_stream *stream = pmt->streams[i];
+			if (stream->ES_info) {
+				result = find_CA_descriptor(stream->ES_info, stream->ES_info_size, req_CA_type, CA_id, CA_pid);
+				if (result)
+					break;
+			}
+		}
+	}
+
+	return result;
 }

@@ -5,19 +5,19 @@ CFLAGS = -ggdb -D_GNU_SOURCE -Wall -Wextra -Wshadow -Wformat-security -O2
 RM = /bin/rm -f
 Q=@
 
-OBJS = log.o tsfuncs.o tsfuncs_crc.o tsfuncs_misc.o tsfuncs_time.o \
-	tsfuncs_sections.o tsfuncs_section_data.o \
-	tsfuncs_descriptors.o \
-	tsfuncs_pat.o tsfuncs_pat_desc.o \
-	tsfuncs_cat.o \
-	tsfuncs_pmt.o \
-	tsfuncs_nit.o tsfuncs_nit_desc.o \
-	tsfuncs_sdt.o tsfuncs_sdt_desc.o \
-	tsfuncs_eit.o tsfuncs_eit_desc.o \
-	tsfuncs_tdt.o tsfuncs_tdt_desc.o \
-	tsfuncs_pes.o tsfuncs_pes_data.o \
-	tsfuncs_pes_es.o \
-	tsfuncs_privsec.o
+OBJS = log.o tsfuncs.o crc.o misc.o time.o \
+	sections.o secdata.o \
+	descs.o \
+	pat.o pat_desc.o \
+	cat.o \
+	pmt.o \
+	nit.o nit_desc.o \
+	sdt.o sdt_desc.o \
+	eit.o eit_desc.o \
+	tdt.o tdt_desc.o \
+	pes.o pes_data.o \
+	pes_es.o \
+	privsec.o
 PROG = libts.a
 
 tstest_OBJS = tstest.o libts.a

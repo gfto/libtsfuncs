@@ -162,6 +162,9 @@ int				ts_nit_add_frequency_list_descriptor_cable	(struct ts_nit *nit, uint16_t 
 int				ts_nit_add_cable_delivery_descriptor		(struct ts_nit *nit, uint16_t ts_id, uint16_t org_net_id, uint32_t freq, uint8_t modulation, uint32_t symbol_rate);
 int				ts_nit_add_service_list_descriptor			(struct ts_nit *nit, uint16_t ts_id, uint16_t org_net_id, uint32_t *services, uint8_t num_services);
 
+struct ts_nit *	ts_nit_copy			(struct ts_nit *nit);
+int				ts_nit_is_same		(struct ts_nit *nit1, struct ts_nit *nit2);
+
 // SDT
 struct ts_sdt *	ts_sdt_alloc		();
 struct ts_sdt * ts_sdt_alloc_init	(uint16_t org_network_id, uint16_t transport_stream_id);
@@ -173,6 +176,9 @@ void            ts_sdt_dump			(struct ts_sdt *sdt);
 void			ts_sdt_generate		(struct ts_sdt *sdt, uint8_t **ts_packets, int *num_packets);
 
 int             ts_sdt_add_service_descriptor(struct ts_sdt *sdt, uint16_t service_id, uint8_t video, char *provider_name, char *service_name);
+
+struct ts_sdt *	ts_sdt_copy			(struct ts_sdt *sdt);
+int				ts_sdt_is_same		(struct ts_sdt *sdt1, struct ts_sdt *sdt2);
 
 // EIT
 struct ts_eit * ts_eit_alloc				();
@@ -194,6 +200,8 @@ void			ts_eit_regenerate_packets	(struct ts_eit *eit);
 int				ts_eit_add_short_event_descriptor	(struct ts_eit *eit, uint16_t event_id, uint8_t running, time_t start_time, int duration_sec, char *event_name, char *event_short_descr);
 int				ts_eit_add_extended_event_descriptor(struct ts_eit *eit, uint16_t event_id, uint8_t running, time_t start_time, int duration_sec, char *text);
 
+int				ts_eit_is_same		(struct ts_eit *eit1, struct ts_eit *eit2);
+
 // TDT
 struct ts_tdt *	ts_tdt_alloc();
 struct ts_tdt *	ts_tdt_alloc_init	(time_t ts);
@@ -210,6 +218,9 @@ void			ts_tdt_set_time		(struct ts_tdt *tdt, time_t ts);
 
 void			ts_tot_set_localtime_offset			(struct ts_tdt *tdt, time_t now, time_t change_time, uint8_t polarity, uint16_t ofs, uint16_t ofs_next);
 void			ts_tot_set_localtime_offset_sofia	(struct ts_tdt *tdt, time_t now);
+
+struct ts_tdt *	ts_tdt_copy			(struct ts_tdt *tdt);
+int				ts_tdt_is_same		(struct ts_tdt *tdt1, struct ts_tdt *tdt2);
 
 // Private section
 struct ts_privsec *	ts_privsec_alloc();

@@ -297,3 +297,9 @@ void ts_eit_dump(struct ts_eit *eit) {
 
 	ts_eit_check_generator(eit);
 }
+
+int ts_eit_is_same(struct ts_eit *eit1, struct ts_eit *eit2) {
+	if (eit1 == eit2) return 1; // Same
+	if ((!eit1 && eit2) || (eit1 && !eit2)) return 0; // Not same (one is NULL)
+	return ts_section_is_same(eit1->section_header, eit2->section_header);
+}

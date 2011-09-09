@@ -211,6 +211,21 @@ void ts_nit_generate(struct ts_nit *nit, uint8_t **ts_packets, int *num_packets)
 	FREE(secdata);
 }
 
+struct ts_nit *ts_nit_copy(struct ts_nit *nit) {
+	struct ts_nit *newnit = ts_nit_alloc();
+	int i;
+	for (i=0;i<nit->section_header->num_packets; i++) {
+		newnit = ts_nit_push_packet(newnit, nit->section_header->packet_data + (i * TS_PACKET_SIZE));
+	}
+	if (newnit->initialized) {
+		return newnit;
+	} else {
+		ts_LOGf("Error copying nit!\n");
+		ts_nit_free(&newnit);
+		return NULL;
+	}
+}
+
 void ts_nit_check_generator(struct ts_nit *nit) {
 	struct ts_nit *nit1 = ts_nit_alloc();
 	int i;
@@ -267,4 +282,10 @@ void ts_nit_dump(struct ts_nit *nit) {
 	}
 
 	ts_nit_check_generator(nit);
+}
+
+int ts_nit_is_same(struct ts_nit *nit1, struct ts_nit *nit2) {
+	if (nit1 == nit2) return 1; // Same
+	if ((!nit1 && nit2) || (nit1 && !nit2)) return 0; // Not same (one is NULL)
+	return ts_section_is_same(nit1->section_header, nit2->section_header);
 }

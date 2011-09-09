@@ -187,6 +187,21 @@ void ts_sdt_generate(struct ts_sdt *sdt, uint8_t **ts_packets, int *num_packets)
     FREE(secdata);
 }
 
+struct ts_sdt *ts_sdt_copy(struct ts_sdt *sdt) {
+	struct ts_sdt *newsdt = ts_sdt_alloc();
+	int i;
+	for (i=0;i<sdt->section_header->num_packets; i++) {
+		newsdt = ts_sdt_push_packet(newsdt, sdt->section_header->packet_data + (i * TS_PACKET_SIZE));
+	}
+	if (newsdt->initialized) {
+		return newsdt;
+	} else {
+		ts_LOGf("Error copying sdt!\n");
+		ts_sdt_free(&newsdt);
+		return NULL;
+	}
+}
+
 void ts_sdt_check_generator(struct ts_sdt *sdt) {
 	struct ts_sdt *sdt1 = ts_sdt_alloc();
 	int i;
@@ -238,4 +253,10 @@ void ts_sdt_dump(struct ts_sdt *sdt) {
 	}
 
 	ts_sdt_check_generator(sdt);
+}
+
+int ts_sdt_is_same(struct ts_sdt *sdt1, struct ts_sdt *sdt2) {
+	if (sdt1 == sdt2) return 1; // Same
+	if ((!sdt1 && sdt2) || (sdt1 && !sdt2)) return 0; // Not same (one is NULL)
+	return ts_section_is_same(sdt1->section_header, sdt2->section_header);
 }

@@ -38,21 +38,46 @@ enum ts_scrambled_type {
 // Packet manipulation
 void            ts_packet_init_null (uint8_t *ts_packet);
 
-int             ts_packet_is_pusi   (uint8_t *ts_packet);
+static inline int ts_packet_is_pusi(uint8_t *ts_packet) {
+	return (ts_packet[1] &~ 0xbf) >> 6;
+}
 
-uint16_t        ts_packet_get_pid   (uint8_t *ts_packet);
-void            ts_packet_set_pid   (uint8_t *ts_packet, uint16_t new_pid);
+static inline uint16_t ts_packet_get_pid(uint8_t *ts_packet) {
+	return (ts_packet[1] &~ 0xE0) << 8 | ts_packet[2];
+}
 
-uint8_t         ts_packet_get_cont  (uint8_t *ts_packet);
-void            ts_packet_set_cont  (uint8_t *ts_packet, uint8_t value);
-void            ts_packet_inc_cont  (uint8_t *ts_packet, uint8_t increment);
+static inline void ts_packet_set_pid(uint8_t *ts_packet, uint16_t new_pid) {
+	ts_packet[1]  = (ts_packet[1] &~ 0x1f) | (new_pid >> 8);	// 111xxxxx xxxxxxxx
+	ts_packet[2]  = new_pid &~ 0xff00;
+}
 
-uint8_t         ts_packet_get_payload_offset(uint8_t *ts_packet);
+static inline uint8_t ts_packet_get_cont(uint8_t *ts_packet) {
+	return (ts_packet[3] &~ 0xF0);	// 1111xxxx
+}
 
-int             ts_packet_is_scrambled(uint8_t *ts_packet);
-int             ts_packet_get_scrambled(uint8_t *ts_packet);
-void            ts_packet_set_not_scrambled(uint8_t *ts_packet);
+static inline void ts_packet_set_cont(uint8_t *ts_packet, uint8_t value) {
+	// Mask the last 4 bits (continuity), then set the continuity
+	ts_packet[3] =  (ts_packet[3] &~ 0x0F) | (value &~ 0xF0);
+}
+
+static inline void ts_packet_inc_cont(uint8_t *ts_packet, uint8_t increment) {
+	ts_packet_set_cont(ts_packet, ts_packet_get_cont(ts_packet) + increment);
+}
+
+static inline int ts_packet_get_scrambled(uint8_t *ts_packet) {
+	return ts_packet[3] >> 6; // 0 is not scamlbed, 1 is reserved, 2 or 3 mean scrambled
+}
+
+static inline int ts_packet_is_scrambled(uint8_t *ts_packet) {
+	return ts_packet_get_scrambled(ts_packet) > 1;
+}
+
+static inline void ts_packet_set_not_scrambled(uint8_t *ts_packet) {
+	ts_packet[3] = ts_packet[3] &~ 0xc0; // Mask top two bits (11xxxxxx)
+}
+
 void            ts_packet_set_scrambled(uint8_t *ts_packet, enum ts_scrambled_type stype);
+uint8_t         ts_packet_get_payload_offset(uint8_t *ts_packet);
 
 int				ts_packet_has_pcr		(uint8_t *ts_packet);
 uint64_t		ts_packet_get_pcr_ex	(uint8_t *ts_packet, uint64_t *pcr_base, uint16_t *pcr_ext);

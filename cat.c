@@ -178,7 +178,7 @@ int ts_cat_is_same(struct ts_cat *cat1, struct ts_cat *cat2) {
 
 enum CA_system ts_get_CA_sys(uint16_t CA_id) {
 	if (CA_id >= 0x0600 && CA_id <= 0x06FF) return CA_IRDETO;
-	if (CA_id >= 0x0B00 && CA_id <= 0x0BFF) return CA_CONNAX;
+	if (CA_id >= 0x0B00 && CA_id <= 0x0BFF) return CA_CONAX;
 	if (CA_id >= 0x0D00 && CA_id <= 0x0DFF) return CA_CRYPTOWORKS;
 	return CA_UNKNOWN;
 }
@@ -186,7 +186,7 @@ enum CA_system ts_get_CA_sys(uint16_t CA_id) {
 char * ts_get_CA_sys_txt(enum CA_system CA_sys) {
 	switch (CA_sys) {
 		case CA_IRDETO:			return "IRDETO";
-		case CA_CONNAX:			return "CONNAX";
+		case CA_CONAX:			return "CONAX";
 		case CA_CRYPTOWORKS:	return "CRYPTOWORKS";
 		case CA_UNKNOWN:
 		default:				return "UNKNOWN";

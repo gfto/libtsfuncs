@@ -87,7 +87,7 @@ struct ts_pat {
 
 enum CA_system {
 	CA_IRDETO,		// 0x0600 - 0x06FF Irdeto
-	CA_CONNAX,		// 0x0B00 - 0x0BFF Norwegian Telekom
+	CA_CONAX,		// 0x0B00 - 0x0BFF Norwegian Telekom
 	CA_CRYPTOWORKS,	// 0x0D00 - 0x0DFF CrytoWorks
 	CA_UNKNOWN,
 };

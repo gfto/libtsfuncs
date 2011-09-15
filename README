@@ -1,0 +1,51 @@
+libtsfuncs
+==========
+Collection of routines to work with mpeg PSI tables.
+
+Using it
+========
+Clone or download libtsfuncs in a directory in your source tree and
+look at the example Makefile bellow:
+
+---
+TSFUNCS_DIR = libtsfuncs
+TSFUNCS_LIB = $(TSFUNCS_DIR)/libtsfuncs.a
+
+all: prog
+
+prog_OBJS = main.o $(TSFUNCS_LIB)
+
+$(TSFUNCS_LIB):
+	$(MAKE) -s -C $(TSFUNCS_DIR)
+
+prog: $(prog_OBJS)
+	$(CC) $(CFLAGS) $(prog_OBJS) -o prog
+---
+
+In every C file that you need to use it, add
+
+#include "libtsfuncs/tsfuncs.h"
+
+Documentation
+=============
+There isn't any. I'm too lazy to write proper docs. Maybe some day but
+until then just look at the tsfuncs.h, tsdata.h and log.h header files.
+
+Development
+===========
+The development is tracked using git. The repository is hosted at github
+to get it, run the following command:
+
+   git clone git://github.com/gfto/libtsfuncs.git
+
+Releases
+========
+Official releases can be downloaded from libtsfuncs home page which is
+
+   http://georgi.unixsol.org/programs/libtsfuncs/
+
+Contact
+=======
+For patches, bug reports, complaints and so on send e-mail to
+
+   Georgi Chorbadzhiyski <georgi@unixsol.org>

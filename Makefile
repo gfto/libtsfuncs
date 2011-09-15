@@ -18,9 +18,9 @@ OBJS = log.o tsfuncs.o crc.o misc.o time.o \
 	pes.o pes_data.o \
 	pes_es.o \
 	privsec.o
-PROG = libts.a
+PROG = libtsfuncs.a
 
-tstest_OBJS = tstest.o libts.a
+tstest_OBJS = tstest.o libtsfuncs.a
 all: $(PROG) tstest
 
 $(PROG): $(OBJS) tsdata.h tsfuncs.h
@@ -32,7 +32,7 @@ tstest: $(tstest_OBJS)
 	$(Q)$(CC) $(CFLAGS) $(tstest_OBJS) -o tstest
 
 %.o: %.c tsdata.h tsfuncs.h
-	$(Q)echo "  CC	libts	$<"
+	$(Q)echo "  CC	libtsfuncs	$<"
 	$(Q)$(CC) $(CFLAGS) -c $<
 
 clean:

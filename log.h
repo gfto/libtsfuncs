@@ -1,3 +1,10 @@
+/*
+ * Logger function header file
+ * Copyright (C) 2010-2011 Unix Solutions Ltd.
+ *
+ * Released under MIT license.
+ * See LICENSE-MIT.txt for license terms.
+ */
 #ifndef LIBTS_LOG_H
 #define LIBTS_LOG_H
 

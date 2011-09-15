@@ -1,3 +1,10 @@
+/*
+ * libtsfuncs test program
+ * Copyright (C) 2010-2011 Unix Solutions Ltd.
+ *
+ * Released under MIT license.
+ * See LICENSE-MIT.txt for license terms.
+ */
 #include "tsfuncs.h"
 
 #define NOW 1234567890

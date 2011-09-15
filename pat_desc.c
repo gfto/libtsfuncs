@@ -1,3 +1,10 @@
+/*
+ * PAT descriptor generator
+ * Copyright (C) 2010-2011 Unix Solutions Ltd.
+ *
+ * Released under MIT license.
+ * See LICENSE-MIT.txt for license terms.
+ */
 #include <stdio.h>
 #include <unistd.h>
 #include <netdb.h>

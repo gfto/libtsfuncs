@@ -1,3 +1,10 @@
+/*
+ * Main header file
+ * Copyright (C) 2010-2011 Unix Solutions Ltd.
+ *
+ * Released under MIT license.
+ * See LICENSE-MIT.txt for license terms.
+ */
 #ifndef LIBTS_TSFUNCS_H
 #define LIBTS_TSFUNCS_H
 

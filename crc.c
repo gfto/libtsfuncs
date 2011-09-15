@@ -1,3 +1,10 @@
+/*
+ * CRC functions for mpeg PSI tables
+ * Copyright (C) 2010-2011 Unix Solutions Ltd.
+ *
+ * Released under MIT license.
+ * See LICENSE-MIT.txt for license terms.
+ */
 #include <netdb.h>
 
 #include "tsfuncs.h"

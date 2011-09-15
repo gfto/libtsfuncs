@@ -326,20 +326,17 @@ int ts_pes_parse(struct ts_pes *pes) {
 		return 0;
 
 	if (pes->PTS_flag && !pes->DTS_flag) {
-		if (!ts_decode_pts_dts(&data[dpos], 2, &pes->PTS))
-			return 0;
+		ts_decode_pts_dts(&data[dpos], &pes->PTS);
 		dpos += 5;
 		pes->have_pts = 1;
 	}
 
 	if (pes->PTS_flag && pes->DTS_flag) {
-		if (!ts_decode_pts_dts(&data[dpos], 3, &pes->PTS))
-			return 0;
+		ts_decode_pts_dts(&data[dpos], &pes->PTS);
 		pes->have_pts = 1;
 		dpos += 5;
 
-		if (!ts_decode_pts_dts(&data[dpos], 1, &pes->DTS))
-			return 0;
+		ts_decode_pts_dts(&data[dpos], &pes->DTS);
 		pes->have_dts = 1;
 		dpos += 5;
 	}

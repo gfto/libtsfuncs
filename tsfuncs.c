@@ -50,110 +50,32 @@ uint8_t ts_packet_get_payload_offset(uint8_t *ts_packet) {
 	}
 }
 
-/*
- * Decode a PTS or DTS value.
- *
- * - `data` is the 5 bytes containing the encoded PTS or DTS value
- * - `required_guard` should be 2 for a PTS alone, 3 for a PTS before
- *   a DTS, or 1 for a DTS after a PTS
- * - `value` is the PTS or DTS value as decoded
- *
- * Returns 0 if the PTS/DTS value is decoded successfully, 1 if an error occurs
- */
-int ts_decode_pts_dts(uint8_t *data, int required_guard, uint64_t *value) {
-  uint64_t      pts1,pts2,pts3;
-  int           marker;
-  char         *what;
-  int           guard = (data[0] & 0xF0) >> 4;
-
-  // Rather than try to use casts to make the arithmetic come out right on both
-  // Linux-with-gcc (old-style C rules) and Windows-with-VisualC++ (C99 rules),
-  // it's simpler just to use intermediates that won't get cast to "int".
-  unsigned int  data0 = data[0];
-  unsigned int  data1 = data[1];
-  unsigned int  data2 = data[2];
-  unsigned int  data3 = data[3];
-  unsigned int  data4 = data[4];
-
-  switch (required_guard) {
-    case 2:  what = "PTS"; break;  // standalone
-    case 3:  what = "PTS"; break;  // before a DTS
-    case 1:  what = "DTS"; break;  // always after a PTS
-    default: what = "???"; break;
-  }
-
-  if (guard != required_guard)
-  {
-    ts_LOGf("!!! decode_pts_dts(), Guard bits at start of %s data are %x, not %x\n", what, guard, required_guard);
-  }
-
-  pts1 = (data0 & 0x0E) >> 1;
-  marker = data0 & 0x01;
-  if (marker != 1)
-  {
-    ts_LOGf("!!! decode_pts_dts(), First %s marker is not 1\n",what);
-    return 0;
-  }
-
-  pts2 = (data1 << 7) | ((data2 & 0xFE) >> 1);
-  marker = data2 & 0x01;
-  if (marker != 1)
-  {
-    ts_LOGf("!!! decode_pts_dts(), Second %s marker is not 1\n",what);
-    return 0;
-  }
-
-  pts3 = (data3 << 7) | ((data4 & 0xFE) >> 1);
-  marker = data4 & 0x01;
-  if (marker != 1)
-  {
-    ts_LOGf("!!! decode_pts_dts(), Third %s marker is not 1\n",what);
-    return 0;
-  }
-
-  *value = (pts1 << 30) | (pts2 << 15) | pts3;
-  return 1;
+void ts_decode_pts_dts(uint8_t *data, uint64_t *value) {
+	uint64_t pts1 = ((unsigned int)data[0] & 0x0E) >> 1;
+	uint64_t pts2 = ((unsigned int)data[1] << 7) | (((unsigned int)data[2] & 0xFE) >> 1);
+	uint64_t pts3 = ((unsigned int)data[3] << 7) | (((unsigned int)data[4] & 0xFE) >> 1);
+	*value = (pts1 << 30) | (pts2 << 15) | pts3;
 }
 
 /*
- * Encode a PTS or DTS.
- *
- * - `data` is the array of 5 bytes into which to encode the PTS/DTS
- * - `guard_bits` are the required guard bits: 2 for a PTS alone, 3 for
- *   a PTS before a DTS, or 1 for a DTS after a PTS
- * - `value` is the PTS or DTS value to be encoded
+ * guard 2 == pts
+ * guard 3 == pts before dts
+ * guard 1 == dts
  */
-void ts_encode_pts_dts(uint8_t *data, int guard_bits, uint64_t value) {
-  int   pts1,pts2,pts3;
+void ts_encode_pts_dts(uint8_t *data, int guard, uint64_t value) {
+	#define MAX_PTS_VALUE 0x1FFFFFFFFLL
+	while (value > MAX_PTS_VALUE)
+		value -= MAX_PTS_VALUE;
 
-#define MAX_PTS_VALUE 0x1FFFFFFFFLL
+	unsigned int pts1 = (unsigned int)((value >> 30) & 0x07);
+	unsigned int pts2 = (unsigned int)((value >> 15) & 0x7FFF);
+	unsigned int pts3 = (unsigned int)( value        & 0x7FFF);
 
-  if (value > MAX_PTS_VALUE)
-  {
-    char        *what;
-    uint64_t     temp = value;
-    while (temp > MAX_PTS_VALUE)
-      temp -= MAX_PTS_VALUE;
-    switch (guard_bits)
-    {
-    case 2:  what = "PTS alone"; break;
-    case 3:  what = "PTS before DTS"; break;
-    case 1:  what = "DTS after PTS"; break;
-    default: what = "PTS/DTS/???"; break;
-    }
-    ts_LOGf("!!! value %llu for %s is more than %llu - reduced to %llu\n",value,what,MAX_PTS_VALUE,temp);
-    value = temp;
-  }
-
-  pts1 = (int)((value >> 30) & 0x07);
-  pts2 = (int)((value >> 15) & 0x7FFF);
-  pts3 = (int)( value        & 0x7FFF);
-
-  data[0] =  (guard_bits << 4) | (pts1 << 1) | 0x01;
-  data[1] =  (pts2 & 0x7F80) >> 7;
-  data[2] = ((pts2 & 0x007F) << 1) | 0x01;
-  data[3] =  (pts3 & 0x7F80) >> 7;
-  data[4] = ((pts3 & 0x007F) << 1) | 0x01;
+	data[0] =  (guard << 4) | (pts1 << 1) | 0x01;
+	data[1] =  (pts2 & 0x7F80) >> 7;
+	data[2] = ((pts2 & 0x007F) << 1) | 0x01;
+	data[3] =  (pts3 & 0x7F80) >> 7;
+	data[4] = ((pts3 & 0x007F) << 1) | 0x01;
 }
 
 // Return 0 on failure
@@ -209,14 +131,11 @@ int ts_packet_has_pts_dts(uint8_t *ts_packet, uint64_t *pts, uint64_t *dts) {
 
 	if (pts_flag && !dts_flag) {
 		if (data + 14 >= data_end) goto ERR;
-		if (!ts_decode_pts_dts(&data[9], 2, pts))
-			goto ERR;
+		ts_decode_pts_dts(&data[9], pts);
 	} else if (pts_flag && dts_flag) {
 		if (data + 19 >= data_end) goto ERR;
-		if (!ts_decode_pts_dts(&data[9], 3, pts))
-			goto ERR;
-		if (!ts_decode_pts_dts(&data[14], 1, dts))
-			goto ERR;
+		ts_decode_pts_dts(&data[9], pts);
+		ts_decode_pts_dts(&data[14], dts);
 	}
 	return 1;
 

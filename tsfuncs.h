@@ -85,8 +85,13 @@ uint64_t		ts_packet_get_pcr		(uint8_t *ts_packet);
 void			ts_packet_set_pcr_ex	(uint8_t *ts_packet, uint64_t pcr_base, uint16_t pcr_ext);
 void			ts_packet_set_pcr		(uint8_t *ts_packet, uint64_t pcr);
 
-void			ts_encode_pts_dts		(uint8_t *data, int guard_bits, uint64_t value);
-int				ts_decode_pts_dts		(uint8_t *data, int required_guard, uint64_t *value);
+/*
+ * guard 2 == pts
+ * guard 3 == pts before dts
+ * guard 1 == dts
+ */
+void			ts_encode_pts_dts		(uint8_t *data, int guard, uint64_t value);
+void			ts_decode_pts_dts		(uint8_t *data, uint64_t *value);
 
 int				ts_packet_has_pes		(uint8_t *ts_packet, uint16_t *pes_packet_len);
 int				ts_packet_has_pts_dts	(uint8_t *ts_packet, uint64_t *pts, uint64_t *dts);

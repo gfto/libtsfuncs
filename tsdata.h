@@ -93,9 +93,14 @@ struct ts_pat {
 };
 
 enum CA_system {
+	CA_SECA,		// 0x0100 - 0x01FF Canal Plus (SECA/Mediaguard)
+	CA_VIACCESS,	// 0x0500 - 0x05FF France Telecom
 	CA_IRDETO,		// 0x0600 - 0x06FF Irdeto
+	CA_VIDEOGUARD,	// 0x0900 - 0x09FF News Datacom (NDS/Videoguard)
 	CA_CONAX,		// 0x0B00 - 0x0BFF Norwegian Telekom
 	CA_CRYPTOWORKS,	// 0x0D00 - 0x0DFF CrytoWorks
+	CA_NAGRA,		// 0x1800 - 0x18FF Kudelski SA (Nagravision)
+	CA_DRECRYPT,	// 0x4AE0 - 0x4AE1 OOO Cifra (DRE-Crypt)
 	CA_UNKNOWN,
 };
 

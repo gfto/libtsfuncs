@@ -184,20 +184,31 @@ int ts_cat_is_same(struct ts_cat *cat1, struct ts_cat *cat2) {
 }
 
 enum CA_system ts_get_CA_sys(uint16_t CA_id) {
+	if (CA_id >= 0x0100 && CA_id <= 0x01FF) return CA_SECA;
+	if (CA_id >= 0x0500 && CA_id <= 0x05FF) return CA_VIACCESS;
 	if (CA_id >= 0x0600 && CA_id <= 0x06FF) return CA_IRDETO;
+	if (CA_id >= 0x0900 && CA_id <= 0x09FF) return CA_VIDEOGUARD;
 	if (CA_id >= 0x0B00 && CA_id <= 0x0BFF) return CA_CONAX;
 	if (CA_id >= 0x0D00 && CA_id <= 0x0DFF) return CA_CRYPTOWORKS;
+	if (CA_id >= 0x1800 && CA_id <= 0x18FF) return CA_NAGRA;
+	if (CA_id >= 0x4AE0 && CA_id <= 0x4AE1) return CA_DRECRYPT;
 	return CA_UNKNOWN;
 }
 
+
 char * ts_get_CA_sys_txt(enum CA_system CA_sys) {
 	switch (CA_sys) {
+		case CA_SECA:			return "SECA";
+		case CA_VIACCESS:		return "VIACCESS";
 		case CA_IRDETO:			return "IRDETO";
+		case CA_VIDEOGUARD:		return "VIDEOGUARD";
 		case CA_CONAX:			return "CONAX";
 		case CA_CRYPTOWORKS:	return "CRYPTOWORKS";
-		case CA_UNKNOWN:
-		default:				return "UNKNOWN";
+		case CA_NAGRA:			return "NAGRA";
+		case CA_DRECRYPT:		return "DRE-CRYPT";
+		case CA_UNKNOWN:		return "UNKNOWN";
 	}
+	return "UNKNOWN";
 }
 
 static int find_CA_descriptor(uint8_t *data, int data_len, enum CA_system req_CA_type, uint16_t *CA_id, uint16_t *CA_pid) {

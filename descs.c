@@ -382,7 +382,11 @@ void ts_descriptor_dump(uint8_t *desc_data, int desc_data_len) {
 			}
 			case 0x58: { // local_timeoffset
 				ts_LOGf("%sTag 0x%02x (%02d), sz: %d, Local timeoffset descriptor\n", pad, tag, tag, this_length);
-				if (this_length == 13) {
+				if (this_length % 13 != 0) {
+					ts_LOGf("%s  !!! length %% 13 != 0 (%d)\n", pad, this_length);
+					break;
+				}
+				while (this_length > 0) {
 					uint16_t mjd, lto, lto_next;
 					uint32_t bcd;
 					time_t ts;
@@ -411,8 +415,9 @@ void ts_descriptor_dump(uint8_t *desc_data, int desc_data_len) {
 						tm.tm_hour, tm.tm_min, tm.tm_sec,
 						mjd, bcd, ts);
 					ts_LOGf("%s  LTO next    : %c%04x\n", pad, polarity ? '-' : '+', lto_next);
-				} else {
-					ts_LOGf("%s  !!! length != 13 (%d)\n", pad, this_length);
+					data += 13;
+					data_len -= this_length;
+					this_length -= 13;
 				}
 				break;
 			}

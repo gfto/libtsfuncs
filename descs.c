@@ -70,7 +70,7 @@ void ts_descriptor_dump(uint8_t *desc_data, int desc_data_len) {
 					        reserved                     : 5;
 					uint8_t escape:1, profile:3, level:4;
 				} vs;
-				if (this_length >= 2) {
+				if (this_length >= 1) {
 					vs.multiple_frame_rate_flag     = bit_on(data[0], bit_8);
 					vs.frame_rate_code              = (data[0] &~ 0x80) >> 3; // 1xxxx111
 					vs.mpeg1_only_flag              = bit_on(data[0], bit_3);
@@ -92,7 +92,7 @@ void ts_descriptor_dump(uint8_t *desc_data, int desc_data_len) {
 					ts_LOGf("%s  - constraint_parameter_flag    : %d\n", pad, vs.constraint_parameter_flag);
 					ts_LOGf("%s  - still_picture_flag           : %d\n", pad, vs.still_picture_flag);
 				}
-				if (this_length >= 3 && vs.mpeg1_only_flag == 0) {
+				if (this_length >= 2 && vs.mpeg1_only_flag == 0) {
 					vs.profile_and_level_indication = data[1];
 					vs.chroma_format                = data[2] >> 6;				// xx111111
 					vs.frame_rate_extension_flag    = bit_on(data[2], bit_6);	// 11x11111

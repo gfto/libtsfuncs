@@ -251,3 +251,84 @@ int ts_get_ecm_info(struct ts_pmt *pmt, enum CA_system req_CA_type, uint16_t *CA
 
 	return result;
 }
+
+static int find_CA_descriptor_by_caid(uint8_t *data, int data_len, uint16_t caid, uint16_t *CA_pid) {
+	while (data_len >= 2) {
+		uint8_t tag         = data[0];
+		uint8_t this_length = data[1];
+		data     += 2;
+		data_len -= 2;
+		if (tag == 9 && this_length >= 4) {
+			uint16_t CA_ID = (data[0] << 8) | data[1];
+			uint16_t CA_PID = ((data[2] & 0x1F) << 8) | data[3];
+			if (CA_ID == caid) {
+				*CA_pid = CA_PID;
+				return 1;
+			}
+		}
+		data_len -= this_length;
+		data += this_length;
+	}
+	return 0;
+}
+
+int ts_get_emm_info_by_caid(struct ts_cat *cat, uint16_t caid, uint16_t *ca_pid) {
+	return find_CA_descriptor_by_caid(cat->program_info, cat->program_info_size, caid, ca_pid);
+}
+
+int ts_get_ecm_info_by_caid(struct ts_pmt *pmt, uint16_t caid, uint16_t *ca_pid) {
+	int i, result = find_CA_descriptor_by_caid(pmt->program_info, pmt->program_info_size, caid, ca_pid);
+	if (!result) {
+		for(i=0;i<pmt->streams_num;i++) {
+			struct ts_pmt_stream *stream = pmt->streams[i];
+			if (stream->ES_info) {
+				result = find_CA_descriptor_by_caid(stream->ES_info, stream->ES_info_size, caid, ca_pid);
+				if (result)
+					break;
+			}
+		}
+	}
+
+	return result;
+}
+
+
+static int find_CA_descriptor_by_pid(uint8_t *data, int data_len, uint16_t *caid, uint16_t pid) {
+	while (data_len >= 2) {
+		uint8_t tag         = data[0];
+		uint8_t this_length = data[1];
+		data     += 2;
+		data_len -= 2;
+		if (tag == 9 && this_length >= 4) {
+			uint16_t CA_ID = (data[0] << 8) | data[1];
+			uint16_t CA_PID = ((data[2] & 0x1F) << 8) | data[3];
+			if (CA_PID == pid) {
+				*caid = CA_ID;
+				return 1;
+			}
+		}
+		data_len -= this_length;
+		data += this_length;
+	}
+	return 0;
+}
+
+int ts_get_emm_info_by_pid(struct ts_cat *cat, uint16_t *caid, uint16_t ca_pid) {
+	return find_CA_descriptor_by_pid(cat->program_info, cat->program_info_size, caid, ca_pid);
+}
+
+int ts_get_ecm_info_by_pid(struct ts_pmt *pmt, uint16_t *caid, uint16_t ca_pid) {
+	int i, result = find_CA_descriptor_by_pid(pmt->program_info, pmt->program_info_size, caid, ca_pid);
+	if (!result) {
+		for(i=0;i<pmt->streams_num;i++) {
+			struct ts_pmt_stream *stream = pmt->streams[i];
+			if (stream->ES_info) {
+				result = find_CA_descriptor_by_pid(stream->ES_info, stream->ES_info_size, caid, ca_pid);
+				if (result)
+					break;
+			}
+		}
+	}
+
+	return result;
+}

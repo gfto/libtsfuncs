@@ -143,7 +143,7 @@ void ts_section_add_packet(struct ts_section_header *sec, struct ts_header *ts_h
 		payload_offset += sec->pointer_field + 1; // Pointer field
 	}
 
-	int to_copy = TS_PACKET_SIZE - payload_offset;
+	int to_copy = min(TS_PACKET_SIZE - payload_offset, sec->section_data_len - sec->section_pos);
 	if (to_copy <= 0)
 		return;
 
@@ -155,7 +155,8 @@ void ts_section_add_packet(struct ts_section_header *sec, struct ts_header *ts_h
 	memcpy(sec->packet_data + (sec->num_packets * TS_PACKET_SIZE), ts_packet, TS_PACKET_SIZE);
 	sec->section_pos += to_copy;
 	sec->num_packets++;
-	sec->initialized = (sec->section_pos+1) >= sec->section_data_len;
+	sec->initialized = (sec->section_pos+1) > sec->section_data_len;
+
 	if (sec->initialized) {
 		// CRC is after sec->data[sec->data_len]
 		sec->CRC = (sec->CRC << 8) | sec->data[sec->data_len + 3];

@@ -216,6 +216,9 @@ struct ts_pes *ts_pes_push_packet(struct ts_pes *pes, uint8_t *ts_packet, struct
 		goto OUT;
 
 	if (ts_header.pusi) {
+		// Received PUSI packet before PES END, clear the table to start gathering new one
+		if (pes->ts_header.pusi)
+			ts_pes_clear(pes);
 		uint8_t stream_id = 0;
 		int pes_packet_len = 0;
 		if (payload[0] == 0x00 && payload[1] == 0x00 && payload[2] == 0x01) { // pes_start_code_prefix

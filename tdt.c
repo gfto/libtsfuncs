@@ -51,6 +51,9 @@ struct ts_tdt *ts_tdt_push_packet(struct ts_tdt *tdt, uint8_t *ts_packet) {
 		// TDT/TOT should be with PID 0x11
 		if (ts_header.pid != 0x14)
 			goto OUT;
+		// Received PUSI packet before table END, clear the table to start gathering new one
+		if (tdt->ts_header.pusi)
+			ts_tdt_clear(tdt);
 		if (!tdt->ts_header.pusi)
 			tdt->ts_header = ts_header;
 	}

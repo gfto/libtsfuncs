@@ -67,6 +67,9 @@ struct ts_pmt *ts_pmt_push_packet(struct ts_pmt *pmt, uint8_t *ts_packet) {
 	memset(&ts_header, 0, sizeof(struct ts_header));
 
 	if (ts_packet_header_parse(ts_packet, &ts_header)) {
+		// Received PUSI packet before table END, clear the table to start gathering new one
+		if (pmt->ts_header.pusi)
+			ts_pmt_clear(pmt);
 		if (!pmt->ts_header.pusi)
 			pmt->ts_header = ts_header;
 	}

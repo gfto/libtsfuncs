@@ -67,6 +67,9 @@ struct ts_eit *ts_eit_push_packet(struct ts_eit *eit, uint8_t *ts_packet) {
 		// EIT should be with PID 0x12
 		if (ts_header.pid != 0x12)
 			goto OUT;
+		// Received PUSI packet before table END, clear the table to start gathering new one
+		if (eit->ts_header.pusi)
+			ts_eit_clear(eit);
 		if (!eit->ts_header.pusi)
 			eit->ts_header = ts_header;
 	}

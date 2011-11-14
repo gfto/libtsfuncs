@@ -54,7 +54,7 @@ struct ts_privsec *ts_privsec_push_packet(struct ts_privsec *privsec, uint8_t *t
 
 	if (ts_packet_header_parse(ts_packet, &ts_header)) {
 		// Received PUSI packet before table END, clear the table to start gathering new one
-		if (privsec->ts_header.pusi)
+		if (ts_header.pusi && privsec->ts_header.pusi)
 			ts_privsec_clear(privsec);
 		if (!privsec->ts_header.pusi)
 			privsec->ts_header = ts_header;

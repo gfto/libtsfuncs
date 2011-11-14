@@ -48,7 +48,7 @@ struct ts_cat *ts_cat_push_packet(struct ts_cat *cat, uint8_t *ts_packet) {
 
 	if (ts_packet_header_parse(ts_packet, &ts_header)) {
 		// Received PUSI packet before table END, clear the table to start gathering new one
-		if (cat->ts_header.pusi)
+		if (ts_header.pusi && cat->ts_header.pusi)
 			ts_cat_clear(cat);
 		if (!cat->ts_header.pusi)
 			cat->ts_header = ts_header;

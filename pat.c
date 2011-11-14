@@ -67,7 +67,7 @@ struct ts_pat *ts_pat_push_packet(struct ts_pat *pat, uint8_t *ts_packet) {
 		if (ts_header.pid != 0x00)
 			goto OUT;
 		// Received PUSI packet before table END, clear the table to start gathering new one
-		if (pat->ts_header.pusi)
+		if (ts_header.pusi && pat->ts_header.pusi)
 			ts_pat_clear(pat);
 		if (!pat->ts_header.pusi)
 			pat->ts_header = ts_header;

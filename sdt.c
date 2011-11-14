@@ -68,7 +68,7 @@ struct ts_sdt *ts_sdt_push_packet(struct ts_sdt *sdt, uint8_t *ts_packet) {
 		if (ts_header.pid != 0x11)
 			goto OUT;
 		// Received PUSI packet before table END, clear the table to start gathering new one
-		if (sdt->ts_header.pusi)
+		if (ts_header.pusi && sdt->ts_header.pusi)
 			ts_sdt_clear(sdt);
 		if (!sdt->ts_header.pusi)
 			sdt->ts_header = ts_header;

@@ -70,7 +70,7 @@ struct ts_nit *ts_nit_push_packet(struct ts_nit *nit, uint8_t *ts_packet) {
 		if (ts_header.pid != 0x10)
 			goto OUT;
 		// Received PUSI packet before table END, clear the table to start gathering new one
-		if (nit->ts_header.pusi)
+		if (ts_header.pusi && nit->ts_header.pusi)
 			ts_nit_clear(nit);
 		if (!nit->ts_header.pusi)
 			nit->ts_header = ts_header;

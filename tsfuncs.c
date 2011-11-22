@@ -49,7 +49,7 @@ uint8_t ts_packet_get_payload_offset(uint8_t *ts_packet) {
 			return 0;
 		if (!payload_field && adapt_len > 183)
 			return 0;
-		if (adapt_len + 1 + 4 >= 188) // adaptation field takes the whole packet
+		if (adapt_len + 4 > 188) // adaptation field takes the whole packet
 			return 0;
 		return 4 + 1 + adapt_len; // ts header + adapt_field_len_byte + adapt_field_len
 	} else {

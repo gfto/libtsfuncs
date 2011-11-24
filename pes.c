@@ -10,6 +10,7 @@
 #include <netdb.h>
 #include <stdlib.h>
 #include <string.h>
+#include <inttypes.h>
 
 #include "tsfuncs.h"
 
@@ -510,19 +511,19 @@ void ts_pes_dump(struct ts_pes *pes) {
 		pes->pes_extension_flag	? "PES_Ext "	: ""
 	);
 	if (pes->PTS_flag && pes->have_pts)
-		ts_LOGf("  * PTS        : %llu (%llu ms) (%llu.%04llu sec)\n",
+		ts_LOGf("  * PTS        : %"PRIu64" (%"PRIu64" ms) (%"PRIu64".%04"PRIu64" sec)\n",
 			pes->PTS,
 			pes->PTS / 90,
 			pes->PTS / 90000, (pes->PTS % 90000) / 9
 		);
 	if (pes->DTS_flag && pes->have_dts)
-		ts_LOGf("  * DTS        : %llu (%llu ms) (%llu.%04llu sec)\n",
+		ts_LOGf("  * DTS        : %"PRIu64" (%"PRIu64" ms) (%"PRIu64".%04"PRIu64" sec)\n",
 			pes->DTS,
 			pes->DTS / 90,
 			pes->DTS / 90000, (pes->DTS % 90000) / 9
 		);
 	if (pes->ESCR_flag)
-		ts_LOGf("  * ESCR       : %llu\n", pes->ESCR);
+		ts_LOGf("  * ESCR       : %"PRIu64"\n", pes->ESCR);
 	if (pes->ES_rate_flag)
 		ts_LOGf("  * ES_rate    : %lu\n" , (unsigned long)pes->ES_rate * 50); // In units of 50 bytes
 
@@ -537,8 +538,11 @@ void ts_pes_dump(struct ts_pes *pes) {
 		);
 	}
 
-	if (pes->pes_private_data_flag)
-		ts_LOGf("  * PES priv_data : 0x%08llx%08llx\n", pes->pes_private_data_1, pes->pes_private_data_2);
+	if (pes->pes_private_data_flag) {
+		ts_LOGf("  * PES priv_data : 0x%08llx%08llx\n",
+			(unsigned long long)pes->pes_private_data_1,
+			(unsigned long long)pes->pes_private_data_2);
+	}
 
 	if (pes->pack_header_field_flag) {
 		ts_LOGf("  * Pack_header ... \n");

@@ -29,7 +29,7 @@ $(PROG): $(OBJS) tsdata.h tsfuncs.h
 	$(Q)$(LINK) $@ $(LIBRARY_LINK_OPTS) $(OBJS)
 
 tstest: $(tstest_OBJS)
-	$(Q)echo "  LINK	$(PROG)"
+	$(Q)echo "  LINK	tstest"
 	$(Q)$(CC) $(CFLAGS) $(tstest_OBJS) -o tstest
 
 %.o: %.c tsdata.h tsfuncs.h

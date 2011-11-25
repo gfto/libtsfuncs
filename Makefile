@@ -1,5 +1,7 @@
 CC = $(CROSS)$(TARGET)gcc
 LINK = $(CROSS)$(TARGET)ld -o
+MKDEP = $(CROSS)$(TARGET)$(CC) -M -o $*.d $<
+
 LIBRARY_LINK_OPTS =  -L. -r
 CFLAGS = -O2 -ggdb -std=c99 -D_GNU_SOURCE
 CFLAGS += -Wall -Wextra -Wshadow -Wformat-security -Wstrict-prototypes
@@ -33,11 +35,14 @@ tstest: $(tstest_OBJS)
 	$(Q)$(CC) $(CFLAGS) $(tstest_OBJS) -o tstest
 
 %.o: %.c tsdata.h tsfuncs.h
+	@$(MKDEP)
 	$(Q)echo "  CC	libtsfuncs	$<"
 	$(Q)$(CC) $(CFLAGS) -c $<
 
+-include $(OBJS:.o=.d)
+
 clean:
-	$(Q)echo "  RM	$(PROG) $(OBJS)"
-	$(Q)$(RM) $(PROG) tstest *.o *~
+	$(Q)echo "  RM	$(PROG) $(OBJS:.o=.{o,d})"
+	$(Q)$(RM) $(PROG) tstest $(OBJS:.o=.{o,d}) *~
 
 distclean: clean

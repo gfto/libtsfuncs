@@ -1,7 +1,8 @@
 CC = $(CROSS)$(TARGET)gcc
 LINK = $(CROSS)$(TARGET)ld -o
 LIBRARY_LINK_OPTS =  -L. -r
-CFLAGS = -ggdb -D_GNU_SOURCE -Wall -Wextra -Wshadow -Wformat-security -O2
+CFLAGS = -O2 -ggdb -std=c99 -D_GNU_SOURCE
+CFLAGS += -Wall -Wextra -Wshadow -Wformat-security -Wstrict-prototypes
 RM = /bin/rm -f
 Q=@
 

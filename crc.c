@@ -14,7 +14,7 @@
 static int crc_table_initialized = 0;
 static uint32_t crc32_table[256];
 
-void ts_crc32_init() {
+void ts_crc32_init(void) {
 	int i, j;
 	uint32_t crc;
 	if (crc_table_initialized)

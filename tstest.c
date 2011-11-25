@@ -10,7 +10,7 @@
 #define NOW 1234567890
 #define NOW2 1000000000
 
-void ts_pat_test() {
+void ts_pat_test(void) {
 	struct ts_pat *pat = ts_pat_alloc_init(0x7878);
 
 	ts_pat_dump(pat);
@@ -35,7 +35,7 @@ void ts_pat_test() {
 	ts_pat_free(&pat);
 }
 
-void ts_tdt_test() {
+void ts_tdt_test(void) {
 	struct ts_tdt *tdt = ts_tdt_alloc_init(NOW);
 	ts_tdt_dump(tdt);
 	ts_tdt_set_time(tdt, NOW2);
@@ -43,7 +43,7 @@ void ts_tdt_test() {
 	ts_tdt_free(&tdt);
 }
 
-void ts_tot_test() {
+void ts_tot_test(void) {
 	struct ts_tdt *tot;
 
 	tot = ts_tot_alloc_init(NOW);
@@ -61,7 +61,7 @@ void ts_tot_test() {
 	ts_tdt_free(&tot);
 }
 
-int ts_sdt_test() {
+int ts_sdt_test(void) {
 	struct ts_sdt *sdt = ts_sdt_alloc_init(1, 2);
 
 	ts_sdt_add_service_descriptor(sdt, 1007, 1, "BULSATCOM", "bTV");
@@ -116,7 +116,7 @@ void ts_eit_test4(struct ts_eit *eit) { // Test almost full PSI packet on the TS
 	ts_eit_add_short_event_descriptor(eit, 4, 1, NOW, 3600, "aaaaaaaaBBBB", NULL);
 }
 
-void ts_eit_test() {
+void ts_eit_test(void) {
 	struct ts_eit *eit;
 
 	eit = ts_eit_alloc_init(1, 2, 3, 1, 0, 0);
@@ -141,7 +141,7 @@ void ts_eit_test() {
 //	write(1, eit->section_header->packet_data, eit->section_header->num_packets * TS_PACKET_SIZE);
 }
 
-int main() {
+int main(void) {
 	ts_pat_test();
 	ts_tdt_test();
 	ts_tot_test();

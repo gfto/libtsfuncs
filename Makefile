@@ -24,7 +24,7 @@ OBJS = log.o tsfuncs.o crc.o misc.o time.o \
 PROG = libtsfuncs.a
 
 tstest_OBJS = tstest.o libtsfuncs.a
-all: $(PROG) tstest
+all: $(PROG)
 
 $(PROG): $(OBJS) tsdata.h tsfuncs.h
 	$(Q)echo "  LINK	$(PROG)"

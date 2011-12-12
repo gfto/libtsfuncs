@@ -137,6 +137,7 @@ void						ts_section_data_gen_ts_packets	(struct ts_header *ts_header, uint8_t *
 
 // PAT
 struct ts_pat *	ts_pat_alloc		(void);
+struct ts_pat * ts_pat_init			(struct ts_pat *pat, uint16_t transport_stream_id);
 struct ts_pat * ts_pat_alloc_init	(uint16_t transport_stream_id);
 struct ts_pat *	ts_pat_push_packet	(struct ts_pat *pat, uint8_t *ts_packet);
 void            ts_pat_clear		(struct ts_pat *pat);
@@ -177,7 +178,6 @@ int				ts_get_ecm_info_by_pid	(struct ts_pmt *pmt, uint16_t *caid, uint16_t ca_p
 
 // PMT
 struct ts_pmt *	ts_pmt_alloc		(void);
-struct ts_pmt * ts_pmt_alloc_init	(uint16_t org_network_id, uint16_t transport_stream_id);
 struct ts_pmt *	ts_pmt_push_packet	(struct ts_pmt *pmt, uint8_t *ts_packet);
 void            ts_pmt_clear		(struct ts_pmt *pmt);
 void            ts_pmt_free			(struct ts_pmt **pmt);
@@ -192,6 +192,7 @@ int				ts_pmt_is_same		(struct ts_pmt *pmt1, struct ts_pmt *pmt2);
 
 // NIT
 struct ts_nit * ts_nit_alloc		(void);
+struct ts_nit * ts_nit_init			(struct ts_nit *nit, uint16_t network_id);
 struct ts_nit * ts_nit_alloc_init	(uint16_t network_id);
 struct ts_nit *	ts_nit_push_packet	(struct ts_nit *nit, uint8_t *ts_packet);
 void			ts_nit_clear		(struct ts_nit *nit);
@@ -210,6 +211,7 @@ int				ts_nit_is_same		(struct ts_nit *nit1, struct ts_nit *nit2);
 
 // SDT
 struct ts_sdt *	ts_sdt_alloc		(void);
+struct ts_sdt * ts_sdt_init			(struct ts_sdt *sdt, uint16_t org_network_id, uint16_t transport_stream_id);
 struct ts_sdt * ts_sdt_alloc_init	(uint16_t org_network_id, uint16_t transport_stream_id);
 struct ts_sdt *	ts_sdt_push_packet	(struct ts_sdt *sdt, uint8_t *ts_packet);
 void            ts_sdt_clear		(struct ts_sdt *sdt);
@@ -225,6 +227,7 @@ int				ts_sdt_is_same		(struct ts_sdt *sdt1, struct ts_sdt *sdt2);
 
 // EIT
 struct ts_eit * ts_eit_alloc				(void);
+struct ts_eit *	ts_eit_init					(struct ts_eit *eit, uint16_t service_id, uint16_t transport_stream_id, uint16_t org_network_id, uint8_t table_id, uint8_t sec_number, uint8_t last_sec_number);
 struct ts_eit *	ts_eit_alloc_init			(uint16_t service_id, uint16_t transport_stream_id, uint16_t org_network_id, uint8_t table_id, uint8_t sec_number, uint8_t last_sec_number);
 struct ts_eit *	ts_eit_alloc_init_pf		(uint16_t service_id, uint16_t transport_stream_id, uint16_t org_network_id, uint8_t sec_number, uint8_t last_sec_number);	// Shortcut using table_id 0x4e
 struct ts_eit *	ts_eit_alloc_init_schedule	(uint16_t service_id, uint16_t transport_stream_id, uint16_t org_network_id, uint8_t sec_number, uint8_t last_sec_number);	// Shortcut using table_id 0x50
@@ -247,6 +250,8 @@ int				ts_eit_is_same		(struct ts_eit *eit1, struct ts_eit *eit2);
 
 // TDT
 struct ts_tdt *	ts_tdt_alloc(void);
+struct ts_tdt *	ts_tdt_init			(struct ts_tdt *tdt, time_t ts);
+struct ts_tdt *	ts_tot_init			(struct ts_tdt *tot, time_t ts);
 struct ts_tdt *	ts_tdt_alloc_init	(time_t ts);
 struct ts_tdt *	ts_tot_alloc_init	(time_t ts);
 void			ts_tdt_clear		(struct ts_tdt *tdt);

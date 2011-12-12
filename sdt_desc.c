@@ -22,9 +22,7 @@ static void ts_sdt_regenerate_packet_data(struct ts_sdt *sdt) {
 	free(ts_packets);
 }
 
-struct ts_sdt *ts_sdt_alloc_init(uint16_t org_network_id, uint16_t transport_stream_id) {
-	struct ts_sdt *sdt = ts_sdt_alloc();
-
+struct ts_sdt *ts_sdt_init(struct ts_sdt *sdt, uint16_t org_network_id, uint16_t transport_stream_id) {
 	sdt->ts_header.pid            = 0x11;
 	sdt->ts_header.pusi           = 1;
 	sdt->ts_header.payload_field  = 1;
@@ -43,11 +41,20 @@ struct ts_sdt *ts_sdt_alloc_init(uint16_t org_network_id, uint16_t transport_str
 	sdt->original_network_id = org_network_id;	// 16 bits
 	sdt->reserved            = 0xff;			// 8 bits
 
+	sdt->streams_num = 0;
+
 	sdt->initialized = 1;
 
 	ts_sdt_regenerate_packet_data(sdt);
 
 	return sdt;
+}
+
+struct ts_sdt *ts_sdt_alloc_init(uint16_t org_network_id, uint16_t transport_stream_id) {
+	struct ts_sdt *sdt = ts_sdt_alloc();
+	if (!sdt)
+		return NULL;
+	return ts_sdt_init(sdt, org_network_id, transport_stream_id);
 }
 
 static int ts_sdt_add_stream(struct ts_sdt *sdt, uint16_t service_id, uint8_t *desc, uint8_t desc_size) {

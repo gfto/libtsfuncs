@@ -22,9 +22,7 @@ static void ts_eit_regenerate_packet_data(struct ts_eit *eit) {
 	free(ts_packets);
 }
 
-struct ts_eit *ts_eit_alloc_init(uint16_t service_id, uint16_t transport_stream_id, uint16_t org_network_id, uint8_t table_id, uint8_t sec_number, uint8_t last_sec_number) {
-	struct ts_eit *eit = ts_eit_alloc();
-
+struct ts_eit *ts_eit_init(struct ts_eit *eit, uint16_t service_id, uint16_t transport_stream_id, uint16_t org_network_id, uint8_t table_id, uint8_t sec_number, uint8_t last_sec_number) {
 	eit->ts_header.pid            = 0x12;
 	eit->ts_header.pusi           = 1;
 	eit->ts_header.payload_field  = 1;
@@ -48,11 +46,21 @@ struct ts_eit *ts_eit_alloc_init(uint16_t service_id, uint16_t transport_stream_
 	eit->segment_last_section_number = 0;						// 8 bits
 	eit->last_table_id               = table_id;				// 8 bits
 
+	eit->streams_num = 0;
+
 	eit->initialized = 1;
 
 	ts_eit_regenerate_packet_data(eit);
 
 	return eit;
+}
+
+struct ts_eit *ts_eit_alloc_init(uint16_t service_id, uint16_t transport_stream_id, uint16_t org_network_id, uint8_t table_id, uint8_t sec_number, uint8_t last_sec_number) {
+	struct ts_eit *eit = ts_eit_alloc();
+	if (!eit)
+		return NULL;
+
+	return ts_eit_init(eit, service_id, transport_stream_id, org_network_id, table_id, sec_number, last_sec_number);
 }
 
 struct ts_eit *ts_eit_alloc_init_pf(uint16_t service_id, uint16_t transport_stream_id, uint16_t org_network_id, uint8_t sec_number, uint8_t last_sec_number) {

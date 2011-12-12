@@ -51,6 +51,14 @@ static struct ts_tdt *ts_tdt_init_empty(struct ts_tdt *tdt, time_t ts, int tot) 
 	return tdt;
 }
 
+struct ts_tdt *ts_tdt_init(struct ts_tdt *tdt, time_t ts) {
+	return ts_tdt_init_empty(tdt, ts, 0);
+}
+
+struct ts_tdt *ts_tot_init(struct ts_tdt *tot, time_t ts) {
+	return ts_tdt_init_empty(tot, ts, 1);
+}
+
 struct ts_tdt *ts_tdt_alloc_init(time_t ts) {
 	return ts_tdt_init_empty(ts_tdt_alloc(), ts, 0);
 }

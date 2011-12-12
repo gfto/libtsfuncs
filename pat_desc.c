@@ -22,9 +22,7 @@ static void ts_pat_regenerate_packet_data(struct ts_pat *pat) {
 	free(ts_packets);
 }
 
-struct ts_pat *ts_pat_alloc_init(uint16_t transport_stream_id) {
-	struct ts_pat *pat = ts_pat_alloc();
-
+struct ts_pat *ts_pat_init(struct ts_pat *pat, uint16_t transport_stream_id) {
 	pat->ts_header.pid            = 0x00;
 	pat->ts_header.pusi           = 1;
 	pat->ts_header.payload_field  = 1;
@@ -41,11 +39,20 @@ struct ts_pat *ts_pat_alloc_init(uint16_t transport_stream_id) {
 
 	pat->section_header->ts_id_number             = transport_stream_id;
 
+	pat->programs_num = 0;
+
 	pat->initialized = 1;
 
 	ts_pat_regenerate_packet_data(pat);
 
 	return pat;
+}
+
+struct ts_pat *ts_pat_alloc_init(uint16_t transport_stream_id) {
+	struct ts_pat *pat = ts_pat_alloc();
+	if (!pat)
+		return NULL;
+	return ts_pat_init(pat, transport_stream_id);
 }
 
 int ts_pat_add_program(struct ts_pat *pat, uint16_t program, uint16_t pat_pid) {

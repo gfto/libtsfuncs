@@ -22,9 +22,7 @@ static void ts_nit_regenerate_packet_data(struct ts_nit *nit) {
 	free(ts_packets);
 }
 
-struct ts_nit *ts_nit_alloc_init(uint16_t network_id) {
-	struct ts_nit *nit = ts_nit_alloc();
-
+struct ts_nit *ts_nit_init(struct ts_nit *nit, uint16_t network_id) {
 	nit->ts_header.pid            = 0x10;
 	nit->ts_header.pusi           = 1;
 	nit->ts_header.payload_field  = 1;
@@ -45,11 +43,20 @@ struct ts_nit *ts_nit_alloc_init(uint16_t network_id) {
 	nit->reserved2           = 0xf;
 	nit->ts_loop_size        = 0;		// 16 bits
 
+	nit->streams_num = 0;
+
 	nit->initialized = 1;
 
 	ts_nit_regenerate_packet_data(nit);
 
 	return nit;
+}
+
+struct ts_nit *ts_nit_alloc_init(uint16_t network_id) {
+	struct ts_nit *nit = ts_nit_alloc();
+	if (!nit)
+		return NULL;
+	return ts_nit_init(nit, network_id);
 }
 
 int ts_nit_add_network_name_descriptor(struct ts_nit *nit, char *network_name) {

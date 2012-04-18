@@ -101,6 +101,7 @@ enum CA_system {
 	CA_CRYPTOWORKS,	// 0x0D00 - 0x0DFF CrytoWorks
 	CA_NAGRA,		// 0x1800 - 0x18FF Kudelski SA (Nagravision)
 	CA_DRECRYPT,	// 0x4AE0 - 0x4AE1 OOO Cifra (DRE-Crypt)
+	CA_BULCRYPT,	// 0x5581 & 0x4AEE Bulcrypt
 	CA_UNKNOWN,
 };
 

@@ -42,7 +42,7 @@ tstest: $(tstest_OBJS)
 -include $(OBJS:.o=.d)
 
 clean:
-	$(Q)echo "  RM	$(PROG) $(OBJS:.o=.{o,d})"
-	$(Q)$(RM) $(PROG) tstest $(OBJS:.o=.{o,d}) *~
+	$(Q)echo "  RM	$(PROG) $(OBJS) $(OBJS:.o=.d})"
+	$(Q)$(RM) $(PROG) tstest tstest.o tstest.d $(OBJS) $(OBJS:.o=.d) *~
 
 distclean: clean

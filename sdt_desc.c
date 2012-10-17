@@ -80,7 +80,7 @@ static int ts_sdt_add_stream(struct ts_sdt *sdt, uint16_t service_id, uint8_t *d
 	sinfo->EIT_schedule_flag          = 0;			// 1 bit
 	sinfo->EIT_present_following_flag = 1;			// 1 bit (1 byte) We have EIT
 	sinfo->running_status             = 4;			// 3 bits
-	sinfo->free_CA_mode               = 1;			// 1 bit
+	sinfo->free_CA_mode               = 0;			// 1 bit (0 == not scrambled)
 
 	sinfo->descriptor_size            = desc_size;	// 12 bits (2 bytes)
 	sinfo->descriptor_data            = desc;		// desc_size bytes

@@ -102,6 +102,8 @@ enum CA_system {
 	CA_NAGRA,		// 0x1800 - 0x18FF Kudelski SA (Nagravision)
 	CA_DRECRYPT,	// 0x4AE0 - 0x4AE1 OOO Cifra (DRE-Crypt)
 	CA_BULCRYPT,	// 0x5581 & 0x4AEE Bulcrypt
+	CA_GRIFFIN,		// 0x5501 & 0x5504 & 0x5511 Griffin (Not in dvbservices.com registration)
+	CA_DGCRYPT,		// 0x4ABF          DGCrypt (Beijing Compunicate Technology Inc.)
 	CA_UNKNOWN,
 };
 

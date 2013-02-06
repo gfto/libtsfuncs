@@ -196,6 +196,8 @@ enum CA_system ts_get_CA_sys(uint16_t CA_id) {
 	if (CA_id >= 0x1800 && CA_id <= 0x18FF) return CA_NAGRA;
 	if (CA_id >= 0x4AE0 && CA_id <= 0x4AE1) return CA_DRECRYPT;
 	if (CA_id == 0x5581 || CA_id == 0x4AEE) return CA_BULCRYPT;
+	if (CA_id == 0x5501 || CA_id == 0x5504 || CA_id == 0x5511) return CA_GRIFFIN;
+	if (CA_id == 0x4ABF) return CA_DGCRYPT;
 	return CA_UNKNOWN;
 }
 
@@ -211,6 +213,8 @@ char * ts_get_CA_sys_txt(enum CA_system CA_sys) {
 		case CA_NAGRA:			return "NAGRA";
 		case CA_DRECRYPT:		return "DRE-CRYPT";
 		case CA_BULCRYPT:		return "BULCRYPT";
+		case CA_GRIFFIN:		return "GRIFFIN";
+		case CA_DGCRYPT:		return "DGCRYPT";
 		case CA_UNKNOWN:		return "UNKNOWN";
 	}
 	return "UNKNOWN";

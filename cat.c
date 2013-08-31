@@ -194,13 +194,25 @@ enum CA_system ts_get_CA_sys(uint16_t CA_id) {
 	if (CA_id >= 0x0B00 && CA_id <= 0x0BFF) return CA_CONAX;
 	if (CA_id >= 0x0D00 && CA_id <= 0x0DFF) return CA_CRYPTOWORKS;
 	if (CA_id >= 0x1800 && CA_id <= 0x18FF) return CA_NAGRA;
-	if (CA_id >= 0x4AE0 && CA_id <= 0x4AE1) return CA_DRECRYPT;
-	if (CA_id == 0x5581 || CA_id == 0x4AEE) return CA_BULCRYPT;
-	if (CA_id == 0x5501 || CA_id == 0x5504 || CA_id == 0x5511) return CA_GRIFFIN;
-	if (CA_id == 0x4ABF) return CA_DGCRYPT;
+	switch (CA_id) {
+		case 0x4ABF: return CA_DGCRYPT;
+
+		case 0x4AE0: return CA_DRECRYPT;
+		case 0x4AE1: return CA_DRECRYPT;
+
+		case 0x5581: return CA_BULCRYPT;
+		case 0x4AEE: return CA_BULCRYPT;
+
+		case 0x5501: return CA_GRIFFIN;
+		case 0x5504: return CA_GRIFFIN;
+		case 0x5506: return CA_GRIFFIN;
+		case 0x5508: return CA_GRIFFIN;
+		case 0x5509: return CA_GRIFFIN;
+		case 0x550E: return CA_GRIFFIN;
+		case 0x5511: return CA_GRIFFIN;
+	}
 	return CA_UNKNOWN;
 }
-
 
 char * ts_get_CA_sys_txt(enum CA_system CA_sys) {
 	switch (CA_sys) {

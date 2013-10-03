@@ -93,10 +93,14 @@ int ts_cat_parse(struct ts_cat *cat) {
 	uint8_t *section_data = cat->section_header->data;
 	int section_len = cat->section_header->data_len;
 
+	if (section_len > 4096)
+		return 0;
 	/* Handle streams */
 	uint8_t *stream_data = section_data;
 	cat->program_info_size = section_len;
 	cat->program_info = malloc(cat->program_info_size);
+	if (!cat->program_info)
+		return 0;
 	memcpy(cat->program_info, stream_data, cat->program_info_size);
 	stream_data += cat->program_info_size;
 

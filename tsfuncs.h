@@ -205,6 +205,10 @@ int				ts_nit_add_network_name_descriptor			(struct ts_nit *nit, char *network_n
 int				ts_nit_add_frequency_list_descriptor_cable	(struct ts_nit *nit, uint16_t ts_id, uint16_t org_net_id, uint32_t *freqs, uint8_t num_freqs);
 int				ts_nit_add_cable_delivery_descriptor		(struct ts_nit *nit, uint16_t ts_id, uint16_t org_net_id, uint32_t freq, uint8_t modulation, uint32_t symbol_rate);
 int				ts_nit_add_service_list_descriptor			(struct ts_nit *nit, uint16_t ts_id, uint16_t org_net_id, uint32_t *services, uint8_t num_services);
+int				ts_nit_add_nordig_specifier_descriptor		(struct ts_nit *nit, uint16_t ts_id, uint16_t org_net_id);
+int				ts_nit_add_lcn_descriptor					(struct ts_nit *nit, uint16_t ts_id, uint16_t org_net_id, uint32_t *services, uint8_t num_services);
+int 			ts_nit_add_stream_descriptors				(struct ts_nit *nit, uint16_t ts_id, uint16_t org_net_id, uint32_t freq, uint8_t modulation, uint32_t symbol_rate, uint32_t *lcn_services, uint32_t *svc_services, uint8_t num_services);
+
 
 struct ts_nit *	ts_nit_copy			(struct ts_nit *nit);
 int				ts_nit_is_same		(struct ts_nit *nit1, struct ts_nit *nit2);

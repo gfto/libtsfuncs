@@ -438,6 +438,17 @@ void ts_descriptor_dump(uint8_t *desc_data, int desc_data_len) {
 				}
 				break;
 			}
+			case 0x5f: { // Private NorDig descriptor
+				ts_LOGf("%sTag 0x%02x (%02d), sz: %d, Private Nordig descriptor:\n", pad, tag, tag, this_length);
+				for (i=0; i<this_length; i+=4) {
+					uint8_t u1 = data[i + 0] ;
+					uint8_t u2 = data[i + 1] ;
+					uint8_t u3 = data[i + 2] ;
+					uint8_t u4 = data[i + 3] ;
+					ts_LOGf("%s  Data1: 0x%02x Data2: %02x Data3: %02x Data4: %02x\n", pad, u1, u2, u3 ,u4);
+				}
+				break;
+			}
 			case 0x62: { // frequency_list_descriptor
 				ts_LOGf("%sTag 0x%02x (%02d), sz: %d, Frequency_list_descriptor\n", pad, tag, tag, this_length);
 				uint8_t reserved    = data[0] >> 2;		// 111111xx
@@ -469,23 +480,26 @@ void ts_descriptor_dump(uint8_t *desc_data, int desc_data_len) {
 				ts_LOGf("%sTag 0x%02x (%02d), sz: %d, AC-3 descriptor\n", pad, tag, tag, this_length);
 				break;
 			}
-/*
-			case 0x87: { // Private descriptor! LCN Logical channel descriptor
+
+			case 0x83: { // Private descriptor! LCN Logical channel descriptor
 				ts_LOGf("%sTag 0x%02x (%02d), sz: %d, Logical channel descriptor\n", pad, tag, tag, this_length);
-				for (i=0; i<= this_length; i+=4) {
-					uint16_t service_id = (data[0+i] << 8) | data[1+i];	// xxxxxxxx xxxxxxxx
-					uint8_t  visible    = (data[2+i] >> 7);				// x1111111
-//					uint8_t  reserved1  = (data[2+i] &~ 0x80) >> 2;		// 1xxxxx11
-					uint16_t lcn        = (data[2+i] &~ 0x3f);			// 111111xx
-					         lcn       |=  data[3+i];					// xxxxxxxx
+				for (i=0; i<this_length; i+=4) {
+					uint16_t service_id;
+					uint8_t visible;
+//					uint8_t reserved1;
+					uint16_t lcn;
+					service_id   = data[i + 0] << 8;
+					service_id  |= data[i + 1];
+					visible      = data[i+2] >> 7;			// x1111111
+//					reserved1    = data[i+2] &~ 0x80 >> 6;		// 1x111111
+					lcn          = data[i+2] &~ 0xc0 << 8;		// 11xxxxxx
+					lcn         |= data[i+3];			// xxxxxxxx
 					ts_LOGf("%s  Service_ID: 0x%04x (%4d) LCN: %3d Visible: %d\n",
-						pad,
-						service_id, service_id,
-						lcn, visible);
+						pad, service_id, service_id, lcn, visible);
 				}
 				break;
 			}
-*/
+
 			default: {
 				char *dump = ts_hex_dump(data, this_length, 0);
 				ts_LOGf("%s*** Unknown Tag 0x%02x (%02d), sz: %d, data: %s\n", pad, tag, tag, this_length, dump);

@@ -186,3 +186,112 @@ int ts_nit_add_service_list_descriptor(struct ts_nit *nit, uint16_t ts_id, uint1
 	}
 	return ts_nit_add_stream(nit, ts_id, org_net_id, desc, desc_size);
 }
+
+int ts_nit_add_nordig_specifier_descriptor(struct ts_nit *nit, uint16_t ts_id, uint16_t org_net_id) {
+	int desc_size = 2 + 4;		// 2 for header desc header, 3 for each service
+	uint8_t *desc = calloc(1, desc_size);
+	int dpos = 0;
+	desc[dpos + 0] = 0x5f;				// service_list_descriptor
+	desc[dpos + 1] = desc_size - 2;		// -2 Because of two byte header
+	desc[dpos + 2] = 0x00;				// -2 Because of two byte header
+	desc[dpos + 3] = 0x00;				// -2 Because of two byte header
+	desc[dpos + 4] = 0x00;				// -2 Because of two byte header
+	desc[dpos + 5] = 0x29;				// -2 Because of two byte header
+	dpos += 6;
+
+	return ts_nit_add_stream(nit, ts_id, org_net_id, desc, desc_size);
+}
+
+int ts_nit_add_lcn_descriptor(struct ts_nit *nit, uint16_t ts_id, uint16_t org_net_id, uint32_t *services, uint8_t num_services) {
+	uint8_t i;
+	if (!num_services || num_services > 85) 		// 85 * 3 == 255
+		return 0;
+	int desc_size = 2 + num_services * 4;			// 2 for header desc header, 4 for each service
+	uint8_t *desc = calloc(1, desc_size);
+	int dpos = 0;
+	desc[dpos + 0] = 0x83;					// service_lcn_descriptor
+	desc[dpos + 1] = desc_size - 2;				// -2 Because of two byte header
+	dpos += 2;
+	for(i=0;i<num_services;i++) {
+		uint32_t srv = services[i];
+		desc[dpos + 0] = (srv &~ 0x00ffffff) >> 24;	// service_id (16 bits)
+		desc[dpos + 1] = (srv &~ 0xff00ffff) >> 16;	// service_id
+		desc[dpos + 2] = (srv &~ 0xffff00ff) >>  8;	// visible (1 bit), private (1 bit), first (6 bits) from lcn_number 
+		desc[dpos + 3] = (srv &~ 0xffffff00);		// second (8 bits) lcn_number
+		dpos += 4;
+	}
+	return ts_nit_add_stream(nit, ts_id, org_net_id, desc, desc_size);
+}
+
+
+int ts_nit_add_stream_descriptors(struct ts_nit *nit, uint16_t ts_id, uint16_t org_net_id, uint32_t freq, uint8_t modulation, uint32_t symbol_rate, uint32_t *lcn_services, uint32_t *svc_services, uint8_t num_services) {
+	
+	int desc_size = 13 + 6 + 2 + 2 + num_services * 4 + num_services * 3;		// 2 for header desc header, + ....
+	
+	uint8_t *desc = calloc(1, desc_size);
+
+	desc[ 0] = 0x44;							// cable_delivey_system_descriptor
+	desc[ 1] = 11;								// -2 Because of two byte header
+	desc[ 2] = ((freq &~ 0x00ffffff) >> 24);	// 32 bits, frequency
+	desc[ 3] = ((freq &~ 0xff00ffff) >> 16);
+	desc[ 4] = ((freq &~ 0xffff00ff) >>  8);
+	desc[ 5] =  (freq &~ 0xffffff00);
+	desc[ 6] = 0xff;								// 8 bits reserved
+	desc[ 7] = 0xf0;								// 4 bits reserved, 4 bits FEC_outer (0 == not defined)
+	desc[ 8] = modulation;							// 8 bits reserved
+	desc[ 9] = (symbol_rate >> 20) &~ 0xffffff00;	// 28 bits, symbol_rate
+	desc[10] = (symbol_rate >> 12) &~ 0xffffff00;
+	desc[11] = (symbol_rate >> 4 ) &~ 0xffffff00;
+	desc[12] = (symbol_rate &~ 0xfffffff0) << 4;	// 4 bits
+	desc[12] |= 0;									// 4 bits FEC_inner (0 == not defined)
+
+	uint8_t i;
+	if (!num_services || num_services > 85) // 85 * 3 == 255
+		return 0;
+	
+	int desc_svc_size = 2 + num_services * 3;		// 2 for header desc header, 3 for each service
+	
+
+	int dpos = 13;
+
+	desc[dpos + 0] = 0x41;				// service_list_descriptor
+	desc[dpos + 1] = desc_svc_size - 2;		// -2 Because of two byte header
+	dpos += 2;
+	for(i=0;i<num_services;i++) {
+		uint32_t srv = svc_services[i];
+		desc[dpos + 0] = (srv &~ 0xff00ffff) >> 16;	// service_id (16 bits)
+		desc[dpos + 1] = (srv &~ 0xffff00ff) >>  8;
+		desc[dpos + 2] = (srv &~ 0xffffff00);		// service_type (8 bits)
+		dpos += 3;
+	}
+
+	int desc_prv_size = 2 + 4;		// 2 for header desc header, 3 for each service
+
+	desc[dpos + 0] = 0x5f;				// service_list_descriptor
+	desc[dpos + 1] = desc_prv_size - 2;		// -2 Because of two byte header
+	desc[dpos + 2] = 0x00;				// -2 Because of two byte header
+	desc[dpos + 3] = 0x00;				// -2 Because of two byte header
+	desc[dpos + 4] = 0x00;				// -2 Because of two byte header
+	desc[dpos + 5] = 0x29;				// -2 Because of two byte header
+	dpos += 6;
+
+	if (!num_services || num_services > 85) 		// 85 * 3 == 255
+		return 0;
+	int desc_lcn_size = 2 + num_services * 4;			// 2 for header desc header, 4 for each service
+
+	desc[dpos + 0] = 0x83;					// service_lcn_descriptor
+	desc[dpos + 1] = desc_lcn_size - 2;				// -2 Because of two byte header
+	dpos += 2;
+	for(i=0;i<(num_services);i++) {
+		uint32_t srv = lcn_services[i];
+		desc[dpos + 0] = (srv &~ 0x00ffffff) >> 24;	// service_id (16 bits)
+		desc[dpos + 1] = (srv &~ 0xff00ffff) >> 16;	// service_id
+		desc[dpos + 2] = (srv &~ 0xffff00ff) >>  8;	// visible (1 bit), private (1 bit), first (6 bits) from lcn_number 
+		desc[dpos + 3] = (srv &~ 0xffffff00);		// second (8 bits) lcn_number
+		dpos += 4;
+	}
+
+
+	return ts_nit_add_stream(nit, ts_id, org_net_id, desc, desc_size);
+}
+

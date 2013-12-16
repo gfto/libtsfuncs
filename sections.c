@@ -127,6 +127,7 @@ void ts_section_header_dump(struct ts_section_header *t) {
 		t->table_id == 0x40         ? "network_information_section - actual_network" :
 		t->table_id == 0x41         ? "network_information_section - other_network" :
 		t->table_id == 0x42         ? "service_description_section - actual_transport_stream" :
+		t->table_id == 0x83         ? "lcn_description_section - other" :
 		IN(t->table_id, 0x43, 0x45) ? "reserved for future use" :
 		t->table_id == 0x46         ? "service_description_section - other_transport_stream" :
 		IN(t->table_id, 0x47, 0x49) ? "reserved for future use" :

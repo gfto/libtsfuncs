@@ -102,7 +102,6 @@ int ts_cat_parse(struct ts_cat *cat) {
 	if (!cat->program_info)
 		return 0;
 	memcpy(cat->program_info, stream_data, cat->program_info_size);
-	stream_data += cat->program_info_size;
 
 	if (!ts_crc32_section_check(cat->section_header, "CAT"))
 		return 0;

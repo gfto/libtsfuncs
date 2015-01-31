@@ -197,7 +197,6 @@ int ts_nit_add_nordig_specifier_descriptor(struct ts_nit *nit, uint16_t ts_id, u
 	desc[dpos + 3] = 0x00;				// -2 Because of two byte header
 	desc[dpos + 4] = 0x00;				// -2 Because of two byte header
 	desc[dpos + 5] = 0x29;				// -2 Because of two byte header
-	dpos += 6;
 
 	return ts_nit_add_stream(nit, ts_id, org_net_id, desc, desc_size);
 }

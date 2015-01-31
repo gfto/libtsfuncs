@@ -225,6 +225,8 @@ int ts_nit_add_lcn_descriptor(struct ts_nit *nit, uint16_t ts_id, uint16_t org_n
 
 
 int ts_nit_add_stream_descriptors(struct ts_nit *nit, uint16_t ts_id, uint16_t org_net_id, uint32_t freq, uint8_t modulation, uint32_t symbol_rate, uint32_t *lcn_services, uint32_t *svc_services, uint8_t num_services) {
+	if (!num_services || num_services > 85) // 85 * 3 == 255
+		return 0;
 	
 	int desc_size = 13 + 6 + 2 + 2 + num_services * 4 + num_services * 3;		// 2 for header desc header, + ....
 	
@@ -246,9 +248,6 @@ int ts_nit_add_stream_descriptors(struct ts_nit *nit, uint16_t ts_id, uint16_t o
 	desc[12] |= 0;									// 4 bits FEC_inner (0 == not defined)
 
 	uint8_t i;
-	if (!num_services || num_services > 85) // 85 * 3 == 255
-		return 0;
-	
 	int desc_svc_size = 2 + num_services * 3;		// 2 for header desc header, 3 for each service
 	
 

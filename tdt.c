@@ -234,6 +234,8 @@ void ts_tdt_dump(struct ts_tdt *tdt) {
 
 int ts_tdt_is_same(struct ts_tdt *tdt1, struct ts_tdt *tdt2) {
 	if (tdt1 == tdt2) return 1; // Same
-	if ((!tdt1 && tdt2) || (tdt1 && !tdt2)) return 0; // Not same (one is NULL)
-	return ts_section_is_same(tdt1->section_header, tdt2->section_header);
+	if (tdt1 && tdt2)
+		return ts_section_is_same(tdt1->section_header, tdt2->section_header);
+	else
+		return 0;
 }

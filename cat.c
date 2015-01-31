@@ -185,8 +185,10 @@ void ts_cat_dump(struct ts_cat *cat) {
 
 int ts_cat_is_same(struct ts_cat *cat1, struct ts_cat *cat2) {
 	if (cat1 == cat2) return 1; // Same
-	if ((!cat1 && cat2) || (cat1 && !cat2)) return 0; // Not same (one is NULL)
-	return ts_section_is_same(cat1->section_header, cat2->section_header);
+	if (cat1 && cat2)
+		return ts_section_is_same(cat1->section_header, cat2->section_header);
+	else
+		return 0;
 }
 
 enum CA_system ts_get_CA_sys(uint16_t CA_id) {

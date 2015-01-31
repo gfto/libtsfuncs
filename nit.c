@@ -294,6 +294,8 @@ void ts_nit_dump(struct ts_nit *nit) {
 
 int ts_nit_is_same(struct ts_nit *nit1, struct ts_nit *nit2) {
 	if (nit1 == nit2) return 1; // Same
-	if ((!nit1 && nit2) || (nit1 && !nit2)) return 0; // Not same (one is NULL)
-	return ts_section_is_same(nit1->section_header, nit2->section_header);
+	if (nit1 && nit2)
+		return ts_section_is_same(nit1->section_header, nit2->section_header);
+	else
+		return 0;
 }

@@ -231,6 +231,8 @@ void ts_pat_dump(struct ts_pat *pat) {
 
 int ts_pat_is_same(struct ts_pat *pat1, struct ts_pat *pat2) {
 	if (pat1 == pat2) return 1; // Same
-	if ((!pat1 && pat2) || (pat1 && !pat2)) return 0; // Not same (one is NULL)
-	return ts_section_is_same(pat1->section_header, pat2->section_header);
+	if (pat1 && pat2)
+		return ts_section_is_same(pat1->section_header, pat2->section_header);
+	else
+		return 0;
 }

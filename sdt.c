@@ -267,6 +267,8 @@ void ts_sdt_dump(struct ts_sdt *sdt) {
 
 int ts_sdt_is_same(struct ts_sdt *sdt1, struct ts_sdt *sdt2) {
 	if (sdt1 == sdt2) return 1; // Same
-	if ((!sdt1 && sdt2) || (sdt1 && !sdt2)) return 0; // Not same (one is NULL)
-	return ts_section_is_same(sdt1->section_header, sdt2->section_header);
+	if (sdt1 && sdt2)
+		return ts_section_is_same(sdt1->section_header, sdt2->section_header);
+	else
+		return 0;
 }

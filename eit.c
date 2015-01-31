@@ -17,7 +17,7 @@ struct ts_eit *ts_eit_alloc() {
 	struct ts_eit *eit = calloc(1, sizeof(struct ts_eit));
 	eit->section_header = ts_section_data_alloc();
 	eit->streams_max = 128;
-	eit->streams = calloc(eit->streams_max, sizeof(void *));
+	eit->streams = calloc(eit->streams_max, sizeof(struct ts_eit_stream *));
 	return eit;
 }
 

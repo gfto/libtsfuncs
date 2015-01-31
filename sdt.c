@@ -17,7 +17,7 @@ struct ts_sdt *ts_sdt_alloc() {
 	struct ts_sdt *sdt = calloc(1, sizeof(struct ts_sdt));
 	sdt->section_header	= ts_section_data_alloc();
 	sdt->streams_max	= 128;
-	sdt->streams		= calloc(sdt->streams_max, sizeof(void *));
+	sdt->streams		= calloc(sdt->streams_max, sizeof(struct ts_sdt_stream *));
 	return sdt;
 }
 

@@ -17,7 +17,7 @@ struct ts_nit *ts_nit_alloc() {
 	struct ts_nit *nit = calloc(1, sizeof(struct ts_nit));
 	nit->section_header = ts_section_data_alloc();
 	nit->streams_max = 128;
-	nit->streams = calloc(nit->streams_max, sizeof(void *));
+	nit->streams = calloc(nit->streams_max, sizeof(struct ts_nit_stream *));
 	return nit;
 }
 

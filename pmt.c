@@ -17,7 +17,7 @@ struct ts_pmt *ts_pmt_alloc() {
 	struct ts_pmt *pmt = calloc(1, sizeof(struct ts_pmt));
 	pmt->section_header	= ts_section_data_alloc();
 	pmt->streams_max	= 128;
-	pmt->streams		= calloc(pmt->streams_max, sizeof(void *));
+	pmt->streams		= calloc(pmt->streams_max, sizeof(struct ts_pmt_stream *));
 	return pmt;
 }
 

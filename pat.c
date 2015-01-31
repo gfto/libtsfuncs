@@ -17,7 +17,7 @@ struct ts_pat *ts_pat_alloc() {
 	struct ts_pat *pat = calloc(1, sizeof(struct ts_pat));
 	pat->section_header	= ts_section_data_alloc();
 	pat->programs_max	= 128;
-	pat->programs		= calloc(pat->programs_max, sizeof(void *));
+	pat->programs		= calloc(pat->programs_max, sizeof(struct ts_pat_program *));
 	return pat;
 }
 

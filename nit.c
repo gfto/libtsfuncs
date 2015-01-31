@@ -112,7 +112,6 @@ ERROR:
 
 int ts_nit_parse(struct ts_nit *nit) {
 	uint8_t *section_data = nit->section_header->data;
-	int section_len = nit->section_header->data_len;
 
 	/* Table data (2 bytes) */
 	nit->reserved1         =  (section_data[0] &~ 0x0F) >> 4;						// xxxx1111
@@ -120,7 +119,6 @@ int ts_nit_parse(struct ts_nit *nit) {
 
 	/* Handle streams */
 	uint8_t *stream_data = section_data + 2 + nit->network_info_size;	// +2 is to compensate for reserved1 and network_info_size
-	int stream_len       = section_len - nit->network_info_size - 4;	// -4 for the CRC at the end
 
 	nit->network_info = NULL;
 	if (nit->network_info_size) {
@@ -135,7 +133,7 @@ int ts_nit_parse(struct ts_nit *nit) {
 	nit->ts_loop_size = ((stream_data[0] &~ 0xF0) << 8) | stream_data[1];	// 1111xxxx xxxxxxxx
 
 	stream_data += 2;
-	stream_len   = nit->ts_loop_size;
+	int stream_len = nit->ts_loop_size;
 
 	while (stream_len > 0) {
 		if (nit->streams_num == nit->streams_max) {

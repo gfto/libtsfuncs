@@ -492,7 +492,7 @@ void ts_descriptor_dump(uint8_t *desc_data, int desc_data_len) {
 					service_id  |= data[i + 1];
 					visible      = data[i+2] >> 7;			// x1111111
 //					reserved1    = data[i+2] &~ 0x80 >> 6;		// 1x111111
-					lcn          = data[i+2] &~ 0xc0 << 8;		// 11xxxxxx
+					lcn          = (data[i+2] &~ 0xc0) << 8;		// 11xxxxxx
 					lcn         |= data[i+3];			// xxxxxxxx
 					ts_LOGf("%s  Service_ID: 0x%04x (%4d) LCN: %3d Visible: %d\n",
 						pad, service_id, service_id, lcn, visible);

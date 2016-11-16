@@ -185,14 +185,14 @@ char *h222_stream_id_desc(uint8_t stream_id) {
 	}
 	if (stream_id >= 0xc0 && stream_id <= 0xdf) {
 		stream_number = stream_id & 0x1f;
-		asprintf(&text, "Audio stream %d", stream_number);
+		if (asprintf(&text, "Audio stream %d", stream_number) < 0) return NULL;
 	} else if (stream_id >= 0xe0 && stream_id <= 0xef) {
 		stream_number = stream_id & 0x0f;
-		asprintf(&text, "Video stream %d", stream_number);
+		if (asprintf(&text, "Video stream %d", stream_number) < 0) return NULL;
 	} else if (stream_id >= 0xfc && stream_id <= 0xfe) {
-		asprintf(&text, "Reserved data stream");
+		if (asprintf(&text, "Reserved data stream") < 0) return NULL;
 	} else {
-		asprintf(&text, "Unrecognised stream id 0x%02x", stream_id);
+		if (asprintf(&text, "Unrecognised stream id 0x%02x", stream_id) < 0) return NULL;
 	}
 	return text;
 }

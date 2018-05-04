@@ -143,8 +143,17 @@ static int ts_nit_add_frequency_list_descriptor(struct ts_nit *nit, uint16_t ts_
 }
 
 
+int ts_nit_add_frequency_list_descriptor_neutral(struct ts_nit *nit, uint16_t ts_id, uint16_t org_net_id, uint32_t *freqs, uint8_t num_freqs) {
+	return ts_nit_add_frequency_list_descriptor(nit, ts_id, org_net_id, 0, freqs, num_freqs);
+}
+int ts_nit_add_frequency_list_descriptor_satellite(struct ts_nit *nit, uint16_t ts_id, uint16_t org_net_id, uint32_t *freqs, uint8_t num_freqs) {
+	return ts_nit_add_frequency_list_descriptor(nit, ts_id, org_net_id, 1, freqs, num_freqs);
+}
 int ts_nit_add_frequency_list_descriptor_cable(struct ts_nit *nit, uint16_t ts_id, uint16_t org_net_id, uint32_t *freqs, uint8_t num_freqs) {
 	return ts_nit_add_frequency_list_descriptor(nit, ts_id, org_net_id, 2, freqs, num_freqs);
+}
+int ts_nit_add_frequency_list_descriptor_terrestrial(struct ts_nit *nit, uint16_t ts_id, uint16_t org_net_id, uint32_t *freqs, uint8_t num_freqs) {
+	return ts_nit_add_frequency_list_descriptor(nit, ts_id, org_net_id, 3, freqs, num_freqs);
 }
 
 int ts_nit_add_cable_delivery_descriptor(struct ts_nit *nit, uint16_t ts_id, uint16_t org_net_id, uint32_t freq, uint8_t modulation, uint32_t symbol_rate) {

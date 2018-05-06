@@ -10,6 +10,7 @@
 
 #include <netdb.h>
 #include <time.h>
+#include <stdint.h>
 
 #ifndef FREE
 	#define FREE(x) if(x) { free(x); x=NULL; }

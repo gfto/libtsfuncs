@@ -10,6 +10,7 @@
 
 #include <time.h>
 #include <netdb.h>
+#include <stdint.h>
 
 #include "tsdata.h"
 

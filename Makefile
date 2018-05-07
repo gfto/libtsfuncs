@@ -1,11 +1,11 @@
-CC = cc
+CC? = cc
 LINK = ld -o
 CROSS := $(TARGET)
 MKDEP = $(CROSS)$(CC) -M -o $*.d $<
 
 LIBRARY_LINK_OPTS =  -L. -r
-CFLAGS = -O2 -ggdb -std=c99 -D_GNU_SOURCE
-CFLAGS += -Wall -Wextra -Wshadow -Wformat-security -Wstrict-prototypes
+CFLAGS ?= -O2 -ggdb
+CFLAGS += -std=c99 -D_GNU_SOURCE -Wall -Wextra -Wshadow -Wformat-security -Wstrict-prototypes
 RM = /bin/rm -f
 Q=@
 

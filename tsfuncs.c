@@ -265,7 +265,7 @@ uint8_t *ts_packet_header_parse(uint8_t *ts_packet, struct ts_header *ts_header)
 	if (!ts_header->payload_field && ts_header->adapt_len > 183)
 		goto return_error;
 
-	if (ts_header->payload_offset > TS_MAX_PAYLOAD_SIZE) // Validity check
+	if (ts_header->payload_offset > TS_PACKET_SIZE) // Validity check
 		goto return_error;
 
 	ts_header->payload_size = TS_PACKET_SIZE - ts_header->payload_offset;

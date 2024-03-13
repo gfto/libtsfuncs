@@ -178,7 +178,7 @@ void ts_pmt_generate(struct ts_pmt *pmt, uint8_t **ts_packets, int *num_packets)
 	secdata[curpos + 2]  = pmt->reserved2 << 4;			// xxxx1111
 	secdata[curpos + 2] |= pmt->program_info_size >> 8;	// 1111xxxx xxxxxxxx
 	secdata[curpos + 3]  = pmt->program_info_size &~ 0xff00;
-	curpos += 4; // For thje fields above
+	curpos += 4; // For the fields above
 
 	if (pmt->program_info_size) {
 		memcpy(secdata + curpos, pmt->program_info, pmt->program_info_size);

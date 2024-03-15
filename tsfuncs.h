@@ -64,6 +64,11 @@ static inline void ts_packet_set_pid(uint8_t *ts_packet, uint16_t new_pid) {
 	ts_packet[2]  = new_pid &~ 0xff00;
 }
 
+static inline int ts_packet_has_payload(uint8_t *ts_packet) {
+	// Adaptation field control field (payload bit)
+	return !!(ts_packet[3] & 0x10);
+}
+
 static inline uint8_t ts_packet_get_cont(uint8_t *ts_packet) {
 	return (ts_packet[3] &~ 0xF0);	// 1111xxxx
 }

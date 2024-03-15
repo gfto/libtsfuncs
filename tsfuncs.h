@@ -46,6 +46,11 @@ enum ts_scrambled_type {
 // Packet manipulation
 void            ts_packet_init_null (uint8_t *ts_packet);
 
+// Transport error indicator (TEI)
+static inline int ts_packet_is_tei_set(uint8_t *ts_packet) {
+	return !!(ts_packet[1] & 0x80);
+}
+
 static inline int ts_packet_is_pusi(uint8_t *ts_packet) {
 	return (ts_packet[1] &~ 0xbf) >> 6;
 }

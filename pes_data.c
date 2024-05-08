@@ -48,7 +48,7 @@ static struct pes_entry *pes_entry_find(struct pes_array *pa, uint16_t pid) {
 struct pes_array *pes_array_alloc() {
 	struct pes_array *pa = calloc(1, sizeof(struct pes_array));
 	pa->max = START_ENTRIES;
-	pa->entries = calloc(sizeof(struct pes_entry *), pa->max);
+	pa->entries = calloc(pa->max, sizeof(struct pes_entry *));
 	return pa;
 }
 

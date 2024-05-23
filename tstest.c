@@ -69,9 +69,10 @@ int ts_sdt_test(void) {
 
 	int i;
 	for (i=0;i<25;i++) {
-		ts_sdt_add_service_descriptor(sdt, 9,  0, "PROVIDER", "SERVICE33333333333333333333333333333333333333333333333333333333333333");
-		ts_sdt_add_service_descriptor(sdt, 13, 0, "PROddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddVIDER", "SERVICE");
-		ts_sdt_add_service_descriptor(sdt, 7,  0, "PROVIDER", "SERVICE");
+        ts_sdt_add_service_descriptor(sdt, 9,  2, "PROVIDER", "SERVICE33333333333333333333333333333333333333333333333333333333333333");
+        ts_sdt_add_service_descriptor(sdt, 13, 2, "PROddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddVIDER", "SERVICE");
+        ts_sdt_add_service_descriptor(sdt, 7,  2, "PROVIDER", "SERVICE");
+
 	}
 	ts_sdt_dump(sdt);
 

@@ -93,7 +93,7 @@ static int ts_sdt_add_stream(struct ts_sdt *sdt, uint16_t service_id, uint8_t *d
 	return 1;
 }
 
-int ts_sdt_add_service_descriptor(struct ts_sdt *sdt, uint16_t service_id, uint8_t video, char *provider_name, char *service_name) {
+int ts_sdt_add_service_descriptor(struct ts_sdt *sdt, uint16_t service_id, uint8_t service_type, char *provider_name, char *service_name) {
 	char *name;
 	if (!service_name && !provider_name)
 		return 0;
@@ -109,7 +109,7 @@ int ts_sdt_add_service_descriptor(struct ts_sdt *sdt, uint16_t service_id, uint8
 	uint8_t *desc = calloc(1, desc_size);
 	desc[dpos + 0] = 0x48;					// Service descriptor
 	desc[dpos + 1] = desc_size - 2;			// -2 Because of two byte header
-	desc[dpos + 2] = video ? 0x01 : 0x02;	// DVB Table 75: Service type coding: 0x01 - digital tv, 0x02 - digital radio
+	desc[dpos + 2] = service_type;	        // DVB Table 75: Service type coding: 0x01 - digital tv, 0x02 - digital radio
 	desc[dpos + 3] = (provider_name ? strlen(provider_name) : 0);
 	dpos += 4;
 	if (!provider_name || strlen(provider_name) == 0) {

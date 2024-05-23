@@ -238,7 +238,7 @@ int				ts_sdt_parse		(struct ts_sdt *sdt);
 void            ts_sdt_dump			(struct ts_sdt *sdt);
 void			ts_sdt_generate		(struct ts_sdt *sdt, uint8_t **ts_packets, int *num_packets);
 
-int             ts_sdt_add_service_descriptor(struct ts_sdt *sdt, uint16_t service_id, uint8_t video, char *provider_name, char *service_name);
+int             ts_sdt_add_service_descriptor(struct ts_sdt *sdt, uint16_t service_id, uint8_t service_type, char *provider_name, char *service_name);
 
 struct ts_sdt *	ts_sdt_copy			(struct ts_sdt *sdt);
 int				ts_sdt_is_same		(struct ts_sdt *sdt1, struct ts_sdt *sdt2);
